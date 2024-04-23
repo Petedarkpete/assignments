@@ -173,7 +173,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="">
+                <a class="nav-link collapsed" href="{{route ('users')}}">
                 <i class="bi bi-building px-3"></i><span>Users</span></i>
                 </a>
                 
