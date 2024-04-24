@@ -20,4 +20,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/users', [App\Http\Controllers\UserController:: class, 'index'])->name('users');
 
+Route::post('/users', [App\Http\Controllers\UserController:: class, 'add_bulk'])->name('add_bulk');
+
+
 require __DIR__.'/auth.php';

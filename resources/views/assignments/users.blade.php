@@ -16,7 +16,8 @@
         <div class="card">
         <div class="card-title d-flex justify-content-end">
             <div class="col-12">
-                <button type="button" class="btn btn-primary btn-sm">Add User</button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Single User</button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Bulk Users</button>
             </div>
         </div>
 
@@ -28,6 +29,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Adm No</th>
+                                <th>Email</th>
                                 <th>Year</th>
                                 <th>Action</th>
                             </tr>
@@ -35,6 +37,7 @@
                         <tbody>
                             <tr>
                                 <td>tt</td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -48,7 +51,36 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
+    
+    <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Bulk Users</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ route('add_bulk') }}" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label for="">Select Excel File</label>
+                <input type="file" name="file" class="form-control">
+                <span class="text-danger">{{ $errors->first('file') }}</span>
+                <span class="text-success">{{ session('success') }}</span>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
 </main>
 
 @endsection
