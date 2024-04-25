@@ -64,7 +64,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="{{ route('add_bulk') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('import') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="">Select Excel File</label>
@@ -76,7 +76,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
       </div>
     </div>
   </div>
