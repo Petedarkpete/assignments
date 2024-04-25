@@ -69,15 +69,14 @@
             <div class="form-group">
                 <label for="">Select Excel File</label>
                 <input type="file" name="file" class="form-control">
-                <span class="text-danger">{{ $errors->first('file') }}</span>
-                <span class="text-success">{{ session('success') }}</span>
             </div>
-        </form>
+        
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
