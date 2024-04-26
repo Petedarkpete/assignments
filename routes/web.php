@@ -22,4 +22,5 @@ Route::get('/users', [App\Http\Controllers\UserController:: class, 'index'])->na
 
 Route::post('/users', [App\Http\Controllers\UserController:: class, 'add_bulk'])->name('add_bulk');
 Route::post('import/',[App\Http\Controllers\UserController:: class. 'import'])->name('import');
+
 require __DIR__.'/auth.php';
