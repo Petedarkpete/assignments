@@ -21,6 +21,17 @@ Route::middleware('auth')->group(function () {
 Route::get('/users', [App\Http\Controllers\UserController:: class, 'index'])->name('users');
 
 Route::post('/users', [App\Http\Controllers\UserController:: class, 'add_bulk'])->name('add_bulk');
-Route::post('import/',[App\Http\Controllers\UserController:: class. 'import'])->name('import');
+Route::post('import/',[App\Http\Controllers\UserController:: class, 'import'])->name('import');
+
+Route::get('dashboard', [App\Http\Controllers\DashboardController:: class, 'index'])->name('dashboard');
+Route::get('upload_ass', [App\Http\Controllers\UploadController:: class, 'index'])->name('upload_ass');
+Route::post('upload_assignment', [App\Http\Controllers\UploadController:: class, 'upload'])->name('upload_assignment');
+
+Route::get('/users', [UserController::class, 'index'])->name('users');
+
+Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+
 
 require __DIR__.'/auth.php';

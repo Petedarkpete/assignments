@@ -12,6 +12,8 @@
   <link rel="dns-prefetch" href="//fonts.bunny.net">
   <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
+ 
+
         
   <!-- For Bootstrap Modal -->
         <!-- Latest compiled and minified CSS -->
@@ -132,44 +134,24 @@
         
         <ul class="sidebar-nav" id="sidebar-nav" style="">
             <li class="nav-item">
-                <a class="nav-link collapsed" href="">
+                <a class="nav-link collapsed" href="{{route ('dashboard')}}">
                 <i class="bi bi-bar-chart-fill px-3"></i>
                 <span>Dashboard</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="">
-                <i class="bi bi-person-circle px-3"></i><span>Branches</span></i>
+                <a class="nav-link collapsed" href="{{route('upload_ass')}}">
+                <i class="bi bi-person-circle px-3"></i><span>Upload Assignment</span></i>
                 </a>
                 
             </li>
 
-            
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-building px-3"></i><span>Investor</span><i class="bi bi-chevron-down ms-auto"></i>
+                <a class="nav-link collapsed" href="">
+                <i class="bi bi-person-circle px-3"></i><span>Uploads</span></i>
                 </a>
-                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li class="nav-item px-3">
-                        <a class="nav-link collapsed" href="">
-                        <i class="bi bi-building px-3"></i>
-                        <span>Branch A</span>
-                        </a>
-                    </li>
-                    <li class="nav-item px-3">
-                        <a class="nav-link collapsed" href="">
-                        <i class="bi bi-building px-3"></i>
-                        <span>Branch B</span>
-                        </a>
-                    </li>
-                    <li class="nav-item px-3">
-                        <a class="nav-link collapsed" href="">
-                        <i class="bi bi-building px-3"></i>
-                        <span>Branch C</span>
-                        </a>
-                    </li>
-                </ul>
+                
             </li>
 
             <li class="nav-item">

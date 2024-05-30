@@ -20,8 +20,14 @@ class UserController extends Controller
 
     public function import(Request $request)
     {
+        //validator
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'  // Validate uploaded file
+        ]);
+
         Excel::import(new UserImport, request()->file('file'));
-        return redirect()->route('users.index')->with('success', 'Users imported successfully.');
+        // return redirect()->route('users.index')->with('success', 'Users imported successfully.');
+        return view('assignments.users');
     }
 
     public function login(Request $request)
