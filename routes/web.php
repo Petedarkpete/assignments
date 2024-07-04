@@ -21,7 +21,9 @@ Route::middleware('auth')->group(function () {
 Route::get('/users', [App\Http\Controllers\UserController:: class, 'index'])->name('users');
 
 Route::post('/users', [App\Http\Controllers\UserController:: class, 'add_bulk'])->name('add_bulk');
-Route::post('import/',[App\Http\Controllers\UserController:: class, 'import'])->name('import');
+Route::post('/add_user', [App\Http\Controllers\UserController:: class, 'add_user'])->name('add_user');
+
+Route::post('/import',[App\Http\Controllers\UserController:: class, 'import'])->name('import');
 
 Route::get('dashboard', [App\Http\Controllers\DashboardController:: class, 'index'])->name('dashboard');
 Route::get('upload_ass', [App\Http\Controllers\UploadController:: class, 'index'])->name('upload_ass');
