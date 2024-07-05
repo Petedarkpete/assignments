@@ -19,6 +19,11 @@ class UserController extends Controller
 
         return view('assignments.users', compact('users'));
     }
+    public function indextest(){
+        $users = User::all();
+
+        return view('assignments.users', compact('users'));
+    }
 
     public function add_user(Request $request){
         $password = "test123";
@@ -44,7 +49,23 @@ class UserController extends Controller
 
         return redirect()->back()->with('successful', 'User added successfully.');
     }
+    public function edit_user(Request $request, $id){
 
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+        ]);
+
+        $user = User::find($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->year = $request->year;
+        $user->admission = $request->admission;
+        $user->role = $request->role;
+        $user->password = Hash::make($password);
+
+        return redirect()->back()->with('success', 'User deleted successfully.');
+    }
     public function import(Request $request)
     {
         //validator

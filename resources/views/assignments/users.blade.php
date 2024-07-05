@@ -61,27 +61,27 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form id="add_user" method="post" enctype="multipart/form-data">
+                                                    <form action="{{route('edit_user',['id' => $user->id])}}" method="post" enctype="multipart/form-data">
                                                         @csrf
                                                         <div class="form-group">
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <label for="input1">Name</label>
-                                                                    <input type="text" class="form-control" id="name" placeholder="">
+                                                                    <input type="text" class="form-control" id="name" value="{{ $user->name }}" placeholder="">
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label for="input2">Admission No</label>
-                                                                    <input type="text" class="form-control" id="admission" placeholder="CCS/00XXX/XXX">
+                                                                    <input type="text" class="form-control" id="admission" value="{{ $user->admission }}" placeholder="CCS/00XXX/XXX">
                                                                 </div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <label for="input1">Email</label>
-                                                                    <input type="email" class="form-control" id="input1" placeholder="example@gmail.com">
+                                                                    <input type="email" class="form-control" id="input1" value="{{ $user->email }}" placeholder="example@gmail.com">
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label for="input2">Year</label>
-                                                                    <input type="text" class="form-control" id="input2" placeholder="Your Year of Study">
+                                                                    <input type="text" class="form-control" id="input2" value="{{ $user->email }}" placeholder="Your Year of Study">
                                                                     <input type="hidden" name="role" value="3">
                                                                 </div>
                                                             </div>
@@ -90,7 +90,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary" id="submit-user">Submit</button>
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
                                                 </div>
                                             </form>
                                             </div>

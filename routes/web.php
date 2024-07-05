@@ -20,8 +20,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/users', [App\Http\Controllers\UserController:: class, 'index'])->name('users');
 
-Route::post('/users', [App\Http\Controllers\UserController:: class, 'add_bulk'])->name('add_bulk');
 Route::post('/add_user', [App\Http\Controllers\UserController:: class, 'add_user'])->name('add_user');
+Route::post('/edit_user/{id}', [App\Http\Controllers\UserController:: class, 'edit_user'])->name('edit_user');
 
 Route::post('/import',[App\Http\Controllers\UserController:: class, 'import'])->name('import');
 
@@ -33,7 +33,6 @@ Route::get('/users', [UserController::class, 'index'])->name('users');
 
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
 
-Route::post('/users', [UserController::class, 'store'])->name('users.store');
 
 
 require __DIR__.'/auth.php';
