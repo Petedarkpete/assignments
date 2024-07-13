@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Assignment;
 
 class UploadController extends Controller
 {
@@ -13,7 +14,13 @@ class UploadController extends Controller
     }
     public function upload(Request $request)
     {
-        $id = $request->id;
+        $assignment = new Assignment;
+        $assignment->year = $request->year;
+        $assignment->course = $request->course;
+        $assignment->deadline = $request->deadline;
+        $assignment->title = $request->title;
+        $assignment->description = $request->description;
+
         
         // $file = $request->file('file');
         // $filename = $file->getClientOriginalName();
@@ -22,6 +29,8 @@ class UploadController extends Controller
         //     'message' => 'File uploaded successfully',
         //     'file' => $filename
         // ]);
+        
+        $assignment->save();
 
     }
 }

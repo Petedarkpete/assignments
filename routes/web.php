@@ -22,6 +22,7 @@ Route::get('/users', [App\Http\Controllers\UserController:: class, 'index'])->na
 
 Route::post('/add_user', [App\Http\Controllers\UserController:: class, 'add_user'])->name('add_user');
 Route::post('/edit_user/{id}', [App\Http\Controllers\UserController:: class, 'edit_user'])->name('edit_user');
+Route::post('/delete_user/{id}', [App\Http\Controllers\UserController:: class, 'delete_user'])->name('delete_user');
 
 Route::post('/import',[App\Http\Controllers\UserController:: class, 'import'])->name('import');
 

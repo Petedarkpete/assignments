@@ -89,10 +89,11 @@
                         <label for="input2">Deadline</label>
                         <input type="date" class="form-control" id="input2" placeholder="" name="deadline" required>
                     </div>
-                    <!-- <div class="col-md-6">
+                    <div class="col-md-6">
                         <label for="input2">Upload</label>
-                        <input type="file" class="form-control" id="input2" placeholder="" name="file" required>
-                    </div> -->
+                        <input type="file" class="form-control" id="input2" placeholder="" name="files[]">
+                    </div>
+
                 </div>
                 
             </div>
