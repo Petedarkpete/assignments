@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UploadedAssignment extends Model
 {
@@ -26,5 +27,10 @@ class UploadedAssignment extends Model
     public function User()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function submission()
+    {
+        return $this->hasMany(Submission::class);
     }
 }
