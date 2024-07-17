@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
-class UploadAssignment extends Model
+class UploadedAssignment extends Model
 {
     use HasFactory, Notifiable;
 
@@ -15,12 +16,14 @@ class UploadAssignment extends Model
         'course',
         'deadline',
         'title',
-        'details'
+        'details',
+        'user_id',
+        'file'
     ];
 
     public $timestamps = true;
 
-    public function UploadAssignment()
+    public function User()
     {
         return $this->belongsTo(User::class);
     }

@@ -3,6 +3,11 @@
 @section('content')
 <main id="main" class="main">
     <div class="container">
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
     <div class="row text-center pt-3">
             <div class="col-lg-12">
             <div class="pagetitle">
@@ -24,25 +29,33 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
-                                <th>Adm No</th>
-                                <th>Email</th>
+                                <th>Course</th>
                                 <th>Year</th>
-                                <th>Action</th>
+                                <th>Title</th>
+                                <th>Details</th>
+                                <th>Uploaded Date</th>
+                                <th>Deadline</th>
+                                <th>Download</th>
+                                <th>Edit</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($assignments as $assignment)
                             <tr>
-                                <td>tt</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{$assignment->id}}</td>
+                                <td>{{$assignment->course}}</td>
+                                <td>{{$assignment->year}}</td>
+                                <td>{{$assignment->title}}</td>
+                                <td>{{$assignment->details}}</td>
+                                <td>{{$assignment->created_at}}</td>
+                                <td>{{$assignment->deadline}}</td>
+                                <td>{{$assignment->file}}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm">Edit</button>
                                     <button type="button" class="btn btn-danger btn-sm">Delete</button>
                                 </td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -75,24 +88,24 @@
                     </div>
                     <div class="col-md-6">
                         <label for="input2">Course</label>
-                        <input type="text" class="form-control" id="input2" placeholder="Course Name" name="course" required>
+                        <input type="text" class="form-control" id="course" placeholder="Course Name" name="course" required>
                     </div>
                     <div class="col-md-6">
                         <label for="input1">Assignment Title</label>
-                        <input type="text" class="form-control" id="input1" placeholder="" name="assignment_title" required>
+                        <input type="text" class="form-control" id="title" placeholder="" name="title" required>
                     </div>
                     <div class="col-md-6">
                         <label for="input2">Other Details</label>
-                        <input type="text" class="form-control" id="input2" placeholder="Optional" name="other_details">
+                        <input type="text" class="form-control" id="description" placeholder="Optional" name="description">
                     </div>
                     <div class="col-md-6">
                         <label for="input2">Deadline</label>
-                        <input type="date" class="form-control" id="input2" placeholder="" name="deadline" required>
+                        <input type="date" class="form-control" id="deadline" placeholder="" name="deadline" required>
                     </div>
                     <div class="col-md-6">
                         <label for="input2">Upload</label>
-                        <input type="file" class="form-control" id="input2" placeholder="" name="files[]">
-                        <input type="hidden" class="form-control" id="input2" placeholder="" name="user_id" value="{{Auth::user()->id}}">
+                        <input type="file" class="form-control" id="file" placeholder="" name="file">
+                        <!-- //<input type="hidden" class="form-control" id="input2" placeholder="" name="user_id" value="{{Auth::user()->id}}"> -->
                         
                     </div>
 
@@ -109,6 +122,7 @@
     </div>
   </div>
 </div>
+
 </main>
 
 @endsection

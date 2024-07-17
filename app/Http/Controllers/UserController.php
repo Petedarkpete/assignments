@@ -16,7 +16,6 @@ class UserController extends Controller
     //
     public function index(){
         $users = User::all();
-
         return view('assignments.users', compact('users'));
     }
     public function indextest(){

@@ -50,8 +50,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function user(): HasMany
+    public function UploadedAssignment(): HasMany
     {
-        return $this->hasMany(UploadAssignment::class);
+        return $this->hasMany(UploadedAssignment::class);
     }
 }
