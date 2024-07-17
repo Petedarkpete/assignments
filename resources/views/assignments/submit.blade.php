@@ -16,7 +16,7 @@
                     <table class="table table-bordered bg-info table-sm" id="users_table" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>IDs</th>
                                 <th>Course</th>
                                 <th>Year</th>
                                 <th>Title</th>
