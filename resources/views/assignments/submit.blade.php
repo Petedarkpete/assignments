@@ -16,7 +16,7 @@
                     <table class="table table-bordered bg-info table-sm" id="users_table" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>IDs</th>
+                                <th>ID</th>
                                 <th>Course</th>
                                 <th>Year</th>
                                 <th>Title</th>
@@ -24,7 +24,7 @@
                                 <th>Uploaded Date</th>
                                 <th>Deadline</th>
                                 <th>Download</th>
-                                <th>Edit</th>
+                                <th>Submit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,8 +39,7 @@
                                 <td></td>
                                 <td></td>
                                 <td>
-                                    <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                    <button type="button" class="btn btn-primary btn-sm">Submit</button>
                                 </td>
                             </tr>
                         </tbody>
