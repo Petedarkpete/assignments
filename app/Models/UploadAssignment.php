@@ -19,4 +19,9 @@ class UploadAssignment extends Model
     ];
 
     public $timestamps = true;
+
+    public function UploadAssignment()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
