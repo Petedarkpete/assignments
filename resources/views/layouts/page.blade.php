@@ -155,6 +155,13 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('submit_ass')}}">
+                <i class="bi bi-send px-3"></i><span>Submit</span></i>
+                </a>
+                
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route ('users')}}">
                 <i class="bi bi-building px-3"></i><span>Users</span></i>
                 </a>

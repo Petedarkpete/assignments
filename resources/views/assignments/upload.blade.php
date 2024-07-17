@@ -8,11 +8,11 @@
                 {{ session('success') }}
             </div>
         @endif
-    <div class="row text-center pt-3">
+        <div class="row text-center pt-3">
             <div class="col-lg-12">
-            <div class="pagetitle">
-                <h1>Upload Assignments</h1>
-            </div><!-- End Page Title -->
+                <div class="pagetitle">
+                    <h1>Uploaded Assignments</h1>
+                </div><!-- End Page Title -->
             </div>
         </div>
 
