@@ -158,7 +158,18 @@
                 <a class="nav-link collapsed" href="{{route('submit_ass')}}">
                 <i class="bi bi-send px-3"></i><span>Submit</span></i>
                 </a>
-                
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('year')}}">
+                <i class="bi bi-send px-3"></i><span>Year</span></i>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('course')}}">
+                <i class="bi bi-send px-3"></i><span>Course</span></i>
+                </a>
             </li>
 
             <li class="nav-item">

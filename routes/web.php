@@ -35,6 +35,7 @@ Route::get('/users', [UserController::class, 'index'])->name('users');
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
 
 Route::get('/submit_ass', [App\Http\Controllers\SubmitController::class, 'index'])->name('submit_ass');
+Route::get('/course', [App\Http\Controllers\CourseController::class, 'index'])->name('course');
 
 
 
