@@ -142,14 +142,14 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('upload_ass')}}">
-                <i class="bi bi-person-circle px-3"></i><span>Upload Assignment</span></i>
+                <i class="bi bi-cloud-arrow-up px-3"></i><span>Upload Assignment</span></i>
                 </a>
                 
             </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="">
-                <i class="bi bi-person-circle px-3"></i><span>Uploads</span></i>
+                <i class="bi bi-journal px-3"></i><span>Uploads</span></i>
                 </a>
                 
             </li>
@@ -162,19 +162,19 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('year')}}">
-                <i class="bi bi-send px-3"></i><span>Year</span></i>
+                <i class="bi bi-calendar px-3"></i><span>Year</span></i>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('course')}}">
-                <i class="bi bi-send px-3"></i><span>Course</span></i>
+                <i class="bi bi-book px-3"></i><span>Course</span></i>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route ('users')}}">
-                <i class="bi bi-building px-3"></i><span>Users</span></i>
+                <i class="bi bi-person-circle px-3"></i><span>Users</span></i>
                 </a>
                 
             </li>
