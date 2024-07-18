@@ -34,4 +34,9 @@ class UploadedAssignment extends Model
     {
         return $this->hasMany(Submission::class);
     }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }   
 }
