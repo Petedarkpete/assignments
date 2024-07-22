@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //add course_id
-            $table->interger('course');
+            $table->integer('course');
             //make it a foreign key to the courses table
             $table->foreign('course')->references('id')->on('courses')->onDelete('cascade');
         });

@@ -6,7 +6,7 @@
         <div class="row text-center pt-3">
             <div class="col-lg-12">
                 <div class="pagetitle">
-                    <h1>My Assignments</h1>
+                    <h1>Submissions</h1>
                 </div><!-- End Page Title -->
             </div>
         </div>

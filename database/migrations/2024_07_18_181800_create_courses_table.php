@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('code');
             $table->string('name');
-            $table->string('year(s)');
+            $table->string('year');
+            $table->foreign('year')->references('year')->on('years');
             $table->timestamps();
         });
     }

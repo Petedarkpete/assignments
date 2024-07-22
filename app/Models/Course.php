@@ -24,4 +24,7 @@ class Course extends Model
     public function UploadedAssignment(){
         return $this->HasMany(UploadedAssignment::class);
     }
+    public function Submission(){
+        return $this->HasMany(Submission::class);
+    }
 }

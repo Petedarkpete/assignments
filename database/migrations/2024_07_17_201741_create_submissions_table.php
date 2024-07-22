@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('assignment_id');
-            $table->unsignedBigInteger('instructor_id');
             $table->string('submission_file');
             $table->string('name');
             $table->string('grade')->nullable();
@@ -25,7 +24,6 @@ return new class extends Migration
             // Foreign key constraints
             $table->foreign('student_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('assignment_id')->references('id')->on('uploaded_assignments')->onDelete('cascade');
-            $table->foreign('instructor_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

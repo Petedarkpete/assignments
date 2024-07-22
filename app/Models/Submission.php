@@ -23,18 +23,18 @@ class Submission extends Model
     ];
     public $timestamps = true;
 
-    public function student()
+    public function user()
     {
         return $this->HasMany(User::class);
-    }
-
-    public function instructor()
-    {
-        return $this->BelongsTo(User::class);
     }
 
     public function assignment()
     {
         return $this->BelongsTo(UploadedAssignment::class);
+    }
+    
+    public function course()
+    {
+        return $this->BelongsTo(Course::class);
     }
 }
