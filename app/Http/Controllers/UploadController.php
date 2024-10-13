@@ -13,7 +13,7 @@ class UploadController extends Controller
     {
         //$assignments = UploadedAssignment::where('user_id', Auth::id())->get();
         $assignments = UploadedAssignment::all();
-        return view('assignments.upload',compact('assignments'));
+        return view('assignments.upload_ass',compact('assignments'));
     }
     public function upload(Request $request)
     {

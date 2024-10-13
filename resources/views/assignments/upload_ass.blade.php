@@ -49,8 +49,8 @@
                                 <td>{{$assignment->details}}</td>
                                 <td>{{$assignment->created_at}}</td>
                                 <td>{{$assignment->deadline}}</td>
-                                <td><a target="_blank" href="{{ asset('uploads/assignments/' . $assignment->file) }}"><button type="button" class="btn btn-success btn-sm">Download</button></a></td>
-                                <td>
+                                <td><a target="_blank" href="{{ asset('uploads/assignments/' . $assignment->file) }}"><button type="button" class="btn btn-success btn-sm">View</button></a></td>
+                                <td class="d-flex justify-content-center">
                                     <button type="button" class="btn btn-primary btn-sm">Edit</button>
                                     <button type="button" class="btn btn-danger btn-sm">Delete</button>
                                 </td>
