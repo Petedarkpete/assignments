@@ -6,29 +6,34 @@
         <div class="row text-center pt-3">
             <div class="col-lg-12">
                 <div class="pagetitle">
-                    <h1>Years</h1>
+                    <h1>Classes</h1>
                 </div><!-- End Page Title -->
             </div>
         </div>
         <div class="card">
-            <div class="card-title d-flex justify-content-end">
+            <div class="card-title d-flex justify-content-end mx-2">
+                @if(Session::get('role') == 3)
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addClass">Add Class</button>
+                @endif
             </div>
             <div class="card-body">
-                @if(Session::get('role') == 2)
-                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addYear">Add Year</button>
-                @endif
                 <div class="table-responsive m-2">
                     <table class="table table-bordered bg-info table-sm" id="users_table" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Year</th>
-                                <th>Assignments Ratio</th>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Year(s)</th>
+                                <th>Total Assignments</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
                         <tbody>
+                            
                             <tr>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -41,40 +46,36 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="addYear" tabindex="-1" role="dialog" aria-labelledby="add_yearLabel" aria-hidden="true">
+        <div class="modal fade" id="addClass" tabindex="-1" role="dialog" aria-labelledby="addClassLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Year</h5>
+                    <h5 class="modal-title">Add Class</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="add_year" enctype="multipart/form-data">
+                    <form id="add_class" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <div class="row font-weight-bold">
                                 <div class="col-md-6">
-                                    <label for="input1">Grade</label>
-                                    <select class="form-select" aria-label="Default select example" name="year" required>
-                                        <option value="1"> 1</option>
-                                        <option value="2"> 2</option>
-                                        <option value="3"> 3</option>
-                                        <option value="4"> 4</option>
-                                    </select>
-                                <!-- </div>
+                                    <label for="input2">Class</label>
+                                    <input type="text" class="form-control" id="course" placeholder="E.g., 1,2,3" name="class" required>
+                                </div>
                                 <div class="col-md-6">
-                                    <label for="input2">Course</label>
-                                    <input type="text" class="form-control" id="course" placeholder="Course Name" name="course" required>
-                                </div> -->
+                                    <label for="input1">Year</label>
+                                    <input type="text" class="form-control" id="title" placeholder="" name="year" required>
+                                </div>
                             </div>
                             
                         </div>
+                    
                 </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
                 </div>
@@ -100,7 +101,7 @@
                 //     $('#Modaleditdelete').modal('show');
                 // @endif
            
-            $('#add_year').on('submit', function(e) {
+            $('#add_class').on('submit', function(e) {
                 e.preventDefault(); 
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -113,7 +114,7 @@
                 }); 
 
                 $.ajax({
-                    url: "{{route('add_year')}}", // Your route for processing the form
+                    url: "{{route('add_class')}}", // Your route for processing the form
                     type: 'POST',
                     data: formData,
                     processData: false, // Important for handling files
@@ -122,8 +123,8 @@
                     success: function(response) {
                         // Handle successful response
                         alert('User added successfully');
-                        $('#addYear').modal('hide'); // Close the modal
-                        $('#add_year')[0].reset(); // Clear the form
+                        $('#addClass').modal('hide'); // Close the modal
+                        $('#add_class')[0].reset(); // Clear the form
                     },
                     error: function(xhr, status, error) {
                         console.log('Error Status:', status);

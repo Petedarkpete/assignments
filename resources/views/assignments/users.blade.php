@@ -33,6 +33,14 @@
             <div class="col-12">
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_user_modal">Add Single User</button>
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Bulk Users</button>
+                
+                @if(Session::get('role') == 3)
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addParent">Add Parent</button>
+                @elseif(Session::get('role') == 2)
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addTeacher">Add Teacher</button>
+                @endif
+
+
             </div>
         </div>
 
@@ -226,6 +234,58 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="addParent" tabindex="-1" role="dialog" aria-labelledby="addParentLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add A Parent</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="add_parent" enctype="multipart/form-data">
+        <div class="modal-body">
+            @csrf
+            
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="input1">Name</label>
+                        <input type="text" class="form-control" name="name1" placeholder="All Names" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="input2">Phone</label>
+                        <input type="text" class="form-control" name="phone1" placeholder="07XXXXXX" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="input1">Email</label>
+                        <input type="email" class="form-control" name="email1" placeholder="example@gmail.com" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="input2">Year</label>
+                        <input type="text" class="form-control" name="year1" placeholder="Your Year of Study" required>
+                        <input type="hidden" name="role" value="3">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="input1">Name of Child</label>
+                        <input type="text" class="form-control" name="child" required>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -302,6 +362,40 @@
             $('#Modaleditdelete').modal('show');
         @endif
     });
+        
+      $('#add_parent').on('submit', function(e) {
+        e.preventDefault(); 
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        var formData = new FormData(this);
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': csrfToken // Add the CSRF token to the AJAX header
+            }
+        }); 
+
+          $.ajax({
+              url: "{{ route('add_parent') }}", // Your route for processing the form
+              type: 'POST',
+              data: formData,
+              processData: false, // Important for handling files
+              contentType: false, // Important for handling files
+              
+              success: function(response) {
+                  // Handle successful response
+                  alert('User added successfully');
+                  $('#addParent').modal('hide'); // Close the modal
+                  $('#add_parent')[0].reset(); // Clear the form
+              },
+              error: function(xhr, status, error) {
+                console.log('Error Status:', status);
+                console.log('Error:', error);
+                console.log('Response Text:', xhr.responseText); // Display error message
+                alert('An error occurred while adding the user.');
+            }
+          });
+      });
 
     // $(document).ready(function() {
     //     $('#submit-user').click(function(e){

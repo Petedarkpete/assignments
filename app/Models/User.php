@@ -64,4 +64,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function mclass(){
+        return $this->belongsTo(MClass::class);
+    }
 }

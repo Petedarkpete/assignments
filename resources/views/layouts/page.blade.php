@@ -127,13 +127,18 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('year')}}">
-                <i class="bi bi-calendar px-3"></i><span>Year</span></i>
+                <i class="bi bi-calendar px-3"></i><span>Grade</span></i>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route('course')}}">
                 <i class="bi bi-book px-3"></i><span>Course</span></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{route('class')}}">
+                <i class="bi bi-person-lines-fill px-3"></i><span>Class</span></i>
                 </a>
             </li>
 
@@ -165,6 +170,7 @@
     $(document).ready(function() {
         $('#users_table').DataTable();
     });
+
 </script>
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

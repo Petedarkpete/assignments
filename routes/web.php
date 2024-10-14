@@ -21,6 +21,10 @@ Route::middleware('auth')->group(function () {
 Route::get('/users', [App\Http\Controllers\UserController:: class, 'index'])->name('users');
 
 Route::post('/add_user', [App\Http\Controllers\UserController:: class, 'add_user'])->name('add_user');
+Route::post('/add_parent', [App\Http\Controllers\UserController:: class, 'add_parent'])->name('add_parent');
+Route::post('/add_year', [App\Http\Controllers\YearController:: class, 'add_year'])->name('add_year');
+Route::post('/add_class', [App\Http\Controllers\YearController:: class, 'add_class'])->name('add_class');
+
 Route::post('/edit_user/{id}', [App\Http\Controllers\UserController:: class, 'edit_user'])->name('edit_user');
 Route::post('/delete_user/{id}', [App\Http\Controllers\UserController:: class, 'delete_user'])->name('delete_user');
 
@@ -37,6 +41,7 @@ Route::get('/users/create', [UserController::class, 'create'])->name('users.crea
 Route::get('/submit_ass', [App\Http\Controllers\SubmitController::class, 'index'])->name('submit_ass');
 Route::get('/course', [App\Http\Controllers\CourseController::class, 'index'])->name('course');
 Route::get('/year', [App\Http\Controllers\YearController::class, 'index'])->name('year');
+Route::get('/class', [App\Http\Controllers\ClassController::class, 'index'])->name('class');
 
 
 

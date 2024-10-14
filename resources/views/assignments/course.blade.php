@@ -88,7 +88,7 @@
                                 <div class="col-md-6">
                                     <label for="input2">Upload</label>
                                     <input type="file" class="form-control" id="file" placeholder="" name="file">
-                                    <!-- //<input type="hidden" class="form-control" id="input2" placeholder="" name="user_id" value="{{Auth::user()->id}}"> -->
+                                    <!-- //<input type="hidden" class="form-control" id="input2" placeholder="" name="user_id" -->
                                     
                                 </div>
 

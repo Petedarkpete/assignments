@@ -30,11 +30,29 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $name = User::where('email',$request->email)->value('name');
-
-        Session::put([
-            'name'=>$name
-        ]);
+        $user = User::where('email',$request->email)->first(['name', 'email', 'role', 'year', 'course','phone']);
+        
+        if ($user) {
+            // Put the user data into session
+            Session::put([
+                'name'   => $user->name,
+                'email'  => $user->email,
+                'role'   => $user->role,
+                'year'   => $user->year,
+                'course' => $user->course,
+                'phone'  => $user->phone
+            ]);
+        } else {
+            // Handle the case where the user is not found
+            Session::put([
+                'name'   => null,
+                'email'  => null,
+                'role'   => null,
+                'year'   => null,
+                'course' => null,
+                'phone'  => null
+            ]);
+        }
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
