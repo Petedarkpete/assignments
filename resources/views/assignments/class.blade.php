@@ -64,12 +64,24 @@
                                     <label for="input2">Class</label>
                                     <input type="text" class="form-control" id="course" placeholder="E.g., 1,2,3" name="class" required>
                                 </div>
+                                @foreach($grades as $grade)
                                 <div class="col-md-6">
-                                    <label for="input1">Year</label>
-                                    <input type="text" class="form-control" id="title" placeholder="" name="year" required>
+                                    <label for="input1">Gradesss</label>
+                                    <select class="form-select" aria-label="Default select example" name="year" required>
+                                        <option value="{{ $grade->id }}">{{ $grade->year }}</option>
+                                    </select>
                                 </div>
+                                @endforeach
+                                <div class="col-md-6">
+                                    <label for="input1">Teacher</label>
+                                    <select class="form-select" aria-label="Default select example" name="user" required>
+                                        @foreach($teachers as $teacher)
+                                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                             </div>
-                            
                         </div>
                     
                 </div>
