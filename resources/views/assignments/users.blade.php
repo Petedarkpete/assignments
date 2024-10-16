@@ -28,135 +28,296 @@
               </ul>
             </div>
           @endif
-        <div class="card">
-        <div class="card-title d-flex justify-content-end">
-            <div class="col-12">
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_user_modal">Add Single User</button>
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Bulk Users</button>
+        @if(Session::get('role') == 2)
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link active w-100" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" aria-controls="teachers" aria-selected="true">Teachers</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100" id="parents-tab" data-bs-toggle="tab" data-bs-target="#parents" type="button" role="tab" aria-controls="parents" aria-selected="false">Parents</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100" id="students-tab" data-bs-toggle="tab" data-bs-target="#students" type="button" role="tab" aria-controls="students" aria-selected="false">Students</button>
+            </li>
+        </ul>
+        @elseif (Session::get('role') == 3)
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link active w-100" id="parents-tab" data-bs-toggle="tab" data-bs-target="#parents" type="button" role="tab" aria-controls="parents" aria-selected="true">Parents</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100" id="students-tab" data-bs-toggle="tab" data-bs-target="#students" type="button" role="tab" aria-controls="students" aria-selected="false">Students</button>
+            </li>
+        </ul>
+        @endif
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active mb-3" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">
                 
-                @if(Session::get('role') == 3)
-                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addParent">Add Parent</button>
-                @elseif(Session::get('role') == 2)
-                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addTeacher">Add Teacher</button>
-                @endif
+                <div class="card mt-3">
+                    <div class="card-title d-flex justify-content-end">
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_user_modal">Add Single User</button>
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Bulk Users</button>
+                            
+                            @if(Session::get('role') == 3)
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addParent">Add Parent</button>
+                            @elseif(Session::get('role') == 2)
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addTeacher">Add Teacher</button>
+                            @endif
 
 
-            </div>
-        </div>
+                        </div>
+                    </div>
 
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered bg-info table-sm" id="users_table" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Adm No</th>
-                                <th>Email</th>
-                                <th>Year</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($users as $user)
-                            <tr>
-                                <td>{{ $user->id}}</td>
-                                <td>{{ $user->name}}</td>
-                                <td>{{ $user->admission}}</td>
-                                <td>{{ $user->email}}</td>
-                                <td>{{ $user->year}}</td>
-                                <td>
-                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#edit_user_modal{{ $user->id}}">
-                                        Edit
-                                    </button>
-                                    <div class="modal fade" id="edit_user_modal{{ $user->id}}" tabindex="-1" role="dialog" aria-labelledby="edit_user_modalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Edit User</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form action="{{route('edit_user',$user->id)}}" method="post" enctype="multipart/form-data">
-                                                        @csrf
-                                                        <div class="form-group">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <label for="input1">Name</label>
-                                                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" placeholder="">
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label for="input2">Admission No</label>
-                                                                    <input type="text" class="form-control" id="admission" name="admission" value="{{ old('admission',$user->admission) }}" placeholder="CCS/00XXX/XXX">
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <label for="input1">Email</label>
-                                                                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email',$user->email) }}" placeholder="example@gmail.com">
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label for="input2">Year</label>
-                                                                    <input type="text" class="form-control" id="year" name="year" value="{{ old('year',$user->year) }}" placeholder="Your Year of Study">
-                                                                    <input type="hidden" name="role" value="3">
-                                                                    <input type="hidden" name="password" value="{{ old('year',$user-> password)}}">
-                                                                </div>
-                                                            </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered bg-info table-sm" id="users_table" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Adm No</th>
+                                        <th>Email</th>
+                                        <th>Year</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach ($users as $user)
+                                    <tr>
+                                        <td>{{ $user->id}}</td>
+                                        <td>{{ $user->name}}</td>
+                                        <td>{{ $user->admission}}</td>
+                                        <td>{{ $user->email}}</td>
+                                        <td>{{ $user->year}}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#edit_user_modal{{ $user->id}}">
+                                                Edit
+                                            </button>
+                                            <div class="modal fade" id="edit_user_modal{{ $user->id}}" tabindex="-1" role="dialog" aria-labelledby="edit_user_modalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Edit User</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                            </button>
                                                         </div>
-                                                    
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                                </div>
-                                            </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteUserModal{{ $user->id}}">Delete</button>
-                                    <div class="modal fade" id="deleteUserModal{{ $user->id}}" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Delete User</h5>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p>Are you sure you want to delete this user?</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                    <form action="{{route('delete_user',$user->id)}}" method="post">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                        <div class="modal-body">
+                                                            <form action="{{route('edit_user',$user->id)}}" method="post" enctype="multipart/form-data">
+                                                                @csrf
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <label for="input1">Name</label>
+                                                                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" placeholder="">
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label for="input2">Admission No</label>
+                                                                            <input type="text" class="form-control" id="admission" name="admission" value="{{ old('admission',$user->admission) }}" placeholder="CCS/00XXX/XXX">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <label for="input1">Email</label>
+                                                                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email',$user->email) }}" placeholder="example@gmail.com">
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label for="input2">Year</label>
+                                                                            <input type="text" class="form-control" id="year" name="year" value="{{ old('year',$user->year) }}" placeholder="Your Year of Study">
+                                                                            <input type="hidden" name="role" value="3">
+                                                                            <input type="hidden" name="password" value="{{ old('year',$user-> password)}}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                                        </div>
                                                     </form>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#change_password_modal{{ $user->id}}">
-                                        Change Password
-                                    </button>
-                                    <div class="modal fade" id="change_password_modal{{ $user->id}}" tabindex="-1" role="dialog" aria-labelledby="change_password_modalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Change Password</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
+                                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteUserModal{{ $user->id}}">Delete</button>
+                                            <div class="modal fade" id="deleteUserModal{{ $user->id}}" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Delete User</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Are you sure you want to delete this user?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <form action="{{route('delete_user',$user->id)}}" method="post">
+                                                                @csrf
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
+                                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#change_password_modal{{ $user->id}}">
+                                                Change Password
+                                            </button>
+                                            <div class="modal fade" id="change_password_modal{{ $user->id}}" tabindex="-1" role="dialog" aria-labelledby="change_password_modalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Change Password</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="tab-pane fade" id="parents" role="tabpanel" aria-labelledby="parents-tab">
+                <div class="card mt-3">
+                        <div class="card-title d-flex justify-content-end">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_user_modal">Add Single User</button>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Add Bulk Users</button>
+                                
+                                @if(Session::get('role') == 3)
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addParent">Add Parent</button>
+                                @elseif(Session::get('role') == 2)
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addTeacher">Add Teacher</button>
+                                @endif
+
+
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered bg-info table-sm" id="users_table" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Adm No</th>
+                                            <th>Email</th>
+                                            <th>Year</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($users as $user)
+                                        <tr>
+                                            <td>{{ $user->id}}</td>
+                                            <td>{{ $user->name}}</td>
+                                            <td>{{ $user->admission}}</td>
+                                            <td>{{ $user->email}}</td>
+                                            <td>{{ $user->year}}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#edit_user_modal{{ $user->id}}">
+                                                    Edit
+                                                </button>
+                                                <div class="modal fade" id="edit_user_modal{{ $user->id}}" tabindex="-1" role="dialog" aria-labelledby="edit_user_modalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Edit User</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="{{route('edit_user',$user->id)}}" method="post" enctype="multipart/form-data">
+                                                                    @csrf
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <label for="input1">Name</label>
+                                                                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" placeholder="">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <label for="input2">Admission No</label>
+                                                                                <input type="text" class="form-control" id="admission" name="admission" value="{{ old('admission',$user->admission) }}" placeholder="CCS/00XXX/XXX">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <label for="input1">Email</label>
+                                                                                <input type="email" class="form-control" id="email" name="email" value="{{ old('email',$user->email) }}" placeholder="example@gmail.com">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <label for="input2">Year</label>
+                                                                                <input type="text" class="form-control" id="year" name="year" value="{{ old('year',$user->year) }}" placeholder="Your Year of Study">
+                                                                                <input type="hidden" name="role" value="3">
+                                                                                <input type="hidden" name="password" value="{{ old('year',$user-> password)}}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                            </div>
+                                                        </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteUserModal{{ $user->id}}">Delete</button>
+                                                <div class="modal fade" id="deleteUserModal{{ $user->id}}" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Delete User</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>Are you sure you want to delete this user?</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                <form action="{{route('delete_user',$user->id)}}" method="post">
+                                                                    @csrf
+                                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#change_password_modal{{ $user->id}}">
+                                                    Change Password
+                                                </button>
+                                                <div class="modal fade" id="change_password_modal{{ $user->id}}" tabindex="-1" role="dialog" aria-labelledby="change_password_modalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Change Password</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="tab-pane fade" id="students" role="tabpanel" aria-labelledby="students-tab">...</div>
         </div>
     </div>
     
