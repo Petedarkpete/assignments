@@ -23,7 +23,7 @@ Route::get('/users', [App\Http\Controllers\UserController:: class, 'index'])->na
 //for modules
 Route::get('/modules', [App\Http\Controllers\ModuleController:: class, 'index'])->name('modules');
 Route::post('/modules/store', [App\Http\Controllers\ModuleController:: class, 'store'])->name('modules.store');
-
+Route::post('/sub_modules/store', [App\Http\Controllers\ModuleController:: class, 'storeSubModule'])->name('sub_modules.store');
 
 Route::post('/add_user', [App\Http\Controllers\UserController:: class, 'add_user'])->name('add_user');
 Route::post('/add_parent', [App\Http\Controllers\UserController:: class, 'add_parent'])->name('add_parent');

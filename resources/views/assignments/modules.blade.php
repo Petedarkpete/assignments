@@ -205,6 +205,12 @@
                             <input type="text" class="form-control" id="url" name="url" placeholder="Enter submodule URL">
                         </div>
 
+                        <!-- Submodule URL -->
+                        <div class="form-group">
+                            <label for="url">Slug (Optional)</label>
+                            <input type="text" class="form-control" id="slug" name="slug" required placeholder="Enter slug URL">
+                        </div>
+
                         <!-- Order -->
                         <div class="form-group">
                             <label for="order">Order</label>
@@ -278,7 +284,7 @@
 
             $.ajax({
                 type:'POST',
-                url: '{{route("modules.store")}}',
+                url: '{{route("sub_modules.store")}}',
                 data: formData,
                 success: function (response) {
                     $('#add_module').modal('hide');
