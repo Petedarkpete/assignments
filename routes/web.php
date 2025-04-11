@@ -20,6 +20,11 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/users', [App\Http\Controllers\UserController:: class, 'index'])->name('users');
 
+//for modules
+Route::get('/modules', [App\Http\Controllers\ModuleController:: class, 'index'])->name('modules');
+Route::post('/modules/store', [App\Http\Controllers\ModuleController:: class, 'store'])->name('modules.store');
+
+
 Route::post('/add_user', [App\Http\Controllers\UserController:: class, 'add_user'])->name('add_user');
 Route::post('/add_parent', [App\Http\Controllers\UserController:: class, 'add_parent'])->name('add_parent');
 Route::post('/add_year', [App\Http\Controllers\YearController:: class, 'add_year'])->name('add_year');
@@ -43,6 +48,10 @@ Route::get('/course', [App\Http\Controllers\CourseController::class, 'index'])->
 Route::get('/year', [App\Http\Controllers\YearController::class, 'index'])->name('year');
 Route::get('/class', [App\Http\Controllers\ClassController::class, 'index'])->name('class');
 
-
+Route::get('/roles', function () {
+    return view('roles.index', [
+        'roles' => \App\Models\Role::with('permissions')->get()
+    ]);
+});
 
 require __DIR__.'/auth.php';
