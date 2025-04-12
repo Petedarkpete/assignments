@@ -89,12 +89,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($modules as $module)
+                                    @foreach ($submodules as $submodule)
                                         <tr>
-                                            <td>{{ $module->id }}</td>
-                                            <td>{{ $module->name }}</td>
-                                            <td>{{ $module->slug }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($module->created_at)->format('Y-m-d') }}</td>
+                                            <td>{{ $submodule->id }}</td>
+                                            <td>{{ $submodule->name }}</td>
+                                            <td>{{ $submodule->slug }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($submodule->created_at)->format('Y-m-d') }}</td>
                                             <td><button class="btn btn-warning btn-sm">View</button></td>
                                         </tr>
                                     @endforeach

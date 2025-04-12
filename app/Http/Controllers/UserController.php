@@ -31,7 +31,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        
+
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -39,7 +39,7 @@ class UserController extends Controller
         $user->admission = $request->admission;
         $user->role = $request->role;
         $user->password = Hash::make($password);
-       
+
         $user->save();
 
         return redirect()->back()->with('success', 'User added successfully.');
@@ -47,7 +47,7 @@ class UserController extends Controller
     }
 
     public function add_user(Request $request){
-        
+
         $password = rand(000000,999999);
 
         $validator = Validator::make($request->all(), [
@@ -58,7 +58,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        
+
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -66,13 +66,13 @@ class UserController extends Controller
         $user->admission = $request->admission;
         $user->role = $request->role;
         $user->password = Hash::make($password);
-       
+
         $user->save();
 
         return redirect()->back()->with('success', 'User added successfully.');
     }
     public function edit_user(Request $request, $id){
-        
+
         // $validatedData = $request->validate([
         //     'name' => 'required|string|max:255',
         //     'email' => 'required|string|email|max:255|unique:users,email,'
@@ -84,14 +84,14 @@ class UserController extends Controller
         $user->year = $request->year;
         $user->admission = $request->admission;
         $user->role = $request->role;
-        
+
         $user->save();
 
         return redirect()->back()->with('success_edit', 'User edited successfully.');
     }
     public function delete_user($id){
         $user = User::find($id);
-        
+
         $user->delete();
 
         return redirect()->back()->with('success_delete', 'User deleted successfully.');
@@ -104,7 +104,7 @@ class UserController extends Controller
         ]);
         try{
             Excel::import(new UserImport, request()->file('file'));
-            return redirect()->back()->with('success', 'Users imported successfully.'); 
+            return redirect()->back()->with('success', 'Users imported successfully.');
         }catch(\Exception $e){
             return redirect()->back()->with('error', 'The user already exists!!');
         }
@@ -136,5 +136,12 @@ class UserController extends Controller
         $request->session()->put('user', $user);
 
         return redirect()->route('users.index');
+    }
+
+    public function teachersView () {
+        return view ('users.teachers.view');
+    }
+    public function teacherCreate () {
+        return view ('users.teachers.create');
     }
 }

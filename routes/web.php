@@ -25,6 +25,9 @@ Route::get('/modules', [App\Http\Controllers\ModuleController:: class, 'index'])
 Route::post('/modules/store', [App\Http\Controllers\ModuleController:: class, 'store'])->name('modules.store');
 Route::post('/sub_modules/store', [App\Http\Controllers\ModuleController:: class, 'storeSubModule'])->name('sub_modules.store');
 
+//for users
+Route::get('/teachers/view', [App\Http\Controllers\UserController:: class, 'teachersView'])->name('teachers.view');
+Route::get('/teachers/create', [App\Http\Controllers\UserController:: class, 'teacherCreate'])->name('teachers.create');
 Route::post('/add_user', [App\Http\Controllers\UserController:: class, 'add_user'])->name('add_user');
 Route::post('/add_parent', [App\Http\Controllers\UserController:: class, 'add_parent'])->name('add_parent');
 Route::post('/add_year', [App\Http\Controllers\YearController:: class, 'add_year'])->name('add_year');

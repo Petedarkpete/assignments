@@ -19,7 +19,8 @@ class ModuleController extends Controller
     //
     public function index (){
         $modules = FacadesDB::table('modules')->get();
-        return view('assignments.modules', compact('modules'));
+        $submodules = FacadesDB::table('submodules')->get();
+        return view('assignments.modules', compact('modules','submodules'));
     }
 
     public function store (Request $request) {

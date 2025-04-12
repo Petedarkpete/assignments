@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('submodules', function (Blueprint $table) {
-            $table->id(); 
+            $table->id();
             $table->string('name'); // Name of the submodule
             $table->string('slug')->unique(); // Slug for URL routing
             $table->string('icon')->nullable(); // Optional icon (e.g., "bi-file-earmark")
@@ -35,3 +35,4 @@ return new class extends Migration
         Schema::dropIfExists('submodules');
     }
 };
+

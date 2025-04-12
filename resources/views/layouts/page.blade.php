@@ -73,8 +73,6 @@
 
     <i class="bi bi-list toggle-sidebar-btn m-5 p-5"></i>
 
-
-
     <nav class="header-nav ms-auto">
 
       <div class="dropdown">
@@ -110,56 +108,35 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route('upload_ass')}}">
-                <i class="bi bi-cloud-arrow-up px-3"></i><span>Upload Assignment</span></i>
-                </a>
+            @foreach($modules as $module)
+                <li class="nav-item">
+                    @if ($module->submodules->isNotEmpty())
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#module-{{ $module->id }}">
+                            <i class="bi {{ $module->icon ?? 'bi-circle' }} px-3"></i>
+                            <span>{{ $module->name }}</span>
+                            <i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="module-{{ $module->id }}" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                            @foreach($module->submodules as $submodule)
+                                <li>
+                                    <a class="nav-link collapsed" href="{{ $submodule->url ?? '#' }}">
+                                        <i class="bi {{ $submodule->icon ?? 'bi-dot' }}"></i>
+                                        <span>{{ $submodule->name }}</span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <a class="nav-link collapsed" href="{{ $module->url ?? '#' }}">
+                            <i class="bi {{ $module->icon ?? 'bi-circle' }} px-3"></i>
+                            <span>{{ $module->name }}</span>
+                        </a>
+                    @endif
+                </li>
+            @endforeach
 
-            </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="">
-                <i class="bi bi-journal px-3"></i><span>Uploads</span></i>
-                </a>
 
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route('submit_ass')}}">
-                <i class="bi bi-send px-3"></i><span>Submit</span></i>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route('year')}}">
-                <i class="bi bi-calendar px-3"></i><span>Grade</span></i>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route('course')}}">
-                <i class="bi bi-book px-3"></i><span>Course</span></i>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route('class')}}">
-                <i class="bi bi-person-lines-fill px-3"></i><span>Class</span></i>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route ('modules')}}">
-                <i class="bi bi-person-circle px-3"></i><span>Modules</span></i>
-                </a>
-
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route ('users')}}">
-                <i class="bi bi-person-circle px-3"></i><span>Users</span></i>
-                </a>
-
-            </li>
             <!-- End Components Nav -->
         </ul>
 
