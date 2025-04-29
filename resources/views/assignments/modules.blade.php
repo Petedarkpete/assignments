@@ -128,10 +128,10 @@
                         </div>
 
                         <!-- Module Slug -->
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="slug">Slug</label>
                             <input type="text" class="form-control" id="slug" name="slug" required placeholder="Enter module slug">
-                        </div>
+                        </div> --}}
 
                         <!-- Module Icon -->
                         <div class="form-group">
@@ -140,16 +140,16 @@
                         </div>
 
                         <!-- Module URL -->
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="url">URL (Optional)</label>
                             <input type="text" class="form-control" id="url" name="url" placeholder="Enter URL for module">
-                        </div>
+                        </div> --}}
 
                         <!-- Module Order -->
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="order">Order</label>
                             <input type="number" class="form-control" id="order" name="order" required placeholder="Enter order of module" min="1" step="1" value="1">
-                        </div>
+                        </div> --}}
 
                         <!-- Module Status -->
                         <div class="form-group">
@@ -208,7 +208,7 @@
                         <!-- Submodule URL -->
                         <div class="form-group">
                             <label for="url">Slug (Optional)</label>
-                            <input type="text" class="form-control" id="slug" name="slug" required placeholder="Enter slug URL">
+                            <input type="text" class="form-control" id="slug" name="slug"  placeholder="Enter slug URL">
                         </div>
 
                         <!-- Order -->

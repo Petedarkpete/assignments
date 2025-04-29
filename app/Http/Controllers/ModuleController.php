@@ -30,10 +30,6 @@ class ModuleController extends Controller
         //validation
         $validator = Validator::make($request->all(), [
             'name'   => 'required|string|max:255',
-            'slug'   => 'required|string|max:255|unique:modules,slug',
-            'icon'   => 'nullable|string|max:255',
-            'url'    => 'nullable|url|max:255',
-            'order'  => 'required|integer|min:1',
             'status' => 'required|boolean',
         ]);
 
@@ -43,7 +39,13 @@ class ModuleController extends Controller
             ], 422);
         }
 
+        $slug = strtolower(str_replace('','_', $validator['name']));
+
+        $validator['slug'] = $slug;
+        $validator['url'] = $slug . '/view';
+
         $data = $validator->validated();
+
 
         $module = Module::create($data);
 
@@ -70,6 +72,9 @@ class ModuleController extends Controller
         }
 
         $data = $validator->validated();
+
+        FacadesLog::info("the data -- " . json_encode($data));
+        dd($data);
 
         $module = Submodule::create($data);
 

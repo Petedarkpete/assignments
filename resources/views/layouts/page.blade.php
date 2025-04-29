@@ -62,7 +62,7 @@
 <body>
 
   <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top d-flex align-items-center p-5 bg-info">
+  <header id="header" class="header fixed-top d-flex align-items-center bg-info">
 
     <div class="d-flex align-items-center justify-content-between">
       <div class="ml-5">
@@ -98,7 +98,7 @@
   <!-- End Header -->
 
   <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar mt-4 bg-info">
+  <aside id="sidebar" class="sidebar bg-info">
 
         <ul class="sidebar-nav" id="sidebar-nav" style="">
             <li class="nav-item">

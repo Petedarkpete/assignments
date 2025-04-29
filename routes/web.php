@@ -42,7 +42,7 @@ Route::get('dashboard', [App\Http\Controllers\DashboardController:: class, 'inde
 Route::get('upload_ass', [App\Http\Controllers\UploadController:: class, 'index'])->name('upload_ass');
 Route::post('upload_assignment', [App\Http\Controllers\UploadController:: class, 'upload'])->name('upload_assignment');
 
-Route::get('/users', [UserController::class, 'index'])->name('users');
+Route::get('/users/view', [UserController::class, 'index'])->name('users');
 
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
 
