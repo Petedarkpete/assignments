@@ -49,7 +49,7 @@ Route::get('/users/create', [UserController::class, 'create'])->name('users.crea
 Route::get('/submit_ass', [App\Http\Controllers\SubmitController::class, 'index'])->name('submit_ass');
 Route::get('/course', [App\Http\Controllers\CourseController::class, 'index'])->name('course');
 Route::get('/year', [App\Http\Controllers\YearController::class, 'index'])->name('year');
-Route::get('/class', [App\Http\Controllers\ClassController::class, 'index'])->name('class');
+
 
 Route::get('/roles', function () {
     return view('roles.index', [
@@ -58,3 +58,14 @@ Route::get('/roles', function () {
 });
 
 require __DIR__.'/auth.php';
+
+//class
+Route::get('/class/view', [App\Http\Controllers\ClassController::class, 'index'])->name('class.view');
+Route::get('/class/create', [App\Http\Controllers\ClassController::class, 'createClass'])->name('class.create');
+
+//students
+Route::get('/students/view', [App\Http\Controllers\ClassController::class, 'index'])->name('class.view');
+
+//subject
+Route::get('/subject/view', [App\Http\Controllers\SubjectController::class, 'index'])->name('subject.view');
+Route::get('/subject/create', [App\Http\Controllers\SubjectController::class, 'createSubject'])->name('subject.create');

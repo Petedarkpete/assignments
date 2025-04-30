@@ -13,11 +13,12 @@ class ClassController extends Controller
     //
     public function index(){
         $grades = Year::all();
-        $teachers = User::where('role',2)->get();
-        return view('assignments.class', compact('grades','teachers'));
+        //this should change, it is for testing
+        $teachers = User::where('id',1)->get();
+        return view('class.class', compact('grades','teachers'));
     }
     public function add_class(Request $request){
-        
+
         $validator = Validator::make($request->all(), [
             'year' => 'required',
         ]);
@@ -33,5 +34,9 @@ class ClassController extends Controller
         $mclass->save();
 
         return redirect()->back()->with('success', 'User added successfully.');
+    }
+
+    public function createClass (){
+        return view('class.create');
     }
 }

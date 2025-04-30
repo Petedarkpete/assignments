@@ -51,6 +51,10 @@
           <!-- Template Main CSS File -->
           <link href="{{ asset('v3/assets/css/style.css') }}" rel="stylesheet">
 
+          {{-- For forms --}}
+          <link rel="stylesheet" href="{{ asset('css/form-steps.css') }}">
+
+
           <!-- For Charts -->
           <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
@@ -119,7 +123,7 @@
                         <ul id="module-{{ $module->id }}" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                             @foreach($module->submodules as $submodule)
                                 <li>
-                                    <a class="nav-link collapsed" href="{{ $submodule->url ?? '#' }}">
+                                    <a class="nav-link collapsed" href="{{ url($submodule->url ?? '#') }}">
                                         <i class="bi {{ $submodule->icon ?? 'bi-dot' }}"></i>
                                         <span>{{ $submodule->name }}</span>
                                     </a>
@@ -127,7 +131,7 @@
                             @endforeach
                         </ul>
                     @else
-                        <a class="nav-link collapsed" href="{{ $module->url ?? '#' }}">
+                        <a class="nav-link collapsed" href="{{ url($module->url ?? '#') }}">
                             <i class="bi {{ $module->icon ?? 'bi-circle' }} px-3"></i>
                             <span>{{ $module->name }}</span>
                         </a>

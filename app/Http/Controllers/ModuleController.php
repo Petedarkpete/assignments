@@ -28,24 +28,22 @@ class ModuleController extends Controller
         FacadesLog::info("gets here");
 
         //validation
-        $validator = Validator::make($request->all(), [
+        $validated = Validator::make($request->all(), [
             'name'   => 'required|string|max:255',
             'status' => 'required|boolean',
         ]);
 
-        if ($validator->fails()) {
+        if ($validated->fails()) {
             return response()->json([
-                'errors' => $validator->errors()
+                'errors' => $validated->errors()
             ], 422);
         }
+        $data = $validated->validated();
 
-        $slug = strtolower(str_replace('','_', $validator['name']));
+        $slug = strtolower(str_replace('','_', $data['name']));
 
-        $validator['slug'] = $slug;
-        $validator['url'] = $slug . '/view';
-
-        $data = $validator->validated();
-
+        $data['slug'] = $slug;
+        $data['url'] = $slug . '/view';
 
         $module = Module::create($data);
 
@@ -59,22 +57,25 @@ class ModuleController extends Controller
         FacadesLog::info("gets here");
 
         //validation
-        $validator = Validator::make($request->all(), [
+        $validated = Validator::make($request->all(), [
             'name'       => 'required|string|max:255',
-            'slug'       => 'required|string|max:255|unique:submodules,slug',
             'module_id'  => 'required|exists:modules,id', // ensure it links to a valid module
         ]);
 
-        if ($validator->fails()) {
+        if ($validated->fails()) {
             return response()->json([
-                'errors' => $validator->errors()
+                'errors' => $validated->errors()
             ], 422);
         }
 
-        $data = $validator->validated();
+        $data = $validated->validated();
 
-        FacadesLog::info("the data -- " . json_encode($data));
-        dd($data);
+        $slug = strtolower(str_replace('','_', $data['name']));
+
+        if(empty($data['url'])){
+            $data['slug'] = $slug;
+            $data['url'] = $slug . '/view';
+        }
 
         $module = Submodule::create($data);
 

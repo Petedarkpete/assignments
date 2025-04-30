@@ -205,11 +205,11 @@
                             <input type="text" class="form-control" id="url" name="url" placeholder="Enter submodule URL">
                         </div>
 
-                        <!-- Submodule URL -->
+                        {{-- <!-- Submodule URL -->
                         <div class="form-group">
                             <label for="url">Slug (Optional)</label>
                             <input type="text" class="form-control" id="slug" name="slug"  placeholder="Enter slug URL">
-                        </div>
+                        </div> --}}
 
                         <!-- Order -->
                         <div class="form-group">
