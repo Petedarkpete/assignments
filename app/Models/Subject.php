@@ -11,6 +11,10 @@ class Subject extends Model
     use HasFactory;
     protected $fillable = ['name', 'code', 'status'];
 
+    protected $casts = [
+        'status' => 'boolean',
+    ];
+
     public $timestamps = true;
 
 }

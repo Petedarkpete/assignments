@@ -70,3 +70,5 @@ Route::get('/students/view', [App\Http\Controllers\ClassController::class, 'inde
 Route::get('/subject/view', [App\Http\Controllers\SubjectController::class, 'index'])->name('subject.view');
 Route::get('/subject/create', [App\Http\Controllers\SubjectController::class, 'createSubject'])->name('subject.create');
 Route::post('/subject/store', [App\Http\Controllers\SubjectController::class, 'store'])->name('subject.store');
+Route::delete('/subject/{id}', [App\Http\Controllers\SubjectController::class, 'destroy'])->name('subject.destroy');
+

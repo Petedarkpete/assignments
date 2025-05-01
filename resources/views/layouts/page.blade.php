@@ -8,6 +8,8 @@
   <title>{{ config('app.name', 'Reports') }}</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.bunny.net">
   <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
@@ -52,7 +54,10 @@
           <link href="{{ asset('v3/assets/css/style.css') }}" rel="stylesheet">
 
           {{-- For forms --}}
-          <link rel="stylesheet" href="{{ asset('css/form-steps.css') }}">
+          {{-- <link rel="stylesheet" href="{{ asset('css/form-steps.css') }}"> --}}
+
+          {{-- For the sweetalert--}}
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
           <!-- For Charts -->

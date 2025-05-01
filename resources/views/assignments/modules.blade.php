@@ -60,7 +60,7 @@
                                                 <button class="btn btn-primary btn-sm">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </button>
-                                        </td>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
