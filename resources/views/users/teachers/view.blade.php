@@ -54,9 +54,9 @@
                                 </td>
                                 <td>{{ $teacher->join_date}}</td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm">
+                                    <a href="{{ route('teacher.edit', Crypt::encryptString($teacher->user->id)) }}" class="btn btn-primary btn-sm">
                                         <i class="bi bi-pencil-square"></i>
-                                    </button>
+                                    </a>
                                     <button class="btn btn-danger btn-sm delete-button">
                                         <i class="bi bi-trash"></i>
                                         <input type="hidden" id="teacherId" value="{{ $teacher->user->id }}">

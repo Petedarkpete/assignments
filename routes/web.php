@@ -30,6 +30,8 @@ Route::get('/teachers/view', [App\Http\Controllers\UserController:: class, 'teac
 Route::get('/teachers/create', [App\Http\Controllers\UserController:: class, 'teacherCreate'])->name('teachers.create');
 Route::post('/teachers/store', [App\Http\Controllers\UserController:: class, 'teacherStore'])->name('teachers.store');
 Route::delete('/teacher/{id}', [App\Http\Controllers\UserController::class, 'destroyTeacher'])->name('teacher.destroy');
+Route::get('/teacher/{id}/edit', [App\Http\Controllers\UserController::class, 'teacherEdit'])->name('teacher.edit');
+Route::post('/teachers/update', [App\Http\Controllers\UserController:: class, 'teacherUpdate'])->name('teachers.update');
 
 
 Route::post('/add_user', [App\Http\Controllers\UserController:: class, 'add_user'])->name('add_user');

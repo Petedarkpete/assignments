@@ -8,6 +8,7 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -213,6 +214,24 @@ class UserController extends Controller
             return redirect()->route('teachers.view')
                 ->with('success', 'An error occurred when creating teacher');
         }
+    }
+
+    public function teacherEdit($id)
+    {
+
+        $id = Crypt::decryptString($id);
+        $user = DB::table('users')->join('teachers', 'teachers.user_id', 'users.id')
+            ->select('users.*', 'teachers.*')
+            ->where('users.id', $id)
+            ->first();
+        $subjects = Subject::all();
+
+        return view('users.teachers.edit', compact('user', 'subjects'));
+
+    }
+
+    public function techerEdit(){
+        
     }
 
     public function destroyTeacher($id)

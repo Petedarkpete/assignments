@@ -2,9 +2,8 @@
 
 @section('content')
 <main id="main" class="main">
-
     <div class="container">
-        <h3>Add Teacher</h3>
+        <h3>Edit Teacher {{ $user->other_names }} </h3>
 
         <div class="card">
             <div class="card-body">
@@ -23,53 +22,61 @@
                         <h5 class="mb-3">Personal Information</h5>
 
                         <div class="row mb-2">
-                            <div class=" col-md-4 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">First Name</label>
-                                <input type="text" name="first_name" class="form-control" required>
+                                <input type="text" name="first_name" class="form-control" required
+                                       value="{{ old('first_name', $user->first_name ?? '') }}">
                             </div>
-                            <div class=" col-md-4 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Last Name</label>
-                                <input type="text" name="last_name" class="form-control" required>
+                                <input type="text" name="last_name" class="form-control" required
+                                       value="{{ old('last_name', $user->last_name ?? '') }}">
                             </div>
 
-                            <div class=" col-md-4 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Other Names</label>
-                                <input type="text" name="other_names" class="form-control" required>
+                                <input type="text" name="other_names" class="form-control" required
+                                       value="{{ old('other_names', $user->other_names ?? '') }}">
                             </div>
 
-                            <div class=" col-md-4 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" name="email" class="form-control" required >
+                                <input type="email" name="email" class="form-control" required
+                                       value="{{ old('email', $user->email ?? '') }}">
                             </div>
-                            <div class=" col-md-4 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Phone Number</label>
-                                <input type="number" name="phone" class="form-control" required>
+                                <input type="number" name="phone" class="form-control" required
+                                       value="{{ old('phone', $user->phone ?? '') }}">
                             </div>
-                            <div class=" col-md-4 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Gender</label>
-                                <select name="gender" class="form-control" required>
+                                <select name="gender" class="form-control">
                                     <option value="">Select Gender</option>
-                                    <option>Male</option>
-                                    <option>Female</option>
+                                    <option value="Male" {{ old('gender', $user->gender ?? '') == 'Male' ? 'selected' : '' }}>Male</option>
+                                    <option value="Female" {{ old('gender', $user->gender ?? '') == 'Female' ? 'selected' : '' }}>Female</option>
                                 </select>
                             </div>
-                            <div class=" col-md-4 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Date of Birth</label>
-                                <input type="date" name="date_of_birth" class="form-control" required>
+                                <input type="date" name="date_of_birth" class="form-control"
+                                       value="{{ old('date_of_birth', $user->date_of_birth ?? '') }}">
                             </div>
-                            <div class=" col-md-4 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Address</label>
-                                <input type="text" name="address" class="form-control" required>
+                                <input type="text" name="address" class="form-control" required
+                                       value="{{ old('address', $user->address ?? '') }}">
                             </div>
-                            <div class=" col-md-4 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Profile Photo</label>
                                 <input type="file" name="profile_photo" class="form-control">
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-end">
-                        <button type="button" id="next-btn" class="btn btn-primary">Next</button>
+                            <button type="button" id="next-btn" class="btn btn-primary">Next</button>
                         </div>
+
                     </div>
 
                     <!-- Step 2: Professional Information -->
@@ -79,11 +86,13 @@
                         <div class="row mb-3">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Qualification</label>
-                                <input type="text" name="qualification" class="form-control">
+                                <input type="text" name="qualification" class="form-control" required
+                                    value="{{ old('qualification', $user->qualification ?? '') }}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Specialization</label>
-                                <input type="text" name="specialization" class="form-control">
+                                <input type="text" name="specialization" class="form-control" required
+                                value="{{ old('qualification', $user->specialization ?? '') }}">
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -98,11 +107,13 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label d-block">Will Teacher be Class Teacher?</label>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="is_class_teacher" value="1" required>
+                                    <input class="form-check-input" type="radio" name="is_class_teacher" value="1" required
+                                        {{ old('is_class_teacher', $user->teacher->is_class_teacher ?? '') == '1' ? 'checked' : '' }} required>
                                     <label class="form-check-label">Yes</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="is_class_teacher" value="0" required>
+                                    <input class="form-check-input" type="radio" name="is_class_teacher" value="0" required
+                                    {{ old('is_class_teacher', $user->teacher->is_class_teacher ?? '') == '0' ? 'checked' : '' }} required>
                                     <label class="form-check-label">No</label>
                                 </div>
                             </div>
@@ -117,7 +128,6 @@
                 </form>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -166,6 +176,5 @@
             progressBar.innerText = '1 of 2: Personal Info';
         });
     </script>
-
 
 @endsection
