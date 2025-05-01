@@ -141,7 +141,8 @@ class UserController extends Controller
     }
 
     public function teachersView () {
-        return view ('users.teachers.view');
+        $teachers = Teacher::all();
+        return view ('users.teachers.view', compact('teachers'));
     }
     public function teacherCreate () {
         $subjects = Subject::all();
@@ -211,6 +212,19 @@ class UserController extends Controller
 
             return redirect()->route('teachers.view')
                 ->with('success', 'An error occurred when creating teacher');
+        }
+    }
+
+    public function destroyTeacher($id)
+    {
+        Log::info("gets here");
+        try {
+            $teacher = User::findOrFail($id);
+            $teacher->delete();
+
+            return response()->json(['success' => true, 'message' => 'Teacher deleted successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
 }
