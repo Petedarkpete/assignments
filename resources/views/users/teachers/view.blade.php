@@ -11,7 +11,13 @@
             </div>
         </div>
         <div class="card mt-3">
-            <div class="card-title d-flex justify-content-end p-2">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    <p style="font-size: 0.85rem;">{{ session('success') }}</p>
+                </div>
+            @endif
+            <div class="card-title d-flex justify-content-between align-items-center p-2">
+
                 <a href="{{ route('teachers.create') }}" class="btn btn-primary btn-sm">Add Teacher</a>
             </div>
             <div class="card-body">

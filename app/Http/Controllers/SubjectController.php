@@ -26,6 +26,7 @@ class SubjectController extends Controller
                 'status' => 'required|boolean',
             ]);
 
+
             Log::info("Validation passed for subject: ", $validated);
 
             Subject::create($validated);
