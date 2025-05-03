@@ -2,44 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subject;
+use App\Models\Stream;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
-class SubjectController extends Controller
+class SettingController extends Controller
 {
     //
     public function index (){
-        $subjects = Subject::all();
-        return view ('subject.view', compact('subjects'));
-    }
-
-    public function createSubject (){
-        return view('subject.create');
+        $streams = Stream::all();
+        $teachers = Teacher::with('user')->get();
+        return view ('settings.streams', compact('streams','teachers'));
     }
     public function store (Request $request) {
 
         try {
             $validated = $request->validate([
-                'name'   => 'required|string|max:255',
-                'code'   => 'required|string|max:50|unique:subjects,code',
+                'stream'   => 'required|string|max:255',
+                //will add teachers rep later
+                'teacher_id' => 'required|exists:teachers,id',
                 'status' => 'required|boolean',
             ]);
 
 
-            Log::info("Validation passed for subject: ", $validated);
+            Log::info("Validation passed for stream: ", $validated);
 
-            Subject::create($validated);
+            Stream::create($validated);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Subject created successfully.'
+                'message' => 'Stream created successfully.'
             ]);
         } catch (\Exception $e) {
+            Log::info("the error-- ".$e->getMessage() );
+
             return response()->json([
                 'success' => false,
-                'error' => $e->getMessage()
+                'message' => 'Error adding subject'
             ], 500);
         }
     }
@@ -48,19 +49,19 @@ class SubjectController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required|string|max:255',
-                'code' => 'required|string|max:50',
+                'stream' => 'required|string|max:255',
+                'teacher_id' => 'required|string|max:50',
                 'status' => 'required|boolean',
             ]);
 
             Log::info("the id-- ". $id);
 
-            $subject = Subject::findOrFail($id);
+            $subject = Stream::findOrFail($id);
             $subject->update($request->only('name', 'code', 'status'));
 
             return response()->json([
                 'success' => true,
-                'message' => 'Subject updated successfully.'
+                'message' => 'Stream updated successfully.'
             ]);
 
         } catch (ValidationException $e) {
@@ -74,21 +75,9 @@ class SubjectController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while updating the subject.',
+                'message' => 'An error occurred while updating the stream.',
                 'error' => $e->getMessage()
             ], 500); // Use 500 for Internal Server Error
-        }
-    }
-
-    public function destroy($id)
-    {
-        try {
-            $subject = Subject::findOrFail($id);
-            $subject->delete();
-
-            return response()->json(['success' => true, 'message' => 'Subject deleted successfully.']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
 

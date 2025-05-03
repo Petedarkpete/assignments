@@ -72,9 +72,22 @@ Route::get('/class/create', [App\Http\Controllers\ClassController::class, 'creat
 //students
 Route::get('/students/view', [App\Http\Controllers\ClassController::class, 'index'])->name('class.view');
 
-//subject
-Route::get('/subject/view', [App\Http\Controllers\SubjectController::class, 'index'])->name('subject.view');
-Route::get('/subject/create', [App\Http\Controllers\SubjectController::class, 'createSubject'])->name('subject.create');
-Route::post('/subject/store', [App\Http\Controllers\SubjectController::class, 'store'])->name('subject.store');
-Route::delete('/subject/{id}', [App\Http\Controllers\SubjectController::class, 'destroy'])->name('subject.destroy');
+// //subject
+Route::prefix('subject')->name('subject.')->group(function () {
+    Route::get('/view', [App\Http\Controllers\SubjectController::class, 'index'])->name('view');
+    Route::get('/create', [App\Http\Controllers\SubjectController::class, 'createSubject'])->name('create');
+    Route::post('/store', [App\Http\Controllers\SubjectController::class, 'store'])->name('store');
+    Route::delete('/{id}', [App\Http\Controllers\SubjectController::class, 'destroy'])->name('destroy');
+    Route::post('/update/{id}', [App\Http\Controllers\SubjectController::class, 'update'])->name('update');
+});
+
+//stream
+Route::prefix('streams')->name('streams.')->group(function () {
+    Route::get('/view', [App\Http\Controllers\SettingController::class, 'index'])->name('view');
+    Route::get('/create', [App\Http\Controllers\SettingController::class, 'createStream'])->name('create');
+    Route::post('/store', [App\Http\Controllers\SettingController::class, 'store'])->name('store');
+    Route::delete('/{id}', [App\Http\Controllers\SettingController::class, 'destroy'])->name('destroy');
+    Route::post('/update/{id}', [App\Http\Controllers\SettingController::class, 'update'])->name('update');
+});
+
 

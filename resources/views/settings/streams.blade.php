@@ -6,7 +6,7 @@
         <div class="row text-center">
             <div class="col-lg-12">
                 <div class="pagetitle">
-                    <h1>Subjects</h1>
+                    <h1>Streams</h1>
                 </div><!-- End Page Title -->
             </div>
         </div>
@@ -29,12 +29,12 @@
             </div>
         @endif
 
-        <div class="card p-2" id="subjectCard">
+        <div class="card p-2" id="streamCard">
             <div class="card-title d-flex justify-content-end p-1 m-0">
                 @if(Session::get('id') == 1)
                 <div class="card-title d-flex justify-content-end p-0 m-0">
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSubjectModal">
-                        Add Subject
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addstreamModal">
+                        Add Stream
                     </button>
                 </div>
                 @endif
@@ -44,56 +44,64 @@
                     <table class="table table-bordered bg-info table-sm" id="users_table" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Code</th>
+                                <th>Id</th>
+                                <th>Stream</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($subjects as $subject)
+                            @foreach ($streams as $stream)
                                 <tr>
-                                    <td>{{ $subject->name }}</td>
-                                    <td>{{ $subject->code }}</td>
-                                    <td>{{ $subject->status ? 'Active' : 'Inactive' }}</td>
+                                    <td>{{ $stream->id }}</td>
+                                    <td>{{ $stream->stream }}</td>
+                                    <td>{{ $stream->status ? 'Active' : 'Inactive' }}</td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editSubjectModal{{ $subject->id }}">
+                                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editstreamModal{{ $stream->id }}">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
                                         <button class="btn btn-danger btn-sm delete-button">
                                             <i class="bi bi-trash"></i>
-                                            <input type="hidden" id="subjectId" value="{{ $subject->id }}">
+                                            <input type="hidden" id="streamId" value="{{ $stream->id }}">
                                         </button>
                                     </td>
                                 </tr>
-                                <div class="modal fade" id="editSubjectModal{{ $subject->id }}" tabindex="-1" aria-labelledby="editSubjectModalLabel{{ $subject->id }}" aria-hidden="true">
+                                <div class="modal fade" id="editstreamModal{{ $stream->id }}" tabindex="-1" aria-labelledby="editstreamModalLabel{{ $stream->id }}" aria-hidden="true">
                                     <div class="modal-dialog">
                                       <div class="modal-content">
-                                        <form action="" method="POST" class="editSubjectForm">
+                                        <form action="" method="POST" class="editstreamForm">
                                           @csrf
 
                                           <div class="modal-header">
-                                            <h5 class="modal-title" id="editSubjectModalLabel{{ $subject->id }}">Edit Subject</h5>
+                                            <h5 class="modal-title" id="editstreamModalLabel{{ $stream->id }}">Edit stream</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                           </div>
 
                                           <div class="modal-body">
                                             <div class="mb-3">
-                                              <label class="form-label">Subject Name</label>
-                                              <input type="text" class="form-control" name="name" value="{{ $subject->name }}" required>
+                                              <label class="form-label">Stream Name</label>
+                                              <input type="text" class="form-control" name="name" value="{{ $stream->stream }}" required>
                                             </div>
                                             <div class="mb-3">
-                                              <label class="form-label">Subject Code</label>
-                                              <input type="text" class="form-control" name="code" value="{{ $subject->code }}" required>
+                                                <label class="form-label">Stream Rep</label>
+                                                <select class="form-select" name="teacher_id" required>
+                                                    <option value="">-- Select Stream Rep --</option>
+                                                    @foreach($teachers as $teacher)
+                                                        <option value="{{ $teacher->id }}" {{ $stream->teacher_id == $teacher->id ? 'selected' : '' }}>
+                                                            {{ $teacher->user->first_name }} {{ $teacher->user->last_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
+
                                             <div class="mb-3">
                                               <label class="form-label">Status</label>
                                               <select name="status" class="form-control">
-                                                <option value="1" {{ $subject->status ? 'selected' : '' }}>Active</option>
-                                                <option value="0" {{ !$subject->status ? 'selected' : '' }}>Inactive</option>
+                                                <option value="1" {{ $stream->status ? 'selected' : '' }}>Active</option>
+                                                <option value="0" {{ !$stream->status ? 'selected' : '' }}>Inactive</option>
                                               </select>
                                             </div>
-                                            <input type="hidden" id="subjectIdUpdate" value="{{ $subject->id }}">
+                                            <input type="hidden" id="streamIdUpdate" value="{{ $stream->id }}">
                                           </div>
 
                                           <div class="modal-footer">
@@ -109,27 +117,35 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="addSubjectModal" tabindex="-1" aria-labelledby="addSubjectModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addstreamModal" tabindex="-1" aria-labelledby="addstreamModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <form id="addSubjectForm">
+                <form id="addstreamForm">
                     @csrf
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addSubjectModalLabel">Add Subject</h5>
+                            <h5 class="modal-title" id="addstreamModalLabel">Add Stream</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="subjectName" class="form-label">Subject Name</label>
-                                <input type="text" class="form-control" id="subjectName" name="name" required>
+                                <label for="streamName" class="form-label">Stream Name</label>
+                                <input type="text" class="form-control" id="streamName" name="stream" required>
                             </div>
                             <div class="mb-3">
-                                <label for="subjectCode" class="form-label">Subject Code</label>
-                                <input type="text" class="form-control" id="subjectCode" name="code">
+                                <label for="teacher_id" class="form-label">Stream Rep</label>
+                                <select class="form-select" id="teacher_id" name="teacher_id">
+                                    <option value="">-- Select Stream Rep --</option>
+                                    @foreach($teachers as $teacher)
+                                        <option value="{{ $teacher->id }}">
+                                            {{ $teacher->user->first_name }} {{ $teacher->user->last_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+
                             <div class="mb-3">
-                                <label for="subjectStatus" class="form-label">Status</label>
-                                <select class="form-select" id="subjectStatus" name="status">
+                                <label for="streamStatus" class="form-label">Status</label>
+                                <select class="form-select" id="streamStatus" name="status">
                                     <option value="1">Active</option>
                                     <option value="0">Inactive</option>
                                 </select>
@@ -146,31 +162,31 @@
 
 <script>
     $(document).ready(function() {
-        $('#addSubjectForm').on('submit', function(e) {
+        $('#addstreamForm').on('submit', function(e) {
 
             e.preventDefault();
 
             $.ajax({
-                url: '/subject/store',
+                url: '/streams/store',
                 type: "POST",
                 data : $(this).serialize(),
                 success : function(response) {
                     if(response.success) {
                         Swal.fire({
                             icon : 'success',
-                            title: 'Subject Added Successfully',
+                            title: 'Success',
                             text: response.message,
                             time: 2000,
                             showConfirmButton: true,
                             showProgressBar: true
                         }).then(() => {
-                            window.location.href = '/subject/view';
+                            window.location.href = '/streams/view';
                         });
 
-                        $('#addSubjectForm')[0].reset();
-                        $('#addSubjectModal').modal('hide');
+                        $('#addstreamForm')[0].reset();
+                        $('#addstreamModal').modal('hide');
 
-                        // $('#subjectCard').html(response.html);
+                        // $('#streamCard').html(response.html);
                     }
                 },
                 error : function(response) {
@@ -193,7 +209,7 @@
     });
 
     $(document).ready(function() {
-        $('.editSubjectForm').on('submit', function(e) {
+        $('.editstreamForm').on('submit', function(e) {
         e.preventDefault();
 
         $.ajaxSetup({
@@ -203,11 +219,11 @@
             });
 
         let form = $(this);
-        var subjectIdUpdate = $('#subjectIdUpdate').val();
-        console.log('Subject ID:', subjectIdUpdate);
+        var streamIdUpdate = $('#streamIdUpdate').val();
+        console.log('stream ID:', streamIdUpdate);
 
         $.ajax({
-            url: '/subject/update/' + subjectIdUpdate,
+            url: '/streams/update/' + streamIdUpdate,
             type: "POST",
             data: form.serialize(),
             success: function(response) {
@@ -220,7 +236,7 @@
                         showConfirmButton: false,
                         timerProgressBar: true,
                     }).then(() => {
-                        window.location.href = '/subject/view';
+                        window.location.href = '/stream/view';
                     });
 
                     form.closest('.modal').modal('hide');
@@ -248,12 +264,12 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var subjectId = $(this).find('#subjectId').val();
-            console.log(subjectId);
+            var streamId = $(this).find('#streamId').val();
+            console.log(streamId);
 
 
             Swal.fire({
-                title: 'Are you sure to delete this subject?',
+                title: 'Are you sure to delete this stream?',
                 text: 'You won\'t be able to revert this!',
                 icon: 'warning',
                 showCancelButton: true,
@@ -263,7 +279,7 @@
                 if (result.isConfirmed) {
 
                     $.ajax({
-                        url: '/subject/' + subjectId,
+                        url: '/stream/' + streamId,
                         type: 'DELETE',
                         success: function(response) {
                             if(response.success) {
@@ -274,11 +290,11 @@
                                     timer: 2000,
                                     showConfirmButton: false
                                 }).then(() => {
-                                    window.location.href = '/subject/view';
+                                    window.location.href = '/stream/view';
                                 });
 
 
-                                $('button[data-id="' + subjectId + '"]').closest('tr').remove();
+                                $('button[data-id="' + streamId + '"]').closest('tr').remove();
                             } else {
                                 Swal.fire({
                                     icon: 'error',
