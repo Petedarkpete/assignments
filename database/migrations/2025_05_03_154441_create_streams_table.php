@@ -15,6 +15,7 @@ return new class extends Migration
             Schema::create('streams', function (Blueprint $table) {
                 $table->id();
                 $table->string('stream');
+                $table->boolean('status');
                 $table->unsignedBigInteger('teacher_id');
                 $table->timestamps();
 

@@ -12,7 +12,7 @@ class SettingController extends Controller
 {
     //
     public function index (){
-        $streams = Stream::all();
+        $streams = Stream::with('teacher.user')->get();
         $teachers = Teacher::with('user')->get();
         return view ('settings.streams', compact('streams','teachers'));
     }
@@ -48,16 +48,15 @@ class SettingController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $request->validate([
-                'stream' => 'required|string|max:255',
-                'teacher_id' => 'required|string|max:50',
+            $validated = $request->validate([
+                'stream'   => 'required|string|max:255',
+                //will add teachers rep later
+                'teacher_id' => 'required|exists:teachers,id',
                 'status' => 'required|boolean',
             ]);
 
-            Log::info("the id-- ". $id);
-
             $subject = Stream::findOrFail($id);
-            $subject->update($request->only('name', 'code', 'status'));
+            $subject->update($request->only('stream', 'teacher_id', 'status'));
 
             return response()->json([
                 'success' => true,
@@ -65,11 +64,13 @@ class SettingController extends Controller
             ]);
 
         } catch (ValidationException $e) {
+
             return response()->json([
                 'success' => false,
-                'message' => 'Validation error.',
+                'message' => 'Validation error. Kindly Recheck the fields',
                 'errors' => $e->validator->errors()->toArray()
             ], 422);
+
 
         } catch (\Exception $e) {
 
@@ -78,6 +79,17 @@ class SettingController extends Controller
                 'message' => 'An error occurred while updating the stream.',
                 'error' => $e->getMessage()
             ], 500); // Use 500 for Internal Server Error
+        }
+    }
+    public function destroy($id)
+    {
+        try {
+            $subject = Stream::findOrFail($id);
+            $subject->delete();
+
+            return response()->json(['success' => true, 'message' => 'Subject deleted successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
 

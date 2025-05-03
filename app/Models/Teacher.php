@@ -29,4 +29,9 @@ class Teacher extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function streams()
+    {
+        return $this->hasOne(Stream::class);
+    }
 }

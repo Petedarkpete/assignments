@@ -9,5 +9,11 @@ class Stream extends Model
     //
     protected $table = 'streams';
 
-    protected $fillable = ['stream', 'teacher_id'];
+    protected $fillable = ['stream', 'teacher_id', 'status'];
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
+    }
+
 }

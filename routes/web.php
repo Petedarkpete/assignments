@@ -66,8 +66,6 @@ Route::get('/roles', function () {
 require __DIR__.'/auth.php';
 
 //class
-Route::get('/class/view', [App\Http\Controllers\ClassController::class, 'index'])->name('class.view');
-Route::get('/class/create', [App\Http\Controllers\ClassController::class, 'createClass'])->name('class.create');
 
 //students
 Route::get('/students/view', [App\Http\Controllers\ClassController::class, 'index'])->name('class.view');
@@ -88,6 +86,14 @@ Route::prefix('streams')->name('streams.')->group(function () {
     Route::post('/store', [App\Http\Controllers\SettingController::class, 'store'])->name('store');
     Route::delete('/{id}', [App\Http\Controllers\SettingController::class, 'destroy'])->name('destroy');
     Route::post('/update/{id}', [App\Http\Controllers\SettingController::class, 'update'])->name('update');
+});
+
+Route::prefix('class')->name('class.')->group(function () {
+    Route::get('/view', [App\Http\Controllers\ClassController::class, 'index'])->name('view');
+    Route::get('/create', [App\Http\Controllers\ClassController::class, 'createClass'])->name('create');
+    Route::post('/store', [App\Http\Controllers\ClassController::class, 'store'])->name('store');
+    Route::delete('/{id}', [App\Http\Controllers\ClassController::class, 'destroy'])->name('destroy');
+    Route::post('/update/{id}', [App\Http\Controllers\ClassController::class, 'update'])->name('update');
 });
 
 
