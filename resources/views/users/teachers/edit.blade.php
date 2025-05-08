@@ -104,19 +104,7 @@
                                         @endforeach
                                     </select>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label d-block">Will Teacher be Class Teacher?</label>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="is_class_teacher" value="1" required
-                                        {{ old('is_class_teacher', $user->teacher->is_class_teacher ?? '') == '1' ? 'checked' : '' }} required>
-                                    <label class="form-check-label">Yes</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="is_class_teacher" value="0" required
-                                    {{ old('is_class_teacher', $user->teacher->is_class_teacher ?? '') == '0' ? 'checked' : '' }} required>
-                                    <label class="form-check-label">No</label>
-                                </div>
-                            </div>
+                            
                         </div>
 
                         <div class="d-flex justify-content-between">

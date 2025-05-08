@@ -44,8 +44,9 @@
                     <table class="table table-bordered bg-info table-sm" id="users_table" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Code</th>
+                                <th>Stream</th>
+                                <th>Label</th>
+                                <th>Teacher</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -53,8 +54,9 @@
                         <tbody>
                             @foreach ($classes as $class)
                                 <tr>
-                                    <td>{{ $class->name }}</td>
-                                    <td>{{ $class->code }}</td>
+                                    <td>{{ $class->streams->stream }}</td>
+                                    <td>{{ $class->label }}</td>
+                                    <td>{{ $class->teachers->users->name }}</td>
                                     <td>{{ $class->status ? 'Active' : 'Inactive' }}</td>
                                     <td>
                                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editclassModal{{ $class->id }}">
@@ -79,13 +81,17 @@
 
                                           <div class="modal-body">
                                             <div class="mb-3">
-                                              <label class="form-label">class Name</label>
+                                              <label class="form-label">Stream</label>
                                               <input type="text" class="form-control" name="name" value="{{ $class->name }}" required>
                                             </div>
                                             <div class="mb-3">
-                                              <label class="form-label">class Code</label>
+                                              <label class="form-label">Class Label</label>
                                               <input type="text" class="form-control" name="code" value="{{ $class->code }}" required>
                                             </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Class Teacher</label>
+                                                <input type="text" class="form-control" name="code" value="{{ $class->code }}" required>
+                                              </div>
                                             <div class="mb-3">
                                               <label class="form-label">Status</label>
                                               <select name="status" class="form-control">
@@ -119,13 +125,28 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+
                             <div class="mb-3">
-                                <label for="className" class="form-label">class Name</label>
-                                <input type="text" class="form-control" id="className" name="name" required>
+                                <label for="stream_id" class="form-label">Select Stream</label>
+                                <select name="stream_id" id="stream_id" class="form-control" required>
+                                    <option value="">-- Select Stream --</option>
+                                    @foreach($streams as $stream)
+                                        <option value="{{ $stream->id }}">{{ $stream->stream }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="mb-3">
-                                <label for="classCode" class="form-label">class Code</label>
-                                <input type="text" class="form-control" id="classCode" name="code">
+                                <label for="className" class="form-label">Class Label</label>
+                                <input type="text" class="form-control" id="className" name="label" required placeholder="eg, West, Blue, Green">
+                            </div>
+                            <div class="mb-3">
+                                <label for="teacher_id" class="form-label">Class Teacher</label>
+                                <select name="teacher_id" id="teacher_id" class="form-control" required>
+                                    <option value="">-- Select Class Teacher --</option>
+                                    @foreach($teachers as $teacher)
+                                        <option value="{{ $teacher->id }}">{{ $teacher->user->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="classStatus" class="form-label">Status</label>
@@ -158,7 +179,7 @@
                     if(response.success) {
                         Swal.fire({
                             icon : 'success',
-                            title: 'class Added Successfully',
+                            title: 'Class Added Successfully',
                             text: response.message,
                             time: 2000,
                             showConfirmButton: true,

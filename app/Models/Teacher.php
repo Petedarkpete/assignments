@@ -14,16 +14,12 @@ class Teacher extends Model
         'user_id',
         'qualification',
         'specialization',
-        'is_class_teacher',
+        'class_assigned',
         'join_date'
 
     ];
 
     public $timestamps = true;
-
-    protected $casts = [
-        'is_class_teacher' => 'boolean',
-    ];
 
     public function user()
     {
@@ -33,5 +29,10 @@ class Teacher extends Model
     public function streams()
     {
         return $this->hasOne(Stream::class);
+    }
+
+    public function clas()
+    {
+        return $this->hasMany(Clas::class);
     }
 }

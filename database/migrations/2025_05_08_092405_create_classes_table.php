@@ -14,9 +14,15 @@ return new class extends Migration
         if(!Schema::hasTable('class')){
             Schema::create('class', function (Blueprint $table) {
                 $table->id();
-                $table->string('class_name')->unique();
-                $table->unsignedBigInteger('teacher')->nullable();
-                $table->foreign('teacher')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+                $table->string('label');
+                $table->unsignedBigInteger('stream_id');
+                $table->foreign('stream_id')->references('id')->on('streams')->onDelete('cascade')->onUpdate('cascade');
+
+                $table->unsignedBigInteger('teacher_id')->nullable();
+                $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade')->onUpdate('cascade');
+
+                $table->boolean('status');
+
                 $table->unsignedInteger('no_of_students')->nullable()->default(null);
                 $table->unsignedInteger('total_assignments_created')->nullable()->default(null);
                 $table->unsignedInteger('total_assignments_submited')->nullable()->default(null);

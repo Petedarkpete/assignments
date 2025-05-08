@@ -16,4 +16,9 @@ class Stream extends Model
         return $this->belongsTo(Teacher::class);
     }
 
+    public function clas()
+    {
+        return $this->hasMany(Clas::class);
+    }
+
 }

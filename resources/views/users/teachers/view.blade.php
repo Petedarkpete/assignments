@@ -3,14 +3,14 @@
 @section('content')
 <main id="main" class="main">
     <div class="container">
-        <div class="row text-center pt-3">
+        <div class="row text-center">
             <div class="col-lg-12">
                 <div class="pagetitle">
                     <h1>Teachers</h1>
                 </div>
             </div>
         </div>
-        <div class="card mt-3">
+        <div class="card mt-1">
             @if(session('success'))
                 <div class="alert alert-success">
                     <p style="font-size: 0.85rem;">{{ session('success') }}</p>
@@ -46,11 +46,7 @@
                                 <td>{{ $teacher->user->gender }}</td>
                                 <td>{{ $teacher->specialization }}</td>
                                 <td>
-                                    @if($teacher->is_class_teacher)
-                                        <span class="badge bg-success">Yes</span>
-                                    @else
-                                        <span class="badge bg-secondary">No</span>
-                                    @endif
+
                                 </td>
                                 <td>{{ $teacher->join_date}}</td>
                                 <td>

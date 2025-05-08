@@ -16,9 +16,10 @@ return new class extends Migration
 
                 $table->id();
                 $table->unsignedBigInteger('user_id');
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                
-                $table->boolean('is_class_teacher');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+
+                $table->unsignedBigInteger("class_assigned")->nullable();
+                $table->foreign("class_assigned")->references('id')->on('classes')->onDelete('cascade')->onUpdate('cascade');
 
                 $table->string('qualification')->nullable();
                 $table->string('specialization')->nullable();

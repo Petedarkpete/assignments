@@ -168,14 +168,11 @@ class UserController extends Controller
                 'qualification'    => 'required|string|max:255',
                 'specialization'   => 'required|string|max:255',
                 'subject_id'       => 'required|exists:subjects,id',
-                'is_class_teacher' => 'required|numeric'
             ]);
 
             $full_name = $validated['first_name'] . ' ' . $validated['last_name'];
             $password = Str::random(12);
             $hashedPassword = bcrypt($password);
-
-            $is_class_teacher = 1;
 
             $user = User::create([
                 'name'           => $full_name,
@@ -193,7 +190,6 @@ class UserController extends Controller
                 'user_id'          => $user->id,
                 'qualification'    => $validated['qualification'],
                 'specialization'   => $validated['specialization'],
-                'is_class_teacher' => $validated['is_class_teacher'],
                 'join_date'        => now()->toDateString(),
             ]);
 
@@ -231,7 +227,7 @@ class UserController extends Controller
     }
 
     public function techerEdit(){
-        
+
     }
 
     public function destroyTeacher($id)
