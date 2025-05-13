@@ -96,4 +96,12 @@ Route::prefix('class')->name('class.')->group(function () {
     Route::post('/update/{id}', [App\Http\Controllers\ClassController::class, 'update'])->name('update');
 });
 
+Route::prefix('students')->name('class.')->group(function () {
+    Route::get('/view', [App\Http\Controllers\UserController::class, 'studentsView'])->name('view');
+    Route::get('/create', [App\Http\Controllers\UserController::class, 'createStudent'])->name('students.create');
+    Route::post('/store', [App\Http\Controllers\UserController::class, 'store'])->name('store');
+    Route::delete('/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('destroy');
+    Route::post('/update/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('update');
+});
+
 

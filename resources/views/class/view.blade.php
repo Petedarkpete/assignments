@@ -44,8 +44,9 @@
                     <table class="table table-bordered bg-info table-sm" id="users_table" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Stream</th>
+                                <th>Class</th>
                                 <th>Label</th>
+                                <th>Stream</th>
                                 <th>Teacher</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -54,9 +55,19 @@
                         <tbody>
                             @foreach ($classes as $class)
                                 <tr>
-                                    <td>{{ $class->streams->stream }}</td>
+                                    <td>  <?php
+                                        $gradeString = $class->stream;
+                                        $position = strpos($gradeString, ' ');
+                                        if ($position !== false) {
+                                          echo substr($gradeString, $position + 1);
+                                        } else {
+                                          echo "N/A";
+                                        }
+                                      ?>
+                                    </td>
                                     <td>{{ $class->label }}</td>
-                                    <td>{{ $class->teachers->users->name }}</td>
+                                    <td>{{ $class->stream }}</td>
+                                    <td>{{ $class->name }}</td>
                                     <td>{{ $class->status ? 'Active' : 'Inactive' }}</td>
                                     <td>
                                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editclassModal{{ $class->id }}">
@@ -82,16 +93,30 @@
                                           <div class="modal-body">
                                             <div class="mb-3">
                                               <label class="form-label">Stream</label>
-                                              <input type="text" class="form-control" name="name" value="{{ $class->name }}" required>
-                                            </div>
+                                              <select class="form-select" name="stream" id="stream" required>
+                                                <option value="">-- Select Stream --</option>
+                                                @foreach($classes as $cls)
+                                                    <option value="{{ $cls->str_id }}" {{ $cls->stream == $class->stream ? 'selected' : '' }}>
+                                                        {{ $cls->stream }}
+                                                    </option>
+                                                @endforeach
+                                              </select>
+                                                                                      </div>
                                             <div class="mb-3">
                                               <label class="form-label">Class Label</label>
-                                              <input type="text" class="form-control" name="code" value="{{ $class->code }}" required>
+                                              <input type="text" class="form-control" name="label" value="{{ $class->label }}" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Class Teacher</label>
-                                                <input type="text" class="form-control" name="code" value="{{ $class->code }}" required>
-                                              </div>
+                                                <select class="form-select" name="teacher_id" id="teacher_id" required>
+                                                    <option value="">-- Change Teacher --</option>
+                                                    @foreach($classes as $cls)
+                                                        <option value="{{ $cls->tr_id }}" {{ $cls->name == $class->name ? 'selected' : '' }}>
+                                                            {{ $cls->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                             <div class="mb-3">
                                               <label class="form-label">Status</label>
                                               <select name="status" class="form-control">
@@ -99,7 +124,7 @@
                                                 <option value="0" {{ !$class->status ? 'selected' : '' }}>Inactive</option>
                                               </select>
                                             </div>
-                                            <input type="hidden" id="classIdUpdate" value="{{ $class->id }}">
+                                            <input type="hidden" name="class_id" value="{{ $class->id }}" id="classId">
                                           </div>
 
                                           <div class="modal-footer">
@@ -224,7 +249,7 @@
             });
 
         let form = $(this);
-        var classIdUpdate = $('#classIdUpdate').val();
+        var classIdUpdate = $('#classId').val();
         console.log('class ID:', classIdUpdate);
 
         $.ajax({

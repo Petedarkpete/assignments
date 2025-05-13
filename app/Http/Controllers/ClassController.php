@@ -11,6 +11,7 @@ use App\Models\Stream;
 use App\Models\Teacher;
 use App\Models\Year;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
@@ -18,7 +19,13 @@ class ClassController extends Controller
 {
     //
     public function index(){
-        $classes = Clas::with('streams','teachers', 'users')->get();
+        $classes = DB::table('class')
+            ->join('teachers', 'teachers.id','class.teacher_id')
+            ->join('streams', 'streams.id','class.stream_id')
+            ->join('users', 'users.id', 'teachers.user_id')
+            ->select('class.id','streams.stream', 'streams.id as str_id', 'class.label', 'users.name','class.status', 'teachers.id as tr_id')
+            ->get();
+
         //this should change, it is for testing
         $teachers = Teacher::with('user')->get();
         $streams = Stream::all();
@@ -47,7 +54,6 @@ class ClassController extends Controller
 
         try {
             //code...
-            Log::info("gets here --1");
             $validated = $request->validate([
                 'stream_id' => 'required|exists:streams,id',
                 'label' => 'required|string|max:255',
@@ -79,6 +85,53 @@ class ClassController extends Controller
                 'message' => 'An error occurred while processing the request.',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function update (Request $request, $id)
+    {
+        try {
+            Log::info("the id  ". json_encode($request->all()));
+            $validated = $request->validate([
+                'stream' => 'required|exists:streams,id',
+                'label' => 'required|string|max:255',
+                'teacher_id' => 'nullable|exists:users,id',
+                'status' => 'required|boolean',
+            ]);
+
+            $class = Clas::findOrFail($id);
+            $class->update($request->only('stream','label','teacher_id','status'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Class updated successfully.'
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error.',
+                'errors' => $e->validator->errors()->toArray()
+            ], 422);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the class.',
+                'error' => $e->getMessage()
+            ], 500); // Use 500 for Internal Server Error
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $subject = Clas::findOrFail($id);
+            $subject->delete();
+
+            return response()->json(['success' => true, 'message' => 'Subject deleted successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
 

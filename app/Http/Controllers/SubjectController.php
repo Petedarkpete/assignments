@@ -53,8 +53,6 @@ class SubjectController extends Controller
                 'status' => 'required|boolean',
             ]);
 
-            Log::info("the id-- ". $id);
-
             $subject = Subject::findOrFail($id);
             $subject->update($request->only('name', 'code', 'status'));
 
