@@ -262,4 +262,63 @@ class UserController extends Controller
         return view('users.students.view', compact('students','teachers','classes'));
 
     }
+
+    public function storeStudent (Request $request) {
+        Log::info("Request received for teacher registration.");
+
+        DB::beginTransaction();
+
+        try {
+            $validated = $request->validate([
+                'first_name'       => 'required|string|max:255',
+                'last_name'        => 'required|string|max:255',
+                'gender'           => 'required|in:Male,Female',
+                'class_id'         => 'required|exists:class,id',
+                'teacher_id'       => 'required|exists:teachers,id',
+                'index_number'     => 'required|numeric',
+                'admission_number' => 'required|string|max:50|unique:students,admission_number',
+            ]);
+
+
+            $full_name = $validated['first_name'] . ' ' . $validated['last_name'];
+            $password = Str::random(12);
+            $hashedPassword = bcrypt($password);
+
+            $user = User::create([
+                'name'           => $full_name,
+                'first_name'     => $validated['first_name'],
+                'last_name'      => $validated['last_name'],
+                'email'          => $validated['email'],
+                'phone'          => $validated['phone'],
+                'gender'         => $validated['gender'],
+                'date_of_birth'  => $validated['date_of_birth'],
+                'address'        => $validated['address'],
+                'password'      => $hashedPassword,
+            ]);
+
+            $teacher = Teacher::create([
+                'user_id'          => $user->id,
+                'qualification'    => $validated['qualification'],
+                'specialization'   => $validated['specialization'],
+                'join_date'        => now()->toDateString(),
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('teachers.view')
+                ->with('success', 'Teacher created successfully.');
+
+        } catch (ValidationException $e) {
+            DB::rollBack();
+
+            return redirect()->route('teachers.view')
+                ->with('success', 'Validation error: Kindly Fill all the fields');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Teacher creation failed: ' . $e->getMessage());
+
+            return redirect()->route('teachers.view')
+                ->with('success', 'An error occurred when creating teacher');
+        }
+    }
 }

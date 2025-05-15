@@ -73,7 +73,7 @@
 
     <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <form id="addStudentForm">
+            <form id="addstudentForm">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -85,7 +85,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="StudentName" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="StudentName" name="name" required>
+                                    <input type="text" class="form-control" id="firstName" name="name" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="StudentCode" class="form-label">Class</label>
@@ -101,29 +101,33 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="StudentStatus" class="form-label">Status</label>
-                                    <select class="form-select" id="StudentStatus" name="status">
-                                        <option value="1">Active</option>
-                                        <option value="0">Inactive</option>
+                                    <label for="indexNo" class="form-label">Index Number</label>
+                                    <input type="number" class="form-control" id="indexNo" name="name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-control" id="gender" name="gender" required>
+                                        <option value="" disabled selected>Select gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
                                     </select>
                                 </div>
+
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="StudentName" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="StudentName" name="name" required>
+                                    <input type="text" class="form-control" id="lastName" name="name" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="StudentCode" class="form-label">Teacher</label>
-                                    <input type="text" class="form-control" id="StudentCode" name="code" readonly>
+                                    <label for="TeacherName" class="form-label">Teacher</label>
+                                    <input type="text" class="form-control" id="TeacherName" readonly>
+                                    <input type="hidden" id="StudentCode" name="code">
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="StudentStatus" class="form-label">Status</label>
-                                    <select class="form-select" id="StudentStatus" name="status">
-                                        <option value="1">Active</option>
-                                        <option value="0">Inactive</option>
-                                    </select>
+                                    <label for="admNo" class="form-label">Admission Number</label>
+                                    <input type="text" class="form-control" id="admNo" name="name" required>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +142,35 @@
     </div>
 
     <script>
+
         $(document).ready(function() {
+
+            $('#class').on('change', function (){
+            const classId = $(this).val();
+            const streamLabel = $(this).find('option:selected').text();
+
+            console.log('Selected Class ID:', classId);
+            console.log('Displayed Stream Label:', streamLabel);
+
+            $.ajax({
+                url : '/findTeacher/' + classId,
+                type : 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    if (response.name) {
+                        $('#StudentCode').val(response.name);
+                    } else {
+                        $('#StudentCode').val('No teacher found');
+                    }
+                },
+                error: function () {
+                    $('#StudentCode').val('Error fetching teacher');
+                }
+
+                })
+            })
 
         $('.delete-button').on('click', function(e) {
             e.preventDefault();
@@ -197,33 +229,82 @@
             });
         });
 
-        $('#class').on('change', function (){
+        $('#class').on('change', function () {
             const classId = $(this).val();
-            const streamLabel = $(this).find('option:selected').text();
 
-            console.log('Selected Class ID:', classId);
-            console.log('Displayed Stream Label:', streamLabel);
+            if (!classId) return;
 
             $.ajax({
-                url : '/findTeacher/' + classId,
-                type : 'POST',
+                url: '/findTeacher/' + classId,
+                type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
                 success: function (response) {
-                    if (response.name) {
-                        $('#StudentCode').val(response.name);
+                    if (response.name && response.id) {
+                        $('#TeacherName').val(response.name);
+                        $('#StudentCode').val(response.id);
                     } else {
-                        $('#StudentCode').val('No teacher found');
+                        $('#TeacherName').val('No teacher found');
+                        $('#StudentCode').val('');
                     }
                 },
                 error: function () {
-                    $('#StudentCode').val('Error fetching teacher');
+                    $('#TeacherName').val('Error fetching teacher');
+                    $('#StudentCode').val('');
                 }
-
-                })
-            })
+            });
         });
+
+        });
+
+        $(document).ready(function() {
+        $('#addstudentForm').on('submit', function(e) {
+
+            e.preventDefault();
+
+            $.ajax({
+                url: '/students/store',
+                type: "POST",
+                data : $(this).serialize(),
+                success : function(response) {
+                    if(response.success) {
+                        Swal.fire({
+                            icon : 'success',
+                            title: 'student Added Successfully',
+                            text: response.message,
+                            time: 2000,
+                            showConfirmButton: true,
+                            showProgressBar: true
+                        }).then(() => {
+                            window.location.href = '/student/view';
+                        });
+
+                        $('#addstudentForm')[0].reset();
+                        $('#addstudentModal').modal('hide');
+
+                        // $('#studentCard').html(response.html);
+                    }
+                },
+                error : function(response) {
+                    if(response.responseJSON && response.responseJSON.error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.responseJSON.error
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Unexpected Error',
+                            text: 'Something went wrong.'
+                        });
+                    }
+                }
+            });
+        });
+
+    });
 
     </script>
 @endsection
