@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\StudentsImport;
 use Illuminate\Http\Request;
 use App\Imports\UserImport;
 use App\Models\Clas;
@@ -232,10 +233,6 @@ class UserController extends Controller
 
     }
 
-    public function techerEdit(){
-
-    }
-
     public function destroyTeacher($id)
     {
         Log::info("gets here");
@@ -281,8 +278,6 @@ class UserController extends Controller
 
     public function storeStudent (Request $request)
     {
-        Log::info("Request received for teacher registration." . json_encode($request->all()));
-
         DB::beginTransaction();
 
         try {
@@ -341,6 +336,112 @@ class UserController extends Controller
                 'error' => 'An unexpected error occurred while creating student.',
             ], 500);
         }
+
+    }
+
+    public function updateStudent(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'first_name'       => 'required|string|max:255',
+            'last_name'        => 'required|string|max:255',
+            'gender'           => 'required|in:Male,Female',
+            'class_id'         => 'required|exists:class,id',
+            'teacher_id'       => 'required|exists:teachers,id',
+            'index_number'     => 'required|digits_between:1,6',
+            'admission_number' => 'required|string|max:255|',
+        ]);
+
+        DB::beginTransaction();
+        try {
+
+            $student = Student::findOrFail($id);
+
+            $student->update([
+                'class_id'          => $validated['class_id'],
+                'teacher_id'        => $validated['teacher_id'],
+                'index_number'      => $validated['index_number'],
+                'admission_number'  => $validated['admission_number'],
+            ]);
+
+            $user = $student->user;
+            $user->update([
+                'first_name' => $validated['first_name'],
+                'last_name'  => $validated['last_name'],
+                'name'       => $validated['first_name'] . ' ' . $validated['last_name'],
+                'gender'     => $validated['gender'],
+            ]);
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Student updated successfully.'
+            ]);
+
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'error' => 'Validation error: Please fill all required fields correctly.',
+            ], 422);
+        }
+
+        catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Student editing failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'An unexpected error occurred while editing student.',
+            ], 500);
+        }
+
+    }
+    public function destroyStudent($id)
+    {
+        try {
+            Log::info("Gets here.");
+            $subject = Student::findOrFail($id);
+            $subject->delete();
+
+            return response()->json(['success' => true, 'message' => 'Student deleted successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+    public function importStudents(Request $request)
+    {
+        Log::info("the template". $request->all());
+        dd();
+        try{
+            $request->validate([
+                'teacher_id' => 'required|exists:teachers,id',
+                'class_id'   => 'required|exists:class,id',
+                'excel_file' => 'required|mimes:xlsx,xls',
+            ]);
+
+            Excel::import(new StudentsImport($request->teacher_id, $request->class_id), $request->file('excel_file'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Student updated successfully.'
+            ]);
+
+        }catch (ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'error' => 'Validation error: Please fill all required fields correctly.',
+            ], 422);
+        }
+
+        catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Student editing failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'An unexpected error occurred while editing student.',
+            ], 500);
+        }
+
 
     }
 }

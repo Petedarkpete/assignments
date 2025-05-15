@@ -11,15 +11,24 @@
             </div>
         </div>
         <div class="card mt-1">
-            @if(session('success'))
+            {{-- @if(session('success'))
                 <div class="alert alert-success">
                     <p style="font-size: 0.85rem;">{{ session('success') }}</p>
+                </div>
+            @endif --}}
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
             <div class="card-title d-flex align-items-center p-2">
                 @if(Session::get('id') == 1)
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addStudentModal">
                         Add Student
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addBulkStudentModal">
+                        Add Bulk Students
                     </button>
                 @endif
             </div>
@@ -128,7 +137,7 @@
                                                 <div class="mb-3">
                                                     <label for="editTeacherName" class="form-label">Teacher</label>
                                                     <input type="text" class="form-control" value="{{ $student->tname }}" id="editTeacherName" readonly>
-                                                    <input type="hidden" id="editTeacherId" name="teacher_id">
+                                                    <input type="hidden" id="editTeacherId" name="teacher_id" value="{{ $student->teacher_id }}">
                                                 </div>
 
                                                 <!-- Admission Number -->
@@ -234,120 +243,223 @@
         </div>
     </div>
 
+    <!-- Bulk Upload Students Modal -->
+    <div class="modal fade" id="addBulkStudentModal" tabindex="-1" aria-labelledby="addBulkStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <form id="addBulkStudents" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBulkStudentModalLabel">Add Students in Bulk</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="class" class="form-label">Class</label>
+                    <select name="class_id" id="bulkClass" class="form-control" required>
+                        <option value="">-- Select Class --</option>
+                        @foreach($classes as $class)
+                            @php
+                                preg_match('/\d+/', $class->stream, $matches);
+                                $grade_number = $matches[0] ?? '';
+                            @endphp
+                            <option value="{{ $class->id }}">{{ $grade_number }} {{ $class->label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="TeacherName" class="form-label">Teacher</label>
+                    <input type="text" class="form-control" id="bulkTeacherName" readonly>
+                    <input type="hidden" id="bulkStudentCode" name="teacher_id">
+                </div>
+
+
+                {{-- <div class="mb-3">
+                    <label for="excelFile" class="form-label">Upload Excel File</label>
+                    <input type="file" name="excel_file" id="excelFile" class="form-control" accept=".xls,.xlsx" required>
+                    <div class="form-text">Only .xlsx or .xls files allowed. <a href="{{ asset('template/students_template.xlsx') }}">Download Template</a></div>
+                </div> --}}
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Import Students</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+            </div>
+        </form>
+        </div>
+    </div>
+
+
     <script>
 
         $(document).ready(function() {
 
-            $('#class').on('change', function (){
-            const classId = $(this).val();
-            const streamLabel = $(this).find('option:selected').text();
-
-            console.log('Selected Class ID:', classId);
-            console.log('Displayed Stream Label:', streamLabel);
-
-            $.ajax({
-                url : '/findTeacher/' + classId,
-                type : 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (response) {
-                    if (response.name) {
-                        $('#StudentCode').val(response.name);
-                    } else {
-                        $('#StudentCode').val('No teacher found');
-                    }
-                },
-                error: function () {
-                    $('#StudentCode').val('Error fetching teacher');
-                }
-
-                })
-            })
-
-        $('.delete-button').on('click', function(e) {
-            e.preventDefault();
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
+            $('#class').on('change', function () {
+                fetchTeacherByClass('#class', '#StudentCode');
             });
-            var studentId = $(this).find('#studentId').val();
-            console.log(studentId);
+
+            $('#bulkClass').on('change', function () {
+                fetchTeacherByClass('#bulkClass', '#bulkStudentCode');
+            });
+
+            function fetchTeacherByClass(classSelectorId, teacherNameFieldId, teacherIdFieldId) {
+                const classId = $(classSelectorId).val();
+
+                $.ajax({
+                    url: '/findTeacher/' + classId,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function (response) {
+                        console.log('Teacher Response:', response);
+                        if (response.name && response.id) {
+                            $(teacherNameFieldId).val(response.name); // Show name
+                            $(teacherIdFieldId).val(response.id);     // Store ID
+                        } else {
+                            $(teacherNameFieldId).val('No teacher found');
+                            $(teacherIdFieldId).val('');
+                        }
+                    },
+                    error: function () {
+                        $(teacherNameFieldId).val('Error fetching teacher');
+                        $(teacherIdFieldId).val('');
+                    }
+                });
+            }
+
+            $('#bulkClass').on('change', function () {
+                fetchTeacherByClass('#bulkClass', '#bulkTeacherName', '#bulkStudentCode');
+            });
+
+            $('.delete-button').on('click', function(e) {
+                e.preventDefault();
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                var studentId = $(this).find('#studentId').val();
+                console.log(studentId);
 
 
-            Swal.fire({
-                title: 'Are you sure to delete this student?',
-                text: 'You won\'t be able to revert this!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel',
-            }).then((result) => {
-                if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Are you sure to delete this student?',
+                    text: 'You won\'t be able to revert this!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel',
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                    $.ajax({
-                        url: '/student/' + studentId,
-                        type: 'DELETE',
-                        success: function(response) {
-                            if(response.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Deleted!',
-                                    text: response.message,
-                                    timer: 2000,
-                                    showConfirmButton: false
-                                });
+                        $.ajax({
+                            url: '/student/' + studentId,
+                            type: 'DELETE',
+                            success: function(response) {
+                                if(response.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Deleted!',
+                                        text: response.message,
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    });
 
 
-                                $('button[data-id="' + studentId + '"]').closest('tr').remove();
-                            } else {
+                                    $('button[data-id="' + studentId + '"]').closest('tr').remove();
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops!',
+                                        text: response.message
+                                    });
+                                }
+                            },
+                            error: function() {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops!',
-                                    text: response.message
+                                    text: 'Something went wrong.'
                                 });
                             }
-                        },
-                        error: function() {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops!',
-                                text: 'Something went wrong.'
-                            });
-                        }
-                    });
-                }
+                        });
+                    }
+                });
             });
-        });
 
-        $('#class').on('change', function () {
-            const classId = $(this).val();
+            $('#class').on('change', function () {
+                const classId = $(this).val();
 
-            if (!classId) return;
+                if (!classId) return;
 
-            $.ajax({
-                url: '/findTeacher/' + classId,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (response) {
-                    if (response.name && response.id) {
-                        $('#TeacherName').val(response.name);
-                        $('#StudentCode').val(response.id);
-                    } else {
-                        $('#TeacherName').val('No teacher found');
+                $.ajax({
+                    url: '/findTeacher/' + classId,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function (response) {
+                        if (response.name && response.id) {
+                            $('#TeacherName').val(response.name);
+                            $('#StudentCode').val(response.id);
+                        } else {
+                            $('#TeacherName').val('No teacher found');
+                            $('#StudentCode').val('');
+                        }
+                    },
+                    error: function () {
+                        $('#TeacherName').val('Error fetching teacher');
                         $('#StudentCode').val('');
                     }
-                },
-                error: function () {
-                    $('#TeacherName').val('Error fetching teacher');
-                    $('#StudentCode').val('');
-                }
+                });
             });
-        });
+
+            $('#bulkStudentForm').on('submit', function(e) {
+                e.preventDefault();
+
+
+
+                $.ajax({
+                    url: '/students/import',
+                    type: 'POST',
+                    data : $(this).serialize(),
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Students Imported Successfully',
+                                text: response.message || 'All students have been added.',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.href = '/students/view';
+                            });
+
+                            $('#bulkStudentForm')[0].reset();
+                            $('#addBulkStudentModal').modal('hide');
+                        }
+                    },
+                    error: function(response) {
+                        let message = 'Something went wrong.';
+                        if (response.responseJSON && response.responseJSON.error) {
+                            message = response.responseJSON.error;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Import Error',
+                            text: message
+                        });
+                    }
+                });
+            });
+
 
         });
 
@@ -409,10 +521,10 @@
 
                 let form = $(this);
                 var studentIdUpdate = $('#studentId').val();
-                console.log('student ID:', cstudentIdUpdate);
+                console.log('student ID:', studentIdUpdate);
 
                 $.ajax({
-                    url: '/student/update/' + studentIdUpdate,
+                    url: '/students/update/' + studentIdUpdate,
                     type: "POST",
                     data: form.serialize(),
                     success: function(response) {
@@ -442,7 +554,66 @@
             });
         });
 
-    });
+        $('.delete-button').on('click', function(e) {
+            e.preventDefault();
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            var studentId = $(this).find('#studentId').val();
+            console.log(studentId);
+
+
+            Swal.fire({
+                title: 'Are you sure to delete this class?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: '/students/' + studentId,
+                        type: 'DELETE',
+                        success: function(response) {
+                            if(response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: response.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.href = '/class/view';
+                                });
+
+
+                                $('button[data-id="' + studentId + '"]').closest('tr').remove();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops!',
+                                    text: response.message
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops!',
+                                text: 'Something went wrong.'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        });
 
     </script>
 @endsection

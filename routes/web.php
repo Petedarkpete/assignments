@@ -100,8 +100,9 @@ Route::prefix('students')->name('class.')->group(function () {
     Route::get('/view', [App\Http\Controllers\UserController::class, 'studentsView'])->name('students.view');
     Route::get('/create', [App\Http\Controllers\UserController::class, 'createStudent'])->name('students.create');
     Route::post('/store', [App\Http\Controllers\UserController::class, 'storeStudent'])->name('store');
-    Route::delete('/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('destroy');
-    Route::post('/update/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('update');
+    Route::delete('/{id}', [App\Http\Controllers\UserController::class, 'destroyStudent'])->name('destroy');
+    Route::post('/update/{id}', [App\Http\Controllers\UserController::class, 'updateStudent'])->name('update');
+    Route::post('/import', [App\Http\Controllers\UserController::class, 'importStudents'])->name('students.import');
 });
 
 Route::post('/findTeacher/{id}', [App\Http\Controllers\StudentController::class, 'findTeacher']);

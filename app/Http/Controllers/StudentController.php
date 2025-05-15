@@ -70,7 +70,6 @@ class StudentController extends Controller
 
     public function findTeacher($id)
     {
-        Log::info("the teacher ".$id);
         $teachers = DB::table('class')
             ->join('teachers', 'teachers.id', '=', 'class.teacher_id')
             ->join('users', 'users.id', '=', 'teachers.user_id')

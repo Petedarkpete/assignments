@@ -91,7 +91,7 @@ class ClassController extends Controller
     public function update (Request $request, $id)
     {
         try {
-            Log::info("the id  ". json_encode($request->all()));
+            
             $validated = $request->validate([
                 'stream' => 'required|exists:streams,id',
                 'label' => 'required|string|max:255',

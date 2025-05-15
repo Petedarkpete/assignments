@@ -35,7 +35,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Other Names</label>
-                                <input type="text" name="other_names" class="form-control" required
+                                <input type="text" name="other_names" class="form-control" 
                                        value="{{ old('other_names', $user->other_names ?? '') }}">
                             </div>
 
@@ -104,7 +104,7 @@
                                         @endforeach
                                     </select>
                             </div>
-                            
+
                         </div>
 
                         <div class="d-flex justify-content-between">
