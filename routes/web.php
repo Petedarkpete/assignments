@@ -97,7 +97,7 @@ Route::prefix('class')->name('class.')->group(function () {
 });
 
 Route::prefix('students')->name('class.')->group(function () {
-    Route::get('/view', [App\Http\Controllers\UserController::class, 'studentsView'])->name('view');
+
     Route::get('/create', [App\Http\Controllers\UserController::class, 'createStudent'])->name('students.create');
     Route::post('/store', [App\Http\Controllers\UserController::class, 'storeStudent'])->name('store');
     Route::delete('/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('destroy');
@@ -105,4 +105,5 @@ Route::prefix('students')->name('class.')->group(function () {
 });
 
 Route::post('/findTeacher/{id}', [App\Http\Controllers\StudentController::class, 'findTeacher']);
+Route::get('students/view', [App\Http\Controllers\UserController::class, 'studentsView'])->name('students.view');
 

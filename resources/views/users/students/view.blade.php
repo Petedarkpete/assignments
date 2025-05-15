@@ -30,38 +30,127 @@
                             <tr>
                                 <th>#</th>
                                 <th>Full Name</th>
-                                <th>Email</th>
-                                <th>Phone Number</th>
+                                <th>Class</th>
+                                <th>Teacher</th>
+                                <th>Index No</th>
+                                <th>Admission No</th>
                                 <th>Gender</th>
-                                <th>Specialization</th>
-                                <th>Class student</th>
-                                <th>Joined On</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($students as $student)
-                            {{-- <tr>
+                            <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $student->user->name }}</td>
-                                <td>{{ $student->user->email }}</td>
-                                <td>{{ $student->user->phone }}</td>
-                                <td>{{ $student->user->gender }}</td>
-                                <td>{{ $student->specialization }}</td>
+                                <td>{{ $student->name }}</td>
+                                <td> <?php
+                                    $gradeString = $student->stream;
+                                    $position = strpos($gradeString, ' ');
+                                    if ($position !== false) {
+                                      echo substr($gradeString, $position + 1);
+                                    } else {
+                                      echo "N/A";
+                                    }
+                                  ?> {{ $student->label }}</td>
+                                <td>{{ $student->tname }}</td>
+                                <td>{{ $student->index_number }}</td>
+                                <td>{{ $student->admission_number }}</td>
+                                <td>{{ $student->gender }}</td>
                                 <td>
-
-                                </td>
-                                <td>{{ $student->join_date}}</td>
-                                <td>
-                                    <a href="{{ route('student.edit', Crypt::encryptString($student->user->id)) }}" class="btn btn-primary btn-sm">
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editstudentModal{{ $student->id }}">
                                         <i class="bi bi-pencil-square"></i>
-                                    </a>
+                                    </button>
                                     <button class="btn btn-danger btn-sm delete-button">
                                         <i class="bi bi-trash"></i>
-                                        <input type="hidden" id="studentId" value="{{ $student->user->id }}">
+                                        <input type="hidden" id="studentId" value="{{ $student->id }}">
                                     </button>
                                 </td>
-                            </tr> --}}
+                            </tr>
+
+                            <div class="modal fade" id="editstudentModal{{ $student->id }}" tabindex="-1" aria-labelledby="editstudentModalLabel{{ $student->id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                  <div class="modal-content">
+                                    <form action="" method="POST" class="editstudentForm">
+                                      @csrf
+
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="editstudentModalLabel{{ $student->id }}">Edit student</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                      </div>
+
+                                      <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <!-- First Name -->
+                                                <div class="mb-3">
+                                                    <label for="editFirstName" class="form-label">First Name</label>
+                                                    <input type="text" class="form-control" id="editFirstName" value="{{ $student->first_name }}" name="first_name" required>
+                                                </div>
+
+                                                <!-- Class -->
+                                                <div class="mb-3">
+                                                    <label for="editClass" class="form-label">Class</label>
+                                                    <select name="class_id" id="editClass" class="form-control" required>
+                                                        <option value="">-- Select Class --</option>
+                                                        @foreach($classes as $cls)
+                                                            <option value="{{ $cls->id }}" {{ $cls->stream == $cls->stream ? 'selected' : '' }}>
+                                                                {{ $cls->stream }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <!-- Index Number -->
+                                                <div class="mb-3">
+                                                    <label for="editIndexNumber" class="form-label">Index Number</label>
+                                                    <input type="number" class="form-control" id="editIndexNumber" value="{{ $student->index_number }}" name="index_number" required>
+                                                </div>
+
+                                                <!-- Gender -->
+                                                <div class="mb-3">
+                                                    <label for="editGender" class="form-label">Gender</label>
+                                                    <select name="gender" id="editGender" class="form-control" required>
+                                                        <option value="">Select Gender</option>
+                                                        <option value="Male" {{ old('gender', $user->gender ?? '') == 'Male' ? 'selected' : '' }}>Male</option>
+                                                        <option value="Female" {{ old('gender', $user->gender ?? '') == 'female' ? 'selected' : '' }}>Female</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <!-- Last Name -->
+                                                <div class="mb-3">
+                                                    <label for="editLastName" class="form-label">Last Name</label>
+                                                    <input type="text" class="form-control" id="editLastName" value="{{ $student->last_name }}" name="last_name" required>
+                                                </div>
+
+                                                <!-- Teacher Name (readonly) -->
+                                                <div class="mb-3">
+                                                    <label for="editTeacherName" class="form-label">Teacher</label>
+                                                    <input type="text" class="form-control" value="{{ $student->tname }}" id="editTeacherName" readonly>
+                                                    <input type="hidden" id="editTeacherId" name="teacher_id">
+                                                </div>
+
+                                                <!-- Admission Number -->
+                                                <div class="mb-3">
+                                                    <label for="editAdmissionNo" class="form-label">Admission Number</label>
+                                                    <input type="text" class="form-control" id="editAdmissionNo" value="{{ $student->admission_number }}" name="admission_number" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hidden input for student ID (for updates) -->
+                                        <input type="hidden" id="editStudentId" name="student_id">
+                                    </div>
+
+                                      <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success">Update</button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                            </div>
                             @endforeach
                         </tbody>
 
@@ -84,12 +173,13 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="StudentName" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="firstName" name="name" required>
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" name="first_name" required>
                                 </div>
+
                                 <div class="mb-3">
-                                    <label for="StudentCode" class="form-label">Class</label>
-                                    <select name="class" id="class" class="form-control" required>
+                                    <label for="class" class="form-label">Class</label>
+                                    <select name="class_id" id="class" class="form-control" required>
                                         <option value="">-- Select Class --</option>
                                         @foreach($classes as $class)
                                             @php
@@ -100,37 +190,41 @@
                                         @endforeach
                                     </select>
                                 </div>
+
                                 <div class="mb-3">
                                     <label for="indexNo" class="form-label">Index Number</label>
-                                    <input type="number" class="form-control" id="indexNo" name="name" required>
+                                    <input type="number" class="form-control" id="index_number" name="index_number" required>
                                 </div>
+
                                 <div class="mb-3">
                                     <label for="gender" class="form-label">Gender</label>
                                     <select class="form-control" id="gender" name="gender" required>
                                         <option value="" disabled selected>Select gender</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
                                     </select>
                                 </div>
-
                             </div>
+
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="StudentName" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="lastName" name="name" required>
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="last_name" required>
                                 </div>
+
                                 <div class="mb-3">
                                     <label for="TeacherName" class="form-label">Teacher</label>
                                     <input type="text" class="form-control" id="TeacherName" readonly>
-                                    <input type="hidden" id="StudentCode" name="code">
+                                    <input type="hidden" id="StudentCode" name="teacher_id">
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="admNo" class="form-label">Admission Number</label>
-                                    <input type="text" class="form-control" id="admNo" name="name" required>
+                                    <input type="text" class="form-control" id="admNo" name="admission_number" required>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success btn-sm">Save</button>
@@ -277,7 +371,7 @@
                             showConfirmButton: true,
                             showProgressBar: true
                         }).then(() => {
-                            window.location.href = '/student/view';
+                            window.location.href = '/students/view';
                         });
 
                         $('#addstudentForm')[0].reset();

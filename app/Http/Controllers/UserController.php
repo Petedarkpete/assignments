@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Imports\UserImport;
 use App\Models\Clas;
+use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
 use Maatwebsite\Excel\Facades\Excel;
@@ -201,15 +202,19 @@ class UserController extends Controller
 
         } catch (ValidationException $e) {
             DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'error' => 'Validation error: Please fill all required fields correctly.',
+            ], 422);
+        }
 
-            return redirect()->route('teachers.view')
-                ->with('success', 'Validation error: Kindly Fill all the fields');
-        } catch (\Exception $e) {
+        catch (\Exception $e) {
             DB::rollBack();
             Log::error('Teacher creation failed: ' . $e->getMessage());
-
-            return redirect()->route('teachers.view')
-                ->with('success', 'An error occurred when creating teacher');
+            return response()->json([
+                'success' => false,
+                'error' => 'An unexpected error occurred while creating teacher.',
+            ], 500);
         }
     }
 
@@ -246,7 +251,18 @@ class UserController extends Controller
 
     public function studentsView ()
     {
-        $students = User::all();
+        $students = DB::table('students')
+            ->join('users', 'users.id','students.user_id')
+            ->join('teachers', 'teachers.id','students.teacher_id')
+            ->join('class', 'class.id', 'students.class_id')
+            ->join('streams','streams.id','class.stream_id')
+            ->join('users as us', 'us.id', 'teachers.user_id')
+            ->select('students.id',
+                'users.first_name', 'users.last_name', 'users.name',
+                'class.label','students.index_number','students.admission_number',
+                'students.teacher_id', 'streams.stream', 'users.gender',
+                'us.name as tname', 'class.stream_id as cid')
+            ->get();
         $teachers = DB::table('teachers')
             ->join('users','users.id','teachers.user_id')
             ->select('teachers.id','users.name')
@@ -263,8 +279,9 @@ class UserController extends Controller
 
     }
 
-    public function storeStudent (Request $request) {
-        Log::info("Request received for teacher registration.");
+    public function storeStudent (Request $request)
+    {
+        Log::info("Request received for teacher registration." . json_encode($request->all()));
 
         DB::beginTransaction();
 
@@ -275,8 +292,8 @@ class UserController extends Controller
                 'gender'           => 'required|in:Male,Female',
                 'class_id'         => 'required|exists:class,id',
                 'teacher_id'       => 'required|exists:teachers,id',
-                'index_number'     => 'required|numeric',
-                'admission_number' => 'required|string|max:50|unique:students,admission_number',
+                'index_number'     => 'required|digits_between:1,6',
+                'admission_number' => 'required|string|max:255|unique:students,admission_number',
             ]);
 
 
@@ -288,37 +305,42 @@ class UserController extends Controller
                 'name'           => $full_name,
                 'first_name'     => $validated['first_name'],
                 'last_name'      => $validated['last_name'],
-                'email'          => $validated['email'],
-                'phone'          => $validated['phone'],
                 'gender'         => $validated['gender'],
-                'date_of_birth'  => $validated['date_of_birth'],
-                'address'        => $validated['address'],
-                'password'      => $hashedPassword,
+                'password'       => $hashedPassword,
             ]);
 
-            $teacher = Teacher::create([
+            $students = Student::create([
                 'user_id'          => $user->id,
-                'qualification'    => $validated['qualification'],
-                'specialization'   => $validated['specialization'],
-                'join_date'        => now()->toDateString(),
+                'index_number'         => $validated['index_number'],
+                'admission_number'     => $validated['admission_number'],
+                'teacher_id'       => $validated['teacher_id'],
+                'class_id'         => $validated['class_id'],
             ]);
 
             DB::commit();
 
-            return redirect()->route('teachers.view')
-                ->with('success', 'Teacher created successfully.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Student created successfully.',
+            ]);
+
 
         } catch (ValidationException $e) {
             DB::rollBack();
-
-            return redirect()->route('teachers.view')
-                ->with('success', 'Validation error: Kindly Fill all the fields');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Teacher creation failed: ' . $e->getMessage());
-
-            return redirect()->route('teachers.view')
-                ->with('success', 'An error occurred when creating teacher');
+            return response()->json([
+                'success' => false,
+                'error' => 'Validation error: Please fill all required fields correctly.',
+            ], 422);
         }
+
+        catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Student creation failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'An unexpected error occurred while creating student.',
+            ], 500);
+        }
+
     }
 }
