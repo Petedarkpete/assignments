@@ -104,4 +104,5 @@ Route::prefix('students')->name('class.')->group(function () {
     Route::post('/update/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('update');
 });
 
+Route::post('/findTeacher/{id}', [App\Http\Controllers\StudentController::class, 'findTeacher']);
 

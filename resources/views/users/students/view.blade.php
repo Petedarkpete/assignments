@@ -16,9 +16,12 @@
                     <p style="font-size: 0.85rem;">{{ session('success') }}</p>
                 </div>
             @endif
-            <div class="card-title d-flex justify-content-between align-items-center p-2">
-
-                <a href="{{ route('students.create') }}" class="btn btn-primary btn-sm">Add student</a>
+            <div class="card-title d-flex align-items-center p-2">
+                @if(Session::get('id') == 1)
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                        Add Student
+                    </button>
+                @endif
             </div>
             <div class="card-body">
                 <div class="table-responsive m-2">
@@ -38,7 +41,7 @@
                         </thead>
                         <tbody>
                             @foreach ($students as $student)
-                            <tr>
+                            {{-- <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $student->user->name }}</td>
                                 <td>{{ $student->user->email }}</td>
@@ -58,7 +61,7 @@
                                         <input type="hidden" id="studentId" value="{{ $student->user->id }}">
                                     </button>
                                 </td>
-                            </tr>
+                            </tr> --}}
                             @endforeach
                         </tbody>
 
@@ -67,65 +70,160 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form id="addStudentForm">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="StudentName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="StudentName" name="name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="StudentCode" class="form-label">Class</label>
+                                    <select name="class" id="class" class="form-control" required>
+                                        <option value="">-- Select Class --</option>
+                                        @foreach($classes as $class)
+                                            @php
+                                                preg_match('/\d+/', $class->stream, $matches);
+                                                $grade_number = $matches[0] ?? '';
+                                            @endphp
+                                            <option value="{{ $class->id }}">{{ $grade_number }} {{ $class->label }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="StudentStatus" class="form-label">Status</label>
+                                    <select class="form-select" id="StudentStatus" name="status">
+                                        <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="StudentName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="StudentName" name="name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="StudentCode" class="form-label">Teacher</label>
+                                    <input type="text" class="form-control" id="StudentCode" name="code" readonly>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="StudentStatus" class="form-label">Status</label>
+                                    <select class="form-select" id="StudentStatus" name="status">
+                                        <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-sm">Save</button>
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-            $(document).ready(function() {
+        $(document).ready(function() {
 
-$('.delete-button').on('click', function(e) {
-    e.preventDefault();
+        $('.delete-button').on('click', function(e) {
+            e.preventDefault();
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    var studentId = $(this).find('#studentId').val();
-    console.log(studentId);
-
-
-    Swal.fire({
-        title: 'Are you sure to delete this student?',
-        text: 'You won\'t be able to revert this!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'Cancel',
-    }).then((result) => {
-        if (result.isConfirmed) {
-
-            $.ajax({
-                url: '/student/' + studentId,
-                type: 'DELETE',
-                success: function(response) {
-                    if(response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Deleted!',
-                            text: response.message,
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            var studentId = $(this).find('#studentId').val();
+            console.log(studentId);
 
 
-                        $('button[data-id="' + studentId + '"]').closest('tr').remove();
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops!',
-                            text: response.message
-                        });
-                    }
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops!',
-                        text: 'Something went wrong.'
+            Swal.fire({
+                title: 'Are you sure to delete this student?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: '/student/' + studentId,
+                        type: 'DELETE',
+                        success: function(response) {
+                            if(response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: response.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+
+
+                                $('button[data-id="' + studentId + '"]').closest('tr').remove();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops!',
+                                    text: response.message
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops!',
+                                text: 'Something went wrong.'
+                            });
+                        }
                     });
                 }
             });
-        }
-    });
-});
-});
+        });
+
+        $('#class').on('change', function (){
+            const classId = $(this).val();
+            const streamLabel = $(this).find('option:selected').text();
+
+            console.log('Selected Class ID:', classId);
+            console.log('Displayed Stream Label:', streamLabel);
+
+            $.ajax({
+                url : '/findTeacher/' + classId,
+                type : 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    if (response.name) {
+                        $('#StudentCode').val(response.name);
+                    } else {
+                        $('#StudentCode').val('No teacher found');
+                    }
+                },
+                error: function () {
+                    $('#StudentCode').val('Error fetching teacher');
+                }
+
+                })
+            })
+        });
+
     </script>
 @endsection

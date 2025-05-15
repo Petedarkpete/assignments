@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Imports\UserImport;
+use App\Models\Clas;
 use App\Models\Subject;
 use App\Models\Teacher;
 use Maatwebsite\Excel\Facades\Excel;
@@ -246,7 +247,19 @@ class UserController extends Controller
     public function studentsView ()
     {
         $students = User::all();
-        return view('users.students.view', compact('students'));
+        $teachers = DB::table('teachers')
+            ->join('users','users.id','teachers.user_id')
+            ->select('teachers.id','users.name')
+            ->get();
+
+        $classes = DB::table('class')
+            ->join('streams','streams.id','class.stream_id')
+            ->join('teachers', 'teachers.id','class.teacher_id')
+            ->join('users','users.id','teachers.user_id')
+            ->select('class.id','class.label','streams.stream','users.name')
+            ->get();
+
+        return view('users.students.view', compact('students','teachers','classes'));
 
     }
 }

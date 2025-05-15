@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+use function Illuminate\Log\log;
 
 class StudentController extends Controller
 {
@@ -62,4 +67,18 @@ class StudentController extends Controller
     {
         //
     }
+
+    public function findTeacher($id)
+    {
+        Log::info("the teacher ".$id);
+        $teachers = DB::table('class')
+            ->join('teachers', 'teachers.id', '=', 'class.teacher_id')
+            ->join('users', 'users.id', '=', 'teachers.user_id')
+            ->select('users.name', 'teachers.id')
+            ->where('class.id', $id)
+            ->first();
+
+        return response()->json($teachers);
+    }
+
 }
