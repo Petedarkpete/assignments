@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->string('phone')->nullable();
-            $table->integer('year')->nullable();
-            $table->string('admission')->nullable();
-            $table->unsignedInteger('role_id')->default(2);
+            $table->dropColumn('role_id');
         });
     }
 
@@ -27,10 +24,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->dropColumn('phone');
-            $table->dropColumn('year');
-            $table->dropColumn('admission');
-            $table->dropColumn('role');
+            $table->unsignedInteger('role_id')->nullable();
         });
     }
 };

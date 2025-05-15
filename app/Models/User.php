@@ -3,14 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laratrust\Contracts\LaratrustUser;
+use Laratrust\Traits\HasRolesAndPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class User extends Authenticatable
+class User extends Authenticatable implements LaratrustUser
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRolesAndPermissions;
 
     /**
      * The attributes that are mass assignable.
@@ -19,12 +21,15 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'first_name',
+        'last_name',
+        'other_names',
         'email',
         'password',
         'phone',
-        'year',
-        'admission',
-        'role',
+        'gender',
+        'address',
+        'profile_photo',
     ];
 
     /**
@@ -59,7 +64,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Submission::class);
     }
-    
+
     public function course()
     {
         return $this->belongsTo(Course::class);
@@ -70,5 +75,17 @@ class User extends Authenticatable
     }
     public function classroom(){
         return $this->belongsTo(User::class);
+    }
+
+    public function role(){
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function teachers(){
+        return $this->hasMany(Teacher::class);
+    }
+
+    public function students(){
+        return $this->hasMany(Student::class);
     }
 }

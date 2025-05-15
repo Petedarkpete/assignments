@@ -8,13 +8,15 @@
   <title>{{ config('app.name', 'Reports') }}</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.bunny.net">
   <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
- 
 
-        
+
+
   <!-- For Bootstrap Modal -->
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -32,7 +34,7 @@
         <!-- Favicons -->
         <link href="{{asset('v3/assets/img/favicon.png')}}" rel="icon">
         <link href="{{ asset('v3/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
-        
+
         <!-- cdn for js tables -->
         <link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
           <!-- Google Fonts -->
@@ -49,15 +51,27 @@
           <link href="{{ asset('v3/assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
 
           <!-- Template Main CSS File -->
-          <link href="{{ asset('v3/assets/css/style.css') }}" rel="stylesheet"> 
+          <link href="{{ asset('v3/assets/css/style.css') }}" rel="stylesheet">
+
+          {{-- For forms --}}
+          {{-- <link rel="stylesheet" href="{{ asset('css/form-steps.css') }}"> --}}
+
+          {{-- For the sweetalert--}}
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
           <!-- For Charts -->
           <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+          <!-- Sweet Alert -->
+          <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.6/dist/sweetalert2.min.css" rel="stylesheet">
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.6/dist/sweetalert2.all.min.js"></script>
+
 </head>
 <body>
 
   <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top d-flex align-items-center p-5 bg-info">
+  <header id="header" class="header fixed-top d-flex align-items-center bg-info">
 
     <div class="d-flex align-items-center justify-content-between">
       <div class="ml-5">
@@ -65,13 +79,11 @@
       </div>
     </div><!-- End Logo -->
 
-    
+
     <i class="bi bi-list toggle-sidebar-btn m-5 p-5"></i>
 
-    
-
     <nav class="header-nav ms-auto">
-      
+
       <div class="dropdown">
         <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {{Session::get('name')}}
@@ -95,8 +107,8 @@
   <!-- End Header -->
 
   <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar mt-4 bg-info">
-        
+  <aside id="sidebar" class="sidebar bg-info">
+
         <ul class="sidebar-nav" id="sidebar-nav" style="">
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{route ('dashboard')}}">
@@ -105,49 +117,35 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route('upload_ass')}}">
-                <i class="bi bi-cloud-arrow-up px-3"></i><span>Upload Assignment</span></i>
-                </a>
-                
-            </li>
+            @foreach($modules as $module)
+                <li class="nav-item">
+                    @if ($module->submodules->isNotEmpty())
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#module-{{ $module->id }}">
+                            <i class="bi {{ $module->icon ?? 'bi-circle' }} px-3"></i>
+                            <span>{{ $module->name }}</span>
+                            <i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="module-{{ $module->id }}" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                            @foreach($module->submodules as $submodule)
+                                <li>
+                                    <a class="nav-link collapsed" href="{{ url($submodule->url ?? '#') }}">
+                                        <i class="bi {{ $submodule->icon ?? 'bi-dot' }}"></i>
+                                        <span>{{ $submodule->name }}</span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <a class="nav-link collapsed" href="{{ url($module->url ?? '#') }}">
+                            <i class="bi {{ $module->icon ?? 'bi-circle' }} px-3"></i>
+                            <span>{{ $module->name }}</span>
+                        </a>
+                    @endif
+                </li>
+            @endforeach
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="">
-                <i class="bi bi-journal px-3"></i><span>Uploads</span></i>
-                </a>
-                
-            </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route('submit_ass')}}">
-                <i class="bi bi-send px-3"></i><span>Submit</span></i>
-                </a>
-            </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route('year')}}">
-                <i class="bi bi-calendar px-3"></i><span>Grade</span></i>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route('course')}}">
-                <i class="bi bi-book px-3"></i><span>Course</span></i>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route('class')}}">
-                <i class="bi bi-person-lines-fill px-3"></i><span>Class</span></i>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{route ('users')}}">
-                <i class="bi bi-person-circle px-3"></i><span>Users</span></i>
-                </a>
-                
-            </li>
             <!-- End Components Nav -->
         </ul>
 
@@ -159,16 +157,19 @@
 
 <footer id="footer" class="footer">
     <div class="copyright">
-      
+
     </div>
     <div class="credits">
-      
+
     </div>
   </footer><!-- End Footer -->
 
 <script>
     $(document).ready(function() {
         $('#users_table').DataTable();
+    });
+    $(document).ready(function() {
+        $('#modules_table').DataTable();
     });
 
 </script>

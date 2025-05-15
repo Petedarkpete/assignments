@@ -1,0 +1,19 @@
+.fade {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    position: absolute;
+    width: 100%;
+  }
+
+  .fade.show {
+    opacity: 1;
+    position: relative;
+  }
+
+  .progress-bar {
+    background-color: #008080; /* Bootstrap default blue */
+  }
+
+  .progress {
+    background-color: #008080; /* light gray */
+  }
