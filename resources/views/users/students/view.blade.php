@@ -70,7 +70,7 @@
                             <div class="modal fade" id="editstudentModal{{ $student->id }}" tabindex="-1" aria-labelledby="editstudentModalLabel{{ $student->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                   <div class="modal-content">
-                                    <form action="" method="POST" class="editstudentForm">
+                                    <form action="editstudentForm" method="POST" class="editstudentForm">
                                       @csrf
 
                                       <div class="modal-header">
@@ -110,8 +110,7 @@
                                                 <div class="mb-3">
                                                     <label for="editGender" class="form-label">Gender</label>
                                                     <select name="gender" id="editGender" class="form-control" required>
-                                                        <option value="">Select Gender</option>
-                                                        <option value="Male" {{ old('gender', $user->gender ?? '') == 'Male' ? 'selected' : '' }}>Male</option>
+                                                        <option value="Male" {{ old('gender', $user->gender ?? '') == 'male' ? 'selected' : '' }}>Male</option>
                                                         <option value="Female" {{ old('gender', $user->gender ?? '') == 'female' ? 'selected' : '' }}>Female</option>
                                                     </select>
                                                 </div>
@@ -395,6 +394,51 @@
                         });
                     }
                 }
+            });
+        });
+
+        $(document).ready(function() {
+            $('.editstudentForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                let form = $(this);
+                var studentIdUpdate = $('#studentId').val();
+                console.log('student ID:', cstudentIdUpdate);
+
+                $.ajax({
+                    url: '/student/update/' + studentIdUpdate,
+                    type: "POST",
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false,
+                                timerProgressBar: true,
+                            }).then(() => {
+                                window.location.href = '/students/view';
+                            });
+
+                            form.closest('.modal').modal('hide');
+                        }
+                    },
+                    error: function(response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Update Failed',
+                            text: response.responseJSON?.message || 'An error occurred during update.'
+                        });
+                    }
+                });
             });
         });
 
