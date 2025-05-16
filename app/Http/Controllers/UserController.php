@@ -409,7 +409,7 @@ class UserController extends Controller
     }
     public function importStudents(Request $request)
     {
-        Log::info("Import request data: " . json_encode($request->all()));
+        // Log::info("Import request data: " . json_encode($request->all()));
 
         try {
             $validated = $request->validate([
@@ -420,27 +420,36 @@ class UserController extends Controller
 
             Log::info("the data ", $validated);
 
-            if ($request->hasFile('excel_file')) {
-                Log::info('Uploaded file:', [
-                    'filename' => $request->file('excel_file')->getClientOriginalName()
-                ]);
-            }
+            // if ($request->hasFile('excel_file')) {
+            //     Log::info('Uploaded file:', [
+            //         'filename' => $request->file('excel_file')->getClientOriginalName()
+            //     ]);
+            // }
 
             $import = new StudentsImport($validated['teacher_id'], $validated['class_id']);
             $import->import($request->file('excel_file'));
 
-            if($import->failures()){
-                $message = $import->failures();
-            }elseif ($import->rowErrors) {
-                $message = $import->rowErrors;
-            } else {
-                $message = "Students imported successfully.";
+            if ($import->failures()->isNotEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Some rows failed contain students that are already existing.',
+                    'failures' => $import->failures()
+                ], 422);
+            }
+
+            if (!empty($import->rowErrors)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Some rows caused runtime errors.',
+                    'errors' => $import->rowErrors
+                ], 422);
             }
 
             return response()->json([
                 'success' => true,
-                'message' => $message
+                'message' => 'Students imported successfully.'
             ]);
+
 
         } catch (ValidationException $e) {
             return response()->json([

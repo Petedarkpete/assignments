@@ -462,16 +462,39 @@ $('#bulkTeacherName').val(response.name);
                     },
                     error: function(response) {
                         let message = 'Something went wrong.';
-                        if (response.responseJSON && response.responseJSON.error) {
-                            message = response.responseJSON.error;
+
+                        if (response.responseJSON) {
+                            const json = response.responseJSON;
+
+                            // If there's a general error
+                            if (json.error) {
+                                message = json.error;
+                            }
+
+                            // If there are validation failures (from Laravel Excel)
+                            else if (json.failures && Array.isArray(json.failures)) {
+                                message = 'Some rows failed validation:\n\n';
+                                json.failures.forEach(failure => {
+                                    message += `Row ${failure.row}: ${failure.attribute} - ${failure.errors.join(', ')}\n`;
+                                });
+                            }
+
+                            // If there are row-level exceptions (e.g., DB errors)
+                            else if (json.errors && Array.isArray(json.errors)) {
+                                message = 'Some rows caused errors:\n\n';
+                                json.errors.forEach(error => {
+                                    message += `Row: ${JSON.stringify(error.row)}\nError: ${error.error}\n\n`;
+                                });
+                            }
                         }
 
                         Swal.fire({
                             icon: 'error',
                             title: 'Import Error',
-                            text: message
+                            html: `<pre style="text-align:left;white-space:pre-wrap;">${message}</pre>`
                         });
                     }
+
                 });
             });
 
