@@ -170,7 +170,7 @@
 
     <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <form id="addstudentForm">
+            <form id="addstudentForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -246,7 +246,7 @@
     <!-- Bulk Upload Students Modal -->
     <div class="modal fade" id="addBulkStudentModal" tabindex="-1" aria-labelledby="addBulkStudentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-        <form id="addBulkStudents" enctype="multipart/form-data">
+        <form id="bulkStudentForm" enctype="multipart/form-data">
             @csrf
             <div class="modal-content">
             <div class="modal-header">
@@ -275,11 +275,11 @@
                 </div>
 
 
-                {{-- <div class="mb-3">
+                <div class="mb-3">
                     <label for="excelFile" class="form-label">Upload Excel File</label>
                     <input type="file" name="excel_file" id="excelFile" class="form-control" accept=".xls,.xlsx" required>
                     <div class="form-text">Only .xlsx or .xls files allowed. <a href="{{ asset('template/students_template.xlsx') }}">Download Template</a></div>
-                </div> --}}
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -316,8 +316,9 @@
                     success: function (response) {
                         console.log('Teacher Response:', response);
                         if (response.name && response.id) {
-                            $(teacherNameFieldId).val(response.name); // Show name
-                            $(teacherIdFieldId).val(response.id);     // Store ID
+                            $('#bulkStudentCode').val(response.id); // not response.name
+$('#bulkTeacherName').val(response.name);
+
                         } else {
                             $(teacherNameFieldId).val('No teacher found');
                             $(teacherIdFieldId).val('');
@@ -421,12 +422,26 @@
             $('#bulkStudentForm').on('submit', function(e) {
                 e.preventDefault();
 
+                const form = $(this)[0];
+                const formData = new FormData(form);
 
+                // Logging values for debugging
+                console.log('Teacher ID:', formData.get('teacher_id'));
+                console.log('Class ID:', formData.get('class_id'));
+
+                const excelFile = formData.get('excel_file');
+                if (excelFile) {
+                    console.log('Excel File Name:', excelFile.name);
+                    console.log('Excel File Type:', excelFile.type);
+                    console.log('Excel File Size:', excelFile.size + ' bytes');
+                } else {
+                    console.log('No Excel file found in formData.');
+                }
 
                 $.ajax({
                     url: '/students/import',
                     type: 'POST',
-                    data : $(this).serialize(),
+                    data: formData,
                     contentType: false,
                     processData: false,
                     success: function(response) {
@@ -461,9 +476,8 @@
             });
 
 
-        });
 
-        $(document).ready(function() {
+
         $('#addstudentForm').on('submit', function(e) {
 
             e.preventDefault();
@@ -509,48 +523,46 @@
             });
         });
 
-        $(document).ready(function() {
-            $('.editstudentForm').on('submit', function(e) {
-                e.preventDefault();
+        $('.editstudentForm').on('submit', function(e) {
+            e.preventDefault();
 
-                $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-
-                let form = $(this);
-                var studentIdUpdate = $('#studentId').val();
-                console.log('student ID:', studentIdUpdate);
-
-                $.ajax({
-                    url: '/students/update/' + studentIdUpdate,
-                    type: "POST",
-                    data: form.serialize(),
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: response.message,
-                                timer: 2000,
-                                showConfirmButton: false,
-                                timerProgressBar: true,
-                            }).then(() => {
-                                window.location.href = '/students/view';
-                            });
-
-                            form.closest('.modal').modal('hide');
-                        }
-                    },
-                    error: function(response) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Update Failed',
-                            text: response.responseJSON?.message || 'An error occurred during update.'
-                        });
+            $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
+
+            let form = $(this);
+            var studentIdUpdate = $('#studentId').val();
+            console.log('student ID:', studentIdUpdate);
+
+            $.ajax({
+                url: '/students/update/' + studentIdUpdate,
+                type: "POST",
+                data: form.serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                        }).then(() => {
+                            window.location.href = '/students/view';
+                        });
+
+                        form.closest('.modal').modal('hide');
+                    }
+                },
+                error: function(response) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Update Failed',
+                        text: response.responseJSON?.message || 'An error occurred during update.'
+                    });
+                }
             });
         });
 
@@ -588,7 +600,7 @@
                                     timer: 2000,
                                     showConfirmButton: false
                                 }).then(() => {
-                                    window.location.href = '/class/view';
+                                    window.location.href = '/students/view';
                                 });
 
 
@@ -613,7 +625,8 @@
             });
         });
 
-        });
+    });
+
 
     </script>
 @endsection

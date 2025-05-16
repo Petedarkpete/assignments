@@ -409,39 +409,51 @@ class UserController extends Controller
     }
     public function importStudents(Request $request)
     {
-        Log::info("the template". $request->all());
-        dd();
-        try{
-            $request->validate([
+        Log::info("Import request data: " . json_encode($request->all()));
+
+        try {
+            $validated = $request->validate([
                 'teacher_id' => 'required|exists:teachers,id',
                 'class_id'   => 'required|exists:class,id',
                 'excel_file' => 'required|mimes:xlsx,xls',
             ]);
 
-            Excel::import(new StudentsImport($request->teacher_id, $request->class_id), $request->file('excel_file'));
+            Log::info("the data ", $validated);
+
+            if ($request->hasFile('excel_file')) {
+                Log::info('Uploaded file:', [
+                    'filename' => $request->file('excel_file')->getClientOriginalName()
+                ]);
+            }
+
+            $import = new StudentsImport($validated['teacher_id'], $validated['class_id']);
+            $import->import($request->file('excel_file'));
+
+            if($import->failures()){
+                $message = $import->failures();
+            }elseif ($import->rowErrors) {
+                $message = $import->rowErrors;
+            } else {
+                $message = "Students imported successfully.";
+            }
 
             return response()->json([
                 'success' => true,
-                'message' => 'Student updated successfully.'
+                'message' => $message
             ]);
 
-        }catch (ValidationException $e) {
-            DB::rollBack();
+        } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'error' => 'Validation error: Please fill all required fields correctly.',
             ], 422);
-        }
-
-        catch (\Exception $e) {
-            DB::rollBack();
+        } catch (\Exception $e) {
             Log::error('Student editing failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'error' => 'An unexpected error occurred while editing student.',
             ], 500);
         }
-
-
     }
+
 }
