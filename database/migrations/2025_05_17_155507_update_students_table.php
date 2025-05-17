@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         //
-        if(!Schema::hasColumn('users','parent_id')){
-            Schema::table('users', function (Blueprint $table) {
+        if(!Schema::hasColumn('students','parent_id')){
+            Schema::table('students', function (Blueprint $table) {
                 $table->foreignId('parent_id')->constrained('parents')->onDelete('cascade');
             });
         }

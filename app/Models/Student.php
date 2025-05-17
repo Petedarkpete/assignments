@@ -39,6 +39,6 @@ class Student extends Model
 
     public function parent()
     {
-        return $this->belongsTo(ParentProfile::class);
+        return $this->belongsTo(ParentProfile::class, 'parent_id');
     }
 }

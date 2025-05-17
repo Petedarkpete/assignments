@@ -24,9 +24,10 @@
             @endif
             <div class="card-title d-flex align-items-center p-2">
                 @if(Session::get('id') == 1)
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addparentModal">
-                        Add parent
-                    </button>
+                <div class="card-title d-flex justify-content-between align-items-center p-2">
+
+                    <a href="{{ url('parents/create') }}" class="btn btn-primary btn-sm">Add Parent</a>
+                </div>
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addBulkparentModal">
                         Add Bulk parents
                     </button>
