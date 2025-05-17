@@ -463,9 +463,5 @@ class UserController extends Controller
         }
     }
 
-    public function parentsView()
-    {
-        return view('users.parents.view');
-    }
 
 }

@@ -6,7 +6,7 @@
         <div class="row text-center">
             <div class="col-lg-12">
                 <div class="pagetitle">
-                    <h1>parents</h1>
+                    <h1>Parents</h1>
                 </div>
             </div>
         </div>

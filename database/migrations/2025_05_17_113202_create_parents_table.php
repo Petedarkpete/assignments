@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('parents', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('parents')){
+            Schema::create('parents', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained()->onDelete('cascade');
+                $table->string('relationship')->nullable();
+                $table->bigInteger('national_id')->nullable();
+                $table->bigInteger('passport')->nullable();
+                $table->string('occupation')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

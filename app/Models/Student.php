@@ -36,4 +36,9 @@ class Student extends Model
     {
         return $this->belongsTo(Teacher::class);
     }
+
+    public function parent()
+    {
+        return $this->belongsTo(ParentProfile::class);
+    }
 }

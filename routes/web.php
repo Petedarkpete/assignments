@@ -106,12 +106,12 @@ Route::prefix('students')->name('class.')->group(function () {
 });
 
 Route::prefix('parents')->name('class.')->group(function () {
-    Route::get('/view', [App\Http\Controllers\UserController::class, 'parentsView'])->name('parents.view');
-    Route::get('/create', [App\Http\Controllers\UserController::class, 'createParent'])->name('parents.create');
-    Route::post('/store', [App\Http\Controllers\UserController::class, 'storeParent'])->name('store');
-    Route::delete('/{id}', [App\Http\Controllers\UserController::class, 'destroyParent'])->name('destroy');
-    Route::post('/update/{id}', [App\Http\Controllers\UserController::class, 'updateParent'])->name('update');
-    Route::post('/import', [App\Http\Controllers\UserController::class, 'importParents'])->name('parents.import');
+    Route::get('/view', [App\Http\Controllers\ParentsController::class, 'parentsView'])->name('parents.view');
+    Route::get('/create', [App\Http\Controllers\ParentsController::class, 'createParent'])->name('parents.create');
+    Route::post('/store', [App\Http\Controllers\ParentsController::class, 'storeParent'])->name('store');
+    Route::delete('/{id}', [App\Http\Controllers\ParentsController::class, 'destroyParent'])->name('destroy');
+    Route::post('/update/{id}', [App\Http\Controllers\ParentsController::class, 'updateParent'])->name('update');
+    Route::post('/import', [App\Http\Controllers\ParentsController::class, 'importParents'])->name('parents.import');
 });
 
 
