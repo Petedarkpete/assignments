@@ -154,6 +154,7 @@ class UserController extends Controller
     }
 
     public function teacherStore (Request $request) {
+
         Log::info("Request received for teacher registration.");
         DB::beginTransaction();
 
@@ -417,9 +418,6 @@ class UserController extends Controller
                 'class_id'   => 'required|exists:class,id',
                 'excel_file' => 'required|mimes:xlsx,xls',
             ]);
-
-            Log::info("the data ", $validated);
-
             // if ($request->hasFile('excel_file')) {
             //     Log::info('Uploaded file:', [
             //         'filename' => $request->file('excel_file')->getClientOriginalName()
@@ -463,6 +461,11 @@ class UserController extends Controller
                 'error' => 'An unexpected error occurred while editing student.',
             ], 500);
         }
+    }
+
+    public function parentsView()
+    {
+        return view('users.parents.view');
     }
 
 }

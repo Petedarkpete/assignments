@@ -57,7 +57,7 @@ class ClassController extends Controller
             $validated = $request->validate([
                 'stream_id' => 'required|exists:streams,id',
                 'label' => 'required|string|max:255',
-                'teacher_id' => 'nullable|exists:users,id',
+                'teacher_id' => 'nullable|exists:teachers,id',
                 'status' => 'required|boolean',
             ]);
             Log::info("the validated ". json_encode($validated));
@@ -72,13 +72,16 @@ class ClassController extends Controller
 
         }  catch (ValidationException $e) {
             Log::info("gets here --2");
+
+            $validationErrors = $e->validator->errors()->toArray();
+
             return response()->json([
                 'success' => false,
                 'message' => 'Validation error.',
-                'errors' => $e->validator->errors()->toArray()
+                'errors'  => $validationErrors
             ], 422);
-
-        } catch (\Exception $e) {
+        }
+         catch (\Exception $e) {
             Log::info("gets here --3");
             return response()->json([
                 'success' => false,
@@ -91,7 +94,7 @@ class ClassController extends Controller
     public function update (Request $request, $id)
     {
         try {
-            
+
             $validated = $request->validate([
                 'stream' => 'required|exists:streams,id',
                 'label' => 'required|string|max:255',
