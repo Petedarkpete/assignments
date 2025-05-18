@@ -21,4 +21,8 @@ class ParentsController extends Controller
 
         return view ('users.parents.create');
     }
+
+    public function storeParent () {
+        
+    }
 }

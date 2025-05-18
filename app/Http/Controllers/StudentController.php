@@ -80,4 +80,28 @@ class StudentController extends Controller
         return response()->json($teachers);
     }
 
+    public function findStudent(Request $request)
+    {
+        $admissionNo = $request->query('admission_no');
+
+        $student = Student::with(['user', 'class', 'teacher'])
+            ->where('admission_number', $admissionNo)
+            ->first();
+
+        if ($student) {
+            return response()->json([
+                'success' => true,
+                'name'    => $student->user->first_name . ' ' . $student->user->last_name,
+                'class'   => $student->class->label ?? 'N/A',
+                'teacher' => $student->teacher->qualification ?? 'N/A',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Student not found.',
+        ]);
+    }
+
+
 }

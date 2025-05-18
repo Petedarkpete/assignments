@@ -317,7 +317,7 @@
                         console.log('Teacher Response:', response);
                         if (response.name && response.id) {
                             $('#bulkStudentCode').val(response.id); // not response.name
-$('#bulkTeacherName').val(response.name);
+                            $('#bulkTeacherName').val(response.name);
 
                         } else {
                             $(teacherNameFieldId).val('No teacher found');

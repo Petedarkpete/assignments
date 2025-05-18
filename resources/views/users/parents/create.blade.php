@@ -85,22 +85,24 @@
 
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Student Admission No</label>
-                                <input type="text" name="specialization" class="form-control">
+                                <input type="text" id="admission_no" name="admission_no" class="form-control">
                             </div>
                             <div id="student_info" class="mt-3"></div>
                         </div>
                         <div class="row" id="studentInfo">
-                            <div class="col-md-4 mb-3">
-                              <label class="form-label">Student Name</label>
-                              <input type="text" class="form-control" id="studentName" readonly>
+                            <div class="col-md-4 mb-3" id="student_name_group">
+                                <label class="form-label">Name</label>
+                                <input type="text" id="student_name" class="form-control" readonly>
                             </div>
-                            <div class="col-md-4 mb-3">
-                              <label class="form-label">Student Class</label>
-                              <input type="text" class="form-control" id="studentClass" readonly>
+
+                            <div class="col-md-4 mb-3" id="student_class_group">
+                                <label class="form-label">Class</label>
+                                <input type="text" id="student_class" class="form-control" readonly>
                             </div>
-                            <div class="col-md-4 mb-3">
-                              <label class="form-label">Student Teacher</label>
-                              <input type="text" class="form-control" id="studentTeacher" readonly>
+
+                            <div class="col-md-4 mb-3" id="student_teacher_group">
+                                <label class="form-label">Teacher</label>
+                                <input type="text" id="student_teacher" class="form-control" readonly>
                             </div>
                         </div>
 
@@ -164,30 +166,54 @@
         });
 
         $('#admission_no').on('blur', function () {
+
             let admissionNo = $(this).val().trim();
+            console.log("admission " + admissionNo);
+
 
             if (admissionNo !== '') {
                 $.ajax({
-                    url: '/student',
+                    url: '/findStudent',
                     method: 'GET',
                     data: { admission_no: admissionNo },
                     success: function (response) {
                         if (response.success) {
-                            $('#student_info').html(`
-                                <div><strong>Name:</strong> ${response.name}</div>
-                                <div><strong>Class:</strong> ${response.class}</div>
-                                <div><strong>Teacher:</strong> ${response.teacher}</div>
-                            `);
+                            $('#student_name').val(response.name);
+                            $('#student_class').val(response.class);
+                            $('#student_teacher').val(response.teacher);
+
+                            $('#class_id').val(response.class_id);
+                            $('#teacher_id').val(response.teacher_id);
+
+                            // Show the hidden fields
+                            $('#student_name_group').show();
+                            $('#student_class_group').show();
+                            $('#student_teacher_group').show();
                         } else {
-                            $('#student_info').html(`<div class="text-danger">${response.message}</div>`);
+                            // Hide and clear if student not found
+                            $('#student_name_group, #student_class_group, #student_teacher_group').hide();
+                            $('#student_name, #student_class, #student_teacher').val('');
+                            $('#class_id, #teacher_id').val('');
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Student Not Found',
+                                text: response.message
+                            });
                         }
                     },
                     error: function () {
-                        $('#student_info').html(`<div class="text-danger">An error occurred.</div>`);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while fetching student details.'
+                        });
                     }
                 });
             }
         });
+
+        
 
     </script>
 
