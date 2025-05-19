@@ -96,11 +96,43 @@
                             </div>
 
                             <div class="col-md-4 mb-3">
+                                <label class="form-label">Identification</label>
+                                <select name="occupation" id="occupation" class="form-control" required>
+                                    <option value="">-- Select --</option>
+                                    <option value="national_id">National ID</option>
+                                    <option value="passport">Passport</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 mb-3" id="national_id_field" style="display: none;">
+                                <label class="form-label">ID No.</label>
+                                <input type="text" name="national_id_no" class="form-control">
+                            </div>
+
+                            <div class="col-md-4 mb-3" id="passport_field" style="display: none;">
+                                <label class="form-label">Passport No.</label>
+                                <input type="text" name="passport_no" class="form-control">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Has more than one student?</label><br>
+                                <div class="form-check form-check-inline mt-1">
+                                    <input class="form-check-input" type="radio" name="add_student" id="add_student_yes" value="yes">
+                                    <label class="form-check-label" for="add_student_yes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline mt-1">
+                                    <input class="form-check-input" type="radio" name="add_student" id="add_student_no" value="no" checked>
+                                    <label class="form-check-label" for="add_student_no">No</label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Student Admission No</label>
                                 <input type="text" id="admission_no" name="admission_no" class="form-control">
                             </div>
-                            <div id="student_info" class="mt-3"></div>
                         </div>
+
                         <div class="row d-none d-print-block" id="studentInfo">
                             <div class="col-md-4 mb-3" id="student_name_group">
                                 <label class="form-label">Name</label>
@@ -223,6 +255,12 @@
                     }
                 });
             }
+        });
+
+        document.getElementById('occupation').addEventListener('change', function () {
+            let value = this.value;
+            document.getElementById('national_id_field').style.display = (value === 'national_id') ? 'block' : 'none';
+            document.getElementById('passport_field').style.display = (value === 'passport') ? 'block' : 'none';
         });
 
 
