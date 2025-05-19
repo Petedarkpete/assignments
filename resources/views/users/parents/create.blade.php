@@ -84,12 +84,24 @@
                             </div>
 
                             <div class="col-md-4 mb-3">
+                                <label class="form-label">Occupation</label>
+                                <select name="occupation" class="form-control" required>
+                                    <option value="">Select Occupation (Optional)</option>
+                                    <option value="Civil Servant">Civil Servant</option>
+                                    <option value="Private Servant">Private Servant</option>
+                                    <option value="Business">Business</option>
+                                    <option value="Farmer">Farmer</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Student Admission No</label>
                                 <input type="text" id="admission_no" name="admission_no" class="form-control">
                             </div>
                             <div id="student_info" class="mt-3"></div>
                         </div>
-                        <div class="row" id="studentInfo">
+                        <div class="row d-none d-print-block" id="studentInfo">
                             <div class="col-md-4 mb-3" id="student_name_group">
                                 <label class="form-label">Name</label>
                                 <input type="text" id="student_name" class="form-control" readonly>
@@ -104,12 +116,14 @@
                                 <label class="form-label">Teacher</label>
                                 <input type="text" id="student_teacher" class="form-control" readonly>
                             </div>
+                            <input type="hidden" id="class_id" name="class_id">
+                            <input type="hidden" id="teacher_id" name="teacher_id">
                         </div>
 
 
                         <div class="d-flex justify-content-between">
                         <button type="button" id="prev-btn" class="btn btn-secondary">Previous</button>
-                        <button type="submit" class="btn btn-success">Submit</button>
+                        <button type="submit" class="btn btn-success" id="submitButton">Submit</button>
                         </div>
                     </div>
 
@@ -181,39 +195,37 @@
                             $('#student_name').val(response.name);
                             $('#student_class').val(response.class);
                             $('#student_teacher').val(response.teacher);
-
                             $('#class_id').val(response.class_id);
                             $('#teacher_id').val(response.teacher_id);
 
-                            // Show the hidden fields
-                            $('#student_name_group').show();
-                            $('#student_class_group').show();
-                            $('#student_teacher_group').show();
+                            document.getElementById("submitButton").disabled = false;
                         } else {
-                            // Hide and clear if student not found
-                            $('#student_name_group, #student_class_group, #student_teacher_group').hide();
-                            $('#student_name, #student_class, #student_teacher').val('');
-                            $('#class_id, #teacher_id').val('');
+                            $('#student_name').val('Not found');
+                            $('#student_class').val('Not found');
+                            $('#student_teacher').val('Not found');
+                            $('#class_id').val('');
+                            $('#teacher_id').val('');
 
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Student Not Found',
-                                text: response.message
-                            });
+                            document.getElementById("submitButton").disabled = true;
                         }
+
+                        $('#studentInfo').removeClass('d-none');
                     },
                     error: function () {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'An error occurred while fetching student details.'
-                        });
+                        $('#student_name').val('Not found: Error');
+                        $('#student_class').val('Not found: Error');
+                        $('#student_teacher').val('Not found: Error');
+                        $('#class_id').val('');
+                        $('#teacher_id').val('');
+                        $('#studentInfo').removeClass('d-none');
+
+                        document.getElementById("submitButton").disabled = true;
                     }
                 });
             }
         });
 
-        
+
 
     </script>
 

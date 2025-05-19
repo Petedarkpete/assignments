@@ -84,23 +84,41 @@ class StudentController extends Controller
     {
         $admissionNo = $request->query('admission_no');
 
-        $student = Student::with(['user', 'class', 'teacher'])
-            ->where('admission_number', $admissionNo)
+        $student = DB::table('students')
+            ->join('teachers', 'teachers.id', '=', 'students.teacher_id')
+            ->join('class', 'class.id', '=', 'students.class_id')
+            ->join('streams', 'streams.id', '=', 'class.stream_id')
+            ->join('users as teachers_user', 'teachers_user.id', '=', 'teachers.user_id')
+            ->join('users as student_user', 'student_user.id', '=', 'students.user_id')
+            ->select(
+                'student_user.first_name as student_first_name',
+                'student_user.last_name as student_last_name',
+                'class.label as class_label',
+                'streams.stream as stream',
+                'teachers_user.name as teacher_name',
+                'students.class_id',
+                'students.teacher_id'
+            )
+            ->where('students.admission_number', $admissionNo)
             ->first();
+        Log::info("mesage  ".json_encode($student));
 
         if ($student) {
             return response()->json([
                 'success' => true,
-                'name'    => $student->user->first_name . ' ' . $student->user->last_name,
-                'class'   => $student->class->label ?? 'N/A',
-                'teacher' => $student->teacher->qualification ?? 'N/A',
+                'name'    => $student->student_first_name . ' ' . $student->student_last_name,
+                'class'   => $student->class_label . ' ' . $student->stream,
+                'teacher' => $student->teacher_name,
+                'class_id'    => $student->class_id,
+                'teacher_id'  => $student->teacher_id,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Student not found.',
             ]);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Student not found.',
-        ]);
     }
 
 
