@@ -200,7 +200,7 @@ class UserController extends Controller
             DB::commit();
 
             return redirect()->route('teachers.view')
-                ->with('success', 'Teacher created successfully.');
+                ->with('success', 'Teacher created successfully.'); 
 
         } catch (ValidationException $e) {
             DB::rollBack();
