@@ -97,9 +97,11 @@ class StudentController extends Controller
                 'streams.stream as stream',
                 'teachers_user.name as teacher_name',
                 'students.class_id',
-                'students.teacher_id'
+                'students.teacher_id',
+                'students.parent_id'
             )
             ->where('students.admission_number', $admissionNo)
+            ->whereNull('students.parent_id')
             ->first();
         Log::info("mesage  ".json_encode($student));
 

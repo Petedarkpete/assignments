@@ -18,6 +18,7 @@ class Student extends Model
         'assignments_received',
         'assignments_downloaded',
         'assignments_submitted',
+        'parent_id',
     ];
 
     // Relationships

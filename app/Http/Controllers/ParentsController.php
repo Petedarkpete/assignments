@@ -29,6 +29,11 @@ class ParentsController extends Controller
         return view ('users.parents.create');
     }
 
+    public function secondStudent () {
+
+        return view ('users.parents.second_student');
+    }
+
     public function storeParent(Request $request)
     {
         Log::info("all the info" . json_encode($request->all()));
@@ -46,6 +51,7 @@ class ParentsController extends Controller
             'admission_no'   => 'required|string|exists:students,admission_number',
             'class_id'       => 'required|exists:class,id',
             'teacher_id'     => 'required|exists:teachers,id',
+            'add_student'    => 'required'
         ]);
 
         DB::beginTransaction();
@@ -65,7 +71,7 @@ class ParentsController extends Controller
             $student = Student::where('admission_number', $validated['admission_no'])->firstOrFail();
 
             // Create parent/guardian
-            ParentProfile::create([
+            $parent = ParentProfile::create([
                 'user_id'      => $user->id,
                 'student_id'   => $student->id,
                 'other_names'  => $validated['other_names'] ?? null,
@@ -75,10 +81,27 @@ class ParentsController extends Controller
                 'occupation'   => $validated['occupation'],
             ]);
 
+            //add parent to student
+            $updateSuccess = $student->update([
+                'parent_id' => $parent->id,
+            ]);
+
+            if ($updateSuccess) {
+                Log::info("Student [ID: {$student->id}] updated with parent ID {$parent->id} successfully.");
+            } else {
+                Log::warning("Failed to update Student [ID: {$student->id}] with parent ID {$parent->id}.");
+            }
+
             DB::commit();
 
-            return redirect()->to('/students/view')
+            if($validated['add_student'] = 'yes'){
+                return redirect()->to('/parents/second_student')
+                ->with('success', 'Parent created successfully. Add information for second student');
+            } else {
+                return redirect()->to('/parents/view')
                 ->with('success', 'Teacher created successfully.');
+            }
+
 
         }  catch (ValidationException $e) {
             DB::rollBack();

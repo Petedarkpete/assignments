@@ -113,7 +113,9 @@
                                 <label class="form-label">Passport No.</label>
                                 <input type="text" name="passport_no" class="form-control">
                             </div>
-
+                        </div>
+                        <hr class="hr hr-blurry" />
+                        <div class="row mb-3">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Has more than one student?</label><br>
                                 <div class="form-check form-check-inline mt-1">

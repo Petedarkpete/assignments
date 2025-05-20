@@ -103,6 +103,7 @@ Route::prefix('students')->name('class.')->group(function () {
     Route::delete('/{id}', [App\Http\Controllers\UserController::class, 'destroyStudent'])->name('destroy');
     Route::post('/update/{id}', [App\Http\Controllers\UserController::class, 'updateStudent'])->name('update');
     Route::post('/import', [App\Http\Controllers\UserController::class, 'importStudents'])->name('students.import');
+
 });
 
 Route::prefix('parents')->name('class.')->group(function () {
@@ -112,6 +113,7 @@ Route::prefix('parents')->name('class.')->group(function () {
     Route::delete('/{id}', [App\Http\Controllers\ParentsController::class, 'destroyParent'])->name('destroy');
     Route::post('/update/{id}', [App\Http\Controllers\ParentsController::class, 'updateParent'])->name('update');
     Route::post('/import', [App\Http\Controllers\ParentsController::class, 'importParents'])->name('parents.import');
+    Route::get('/second_student', [App\Http\Controllers\ParentsController::class, 'secondStudent']);
 });
 
 

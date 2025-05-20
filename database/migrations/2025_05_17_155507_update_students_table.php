@@ -14,7 +14,7 @@ return new class extends Migration
         //
         if(!Schema::hasColumn('students','parent_id')){
             Schema::table('students', function (Blueprint $table) {
-                $table->foreignId('parent_id')->constrained('parents')->onDelete('cascade');
+                $table->foreignId('parent_id')->nullable()->constrained('parents')->onDelete('cascade');
             });
         }
 
