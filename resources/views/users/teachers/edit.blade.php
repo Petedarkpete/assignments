@@ -35,7 +35,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Other Names</label>
-                                <input type="text" name="other_names" class="form-control" 
+                                <input type="text" name="other_names" class="form-control"
                                        value="{{ old('other_names', $user->other_names ?? '') }}">
                             </div>
 
@@ -97,13 +97,16 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Subjects</label>
-                                    <select name="subject_id" class="form-control" required>
-                                        <option value="">-- Select Subject --</option>
-                                        @foreach($subjects as $subject)
-                                            <option value="{{ $subject->id }}">{{ $subject->name }}</option>
-                                        @endforeach
-                                    </select>
+                                <select name="subject_id" class="form-control" required>
+                                    <option value="">-- Select Subject --</option>
+                                    @foreach($subjects as $subject)
+                                        <option value="{{ $subject->id }}" {{ $subject->id == $user->subject_id ? 'selected' : '' }}>
+                                            {{ $subject->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+
 
                         </div>
 
