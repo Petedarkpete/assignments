@@ -88,13 +88,16 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Subjects</label>
-                                    <select name="subject_id" class="form-control" required>
-                                        <option value="">-- Select Subject --</option>
-                                        @foreach($subjects as $subject)
-                                            <option value="{{ $subject->id }}">{{ $subject->name }}</option>
-                                        @endforeach
-                                    </select>
+                                <select name="subject_ids[]" class="form-control" multiple required>
+                                    @foreach($subjects as $subject)
+                                        <option value="{{ $subject->id }}"
+                                            {{ in_array($subject->id, $userSubjects) ? 'selected' : '' }}>
+                                            {{ $subject->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+
                         </div>
 
                         <div class="d-flex justify-content-between">
