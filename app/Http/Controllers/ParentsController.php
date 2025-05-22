@@ -86,11 +86,11 @@ class ParentsController extends Controller
                 'parent_id' => $parent->id,
             ]);
 
-            if ($updateSuccess) {
-                Log::info("Student [ID: {$student->id}] updated with parent ID {$parent->id} successfully.");
-            } else {
-                Log::warning("Failed to update Student [ID: {$student->id}] with parent ID {$parent->id}.");
-            }
+            // if ($updateSuccess) {
+            //     Log::info("Student [ID: {$student->id}] updated with parent ID {$parent->id} successfully.");
+            // } else {
+            //     Log::warning("Failed to update Student [ID: {$student->id}] with parent ID {$parent->id}.");
+            // }
 
             DB::commit();
 
