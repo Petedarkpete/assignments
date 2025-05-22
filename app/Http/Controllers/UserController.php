@@ -155,7 +155,6 @@ class UserController extends Controller
 
     public function teacherStore (Request $request) {
 
-        Log::info("Request received for teacher registration.");
         DB::beginTransaction();
 
         try {
@@ -200,7 +199,7 @@ class UserController extends Controller
             DB::commit();
 
             return redirect()->route('teachers.view')
-                ->with('success', 'Teacher created successfully.'); 
+                ->with('success', 'Teacher created successfully.');
 
         } catch (ValidationException $e) {
             DB::rollBack();
