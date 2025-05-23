@@ -20,7 +20,10 @@ class ParentsController extends Controller
     //
     public function parentsView()
     {
-        $parents = ParentProfile::all();
+        $parents = DB::table('parents')
+            ->join('users', 'parents.user_id','users.id')
+            ->select('parents.*','users.*')
+            ->get();
         $classes = Clas::all();
         return view('users.parents.view', compact('parents', 'classes'));
     }
@@ -95,7 +98,7 @@ class ParentsController extends Controller
             DB::commit();
 
             if($validated['add_student'] = 'yes'){
-                return redirect()->to('/parents/second_student')
+            return redirect()->to('/parents/second_student')
                 ->with('success', 'Parent created successfully. Add information for second student');
             } else {
                 return redirect()->to('/parents/view')

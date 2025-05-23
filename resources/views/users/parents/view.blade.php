@@ -41,11 +41,10 @@
                             <tr>
                                 <th>#</th>
                                 <th>Full Name</th>
-                                <th>Class</th>
-                                <th>Teacher</th>
-                                <th>Index No</th>
-                                <th>Admission No</th>
-                                <th>Gender</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Relationship</th>
+                                <th>No of Students</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -54,18 +53,9 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $parent->name }}</td>
-                                <td> <?php
-                                    $gradeString = $parent->stream;
-                                    $position = strpos($gradeString, ' ');
-                                    if ($position !== false) {
-                                      echo substr($gradeString, $position + 1);
-                                    } else {
-                                      echo "N/A";
-                                    }
-                                  ?> {{ $parent->label }}</td>
-                                <td>{{ $parent->tname }}</td>
-                                <td>{{ $parent->index_number }}</td>
-                                <td>{{ $parent->admission_number }}</td>
+                                <td>{{ $parent->phone }}</td>
+                                <td>{{ $parent->email }}</td>
+                                <td>{{ $parent->relationship }}</td>
                                 <td>{{ $parent->gender }}</td>
                                 <td>
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editparentModal{{ $parent->id }}">
@@ -111,11 +101,6 @@
                                                     </select>
                                                 </div>
 
-                                                <!-- Index Number -->
-                                                <div class="mb-3">
-                                                    <label for="editIndexNumber" class="form-label">Index Number</label>
-                                                    <input type="number" class="form-control" id="editIndexNumber" value="{{ $parent->index_number }}" name="index_number" required>
-                                                </div>
 
                                                 <!-- Gender -->
                                                 <div class="mb-3">
@@ -133,19 +118,6 @@
                                                 <div class="mb-3">
                                                     <label for="editLastName" class="form-label">Last Name</label>
                                                     <input type="text" class="form-control" id="editLastName" value="{{ $parent->last_name }}" name="last_name" required>
-                                                </div>
-
-                                                <!-- Teacher Name (readonly) -->
-                                                <div class="mb-3">
-                                                    <label for="editTeacherName" class="form-label">Teacher</label>
-                                                    <input type="text" class="form-control" value="{{ $parent->tname }}" id="editTeacherName" readonly>
-                                                    <input type="hidden" id="editTeacherId" name="teacher_id" value="{{ $parent->teacher_id }}">
-                                                </div>
-
-                                                <!-- Admission Number -->
-                                                <div class="mb-3">
-                                                    <label for="editAdmissionNo" class="form-label">Admission Number</label>
-                                                    <input type="text" class="form-control" id="editAdmissionNo" value="{{ $parent->admission_number }}" name="admission_number" required>
                                                 </div>
                                             </div>
                                         </div>
