@@ -21,8 +21,15 @@ class ParentsController extends Controller
     public function parentsView()
     {
         $parents = DB::table('parents')
-            ->join('users', 'parents.user_id','users.id')
-            ->select('parents.*','users.*')
+            ->join('users', 'parents.user_id', 'users.id')
+            ->leftJoin('students', 'parents.id', '=', 'students.parent_id')
+            ->select(
+                'parents.*',
+                'users.*',
+                DB::raw('COUNT(students.id) as student_count'),
+                DB::raw('GROUP_CONCAT(students.id) as student_ids')
+            )
+            ->groupBy('parents.id', 'users.id')
             ->get();
         $classes = Clas::all();
         return view('users.parents.view', compact('parents', 'classes'));

@@ -56,7 +56,7 @@
                                 <td>{{ $parent->phone }}</td>
                                 <td>{{ $parent->email }}</td>
                                 <td>{{ $parent->relationship }}</td>
-                                <td>{{ $parent->gender }}</td>
+                                <td>{{ $parent->student_count }}</td>
                                 <td>
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editparentModal{{ $parent->id }}">
                                         <i class="bi bi-pencil-square"></i>
