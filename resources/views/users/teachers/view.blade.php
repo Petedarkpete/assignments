@@ -16,6 +16,12 @@
                     <p style="font-size: 0.85rem;">{{ session('success') }}</p>
                 </div>
             @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    <p style="font-size: 0.85rem;">{{ session('error') }}</p>
+                </div>
+            @endif
             <div class="card-title d-flex justify-content-between align-items-center p-2">
 
                 <a href="{{ route('teachers.create') }}" class="btn btn-primary btn-sm">Add Teacher</a>

@@ -7,6 +7,12 @@
 
         <div class="card">
             <div class="card-body">
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        <p style="font-size: 0.85rem;">{{ session('error') }}</p>
+                    </div>
+                @endif
+
                 <!-- Progress Bar -->
                 <div class="progress mb-4" style="height: 25px;">
                     <div id="form-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 50%;">
@@ -14,7 +20,7 @@
                     </div>
                 </div>
 
-                <form action="/teachers/store" method="POST"  enctype="multipart/form-data">
+                <form action="/teachers/update" method="POST"  enctype="multipart/form-data">
                     @csrf
 
                     <!-- Step 1: Personal Information -->
@@ -53,15 +59,15 @@
                                 <label class="form-label">Gender</label>
                                 <select name="gender" class="form-control">
                                     <option value="">Select Gender</option>
-                                    <option value="Male" {{ old('gender', $user->gender ?? '') == 'Male' ? 'selected' : '' }}>Male</option>
-                                    <option value="Female" {{ old('gender', $user->gender ?? '') == 'Female' ? 'selected' : '' }}>Female</option>
+                                    <option value="Male" {{ old('gender', $user->gender ?? '') == 'male' ? 'selected' : '' }}>Male</option>
+                                    <option value="Female" {{ old('gender', $user->gender ?? '') == 'female' ? 'selected' : '' }}>Female</option>
                                 </select>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            {{-- <div class="col-md-4 mb-3">
                                 <label class="form-label">Date of Birth</label>
                                 <input type="date" name="date_of_birth" class="form-control"
                                        value="{{ old('date_of_birth', $user->date_of_birth ?? '') }}">
-                            </div>
+                            </div> --}}
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Address</label>
                                 <input type="text" name="address" class="form-control" required
@@ -71,6 +77,7 @@
                                 <label class="form-label">Profile Photo</label>
                                 <input type="file" name="profile_photo" class="form-control">
                             </div>
+                            <input type="hidden" name="teacher_id" value="{{ $user->teacher_id }}">
                         </div>
 
                         <div class="d-flex justify-content-end">
@@ -95,7 +102,7 @@
                                 value="{{ old('qualification', $user->specialization ?? '') }}">
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            {{-- <div class="col-md-6 mb-3">
                                 <label class="form-label">Subjects</label>
                                 <select name="subject_id" class="form-control" required>
                                     <option value="">-- Select Subject --</option>
@@ -105,7 +112,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
 
 
                         </div>

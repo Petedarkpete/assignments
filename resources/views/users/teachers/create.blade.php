@@ -7,6 +7,17 @@
         <h3>Add Teacher</h3>
 
         <div class="card">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    <p style="font-size: 0.85rem;">{{ session('success') }}</p>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    <p style="font-size: 0.85rem;">{{ session('error') }}</p>
+                </div>
+            @endif
             <div class="card-body">
                 <!-- Progress Bar -->
                 <div class="progress mb-4" style="height: 25px;">
@@ -53,10 +64,10 @@
                                     <option>Female</option>
                                 </select>
                             </div>
-                            <div class=" col-md-4 mb-3">
+                            {{-- <div class=" col-md-4 mb-3">
                                 <label class="form-label">Date of Birth</label>
                                 <input type="date" name="date_of_birth" class="form-control" required>
-                            </div>
+                            </div> --}}
                             <div class=" col-md-4 mb-3">
                                 <label class="form-label">Address</label>
                                 <input type="text" name="address" class="form-control" required>
@@ -86,7 +97,7 @@
                                 <input type="text" name="specialization" class="form-control">
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            {{-- <div class="col-md-6 mb-3">
                                 <label class="form-label">Subjects</label>
                                 <select name="subject_ids[]" class="form-control" multiple required>
                                     @foreach($subjects as $subject)
@@ -96,7 +107,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
 
                         </div>
 

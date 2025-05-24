@@ -166,11 +166,12 @@ class UserController extends Controller
                 // to change it later to required and numeric
                 'phone'            => 'required|numeric|unique:users,phone',
                 'gender'           => 'required|in:Male,Female',
-                'date_of_birth'    => 'required|date|before:today',
+                // 'date_of_birth'    => 'required|date|before:today',
                 'address'          => 'required|string|max:255',
                 'qualification'    => 'required|string|max:255',
                 'specialization'   => 'required|string|max:255',
-                'subject_id'       => 'required|exists:subjects,id',
+                //this will be added later
+                // 'subject_id'       => 'required|exists:subjects,id',
             ]);
 
             $full_name = $validated['first_name'] . ' ' . $validated['last_name'];
@@ -203,19 +204,17 @@ class UserController extends Controller
 
         } catch (ValidationException $e) {
             DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'error' => 'Validation error: Please fill all required fields correctly.',
-            ], 422);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Validation error: Please fill all required fields correctly.');
         }
 
         catch (\Exception $e) {
             DB::rollBack();
             Log::error('Teacher creation failed: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'error' => 'An unexpected error occurred while creating teacher.',
-            ], 500);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'An unexpected error occurred while creating teacher.');
         }
     }
 
@@ -224,7 +223,7 @@ class UserController extends Controller
 
         $id = Crypt::decryptString($id);
         $user = DB::table('users')->join('teachers', 'teachers.user_id', 'users.id')
-            ->select('users.*', 'teachers.*')
+            ->select('users.*', 'teachers.*', 'teachers.id as teacher_id')
             ->where('users.id', $id)
             ->first();
         $subjects = Subject::all();
@@ -232,6 +231,74 @@ class UserController extends Controller
         return view('users.teachers.edit', compact('user', 'subjects'));
 
     }
+
+    public function teacherUpdate(Request $request)
+    {
+
+        $id = $request->input('teacher_id');
+        Log::info("the id ". $id);
+        DB::beginTransaction();
+
+        try {
+            $teacher = Teacher::findOrFail($id);
+            $user = $teacher->user;
+
+            Log::info("the teacher ". json_encode($teacher));
+            Log::info("the user " .json_encode($user));
+
+
+            $validated = $request->validate([
+                'first_name'       => 'required|string|max:255',
+                'last_name'        => 'required|string|max:255',
+                'other_names'      => 'nullable|string|max:255',
+                'email'            => 'required|email|max:255|unique:users,email,' . $user->id,
+                'phone'            => 'required|numeric|unique:users,phone,' . $user->id,
+                'gender'           => 'required|in:Male,Female',
+                // 'date_of_birth'    => 'required|date|before:today',
+                'address'          => 'required|string|max:255',
+                'qualification'    => 'required|string|max:255',
+                'specialization'   => 'required|string|max:255',
+            ]);
+
+            $full_name = $validated['first_name'] . ' ' . $validated['last_name'];
+
+            // Update user
+            $user->update([
+                'name'          => $full_name,
+                'first_name'    => $validated['first_name'],
+                'last_name'     => $validated['last_name'],
+                'email'         => $validated['email'],
+                'phone'         => $validated['phone'],
+                'gender'        => $validated['gender'],
+                // 'date_of_birth' => $validated['date_of_birth'],
+                'address'       => $validated['address'],
+            ]);
+
+            // Update teacher
+            $teacher->update([
+                'qualification'  => $validated['qualification'],
+                'specialization' => $validated['specialization'],
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('teachers.view')
+                ->with('success', 'Teacher updated successfully.');
+
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Validation error: Please fill all required fields correctly.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Teacher update failed: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'An unexpected error occurred while updating teacher.');
+        }
+    }
+
 
     public function destroyTeacher($id)
     {
