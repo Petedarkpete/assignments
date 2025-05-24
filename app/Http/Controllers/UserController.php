@@ -185,7 +185,7 @@ class UserController extends Controller
                 'email'          => $validated['email'],
                 'phone'          => $validated['phone'],
                 'gender'         => $validated['gender'],
-                'date_of_birth'  => $validated['date_of_birth'],
+                // 'date_of_birth'  => $validated['date_of_birth'],
                 'address'        => $validated['address'],
                 'password'      => $hashedPassword,
             ]);
@@ -524,7 +524,7 @@ class UserController extends Controller
             Log::error('Student editing failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'error' => 'An unexpected error occurred while editing student.',
+                'error' => 'An unexpected error occurred while adding student.',
             ], 500);
         }
     }

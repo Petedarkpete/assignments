@@ -6,7 +6,7 @@
         <div class="row text-center">
             <div class="col-lg-12">
                 <div class="pagetitle">
-                    <h1>Students</h1>
+                    <h1>Students {{ Session::get('id') }}</h1>
                 </div>
             </div>
         </div>
@@ -278,7 +278,7 @@
                 <div class="mb-3">
                     <label for="excelFile" class="form-label">Upload Excel File</label>
                     <input type="file" name="excel_file" id="excelFile" class="form-control" accept=".xls,.xlsx" required>
-                    <div class="form-text">Only .xlsx or .xls files allowed. <a href="{{ asset('template/students_template.xlsx') }}">Download Template</a></div>
+                    <div class="form-text">Only .xlsx or .xls files allowed. <a href="{{ asset('templates/students_template.xlsx') }}">Download Template</a></div>
                 </div>
             </div>
 

@@ -53,7 +53,7 @@ class StudentsImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             'password'   => Hash::make(Str::random(10)),
         ]);
 
-        return Student::create([
+        Student::create([
             'user_id'          => $user->id,
             'class_id'         => $this->classId,
             'teacher_id'       => $this->teacherId,

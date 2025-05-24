@@ -27,7 +27,12 @@ class ClassController extends Controller
             ->get();
 
         //this should change, it is for testing
-        $teachers = Teacher::with('user')->get();
+        $teachers = Teacher::with('user')
+            ->whereNotIn('id', function ($query) {
+                $query->select('teacher_id')->from('class')->whereNotNull('teacher_id');
+            })
+            ->get();
+
         $streams = Stream::all();
         return view('class.view', compact('classes','teachers','streams'));
     }

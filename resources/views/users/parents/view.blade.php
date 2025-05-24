@@ -69,19 +69,19 @@
                                     </button>
                                     <button class="btn btn-danger btn-sm delete-button">
                                         <i class="bi bi-trash"></i>
-                                        <input type="hidden" id="parentId" value="{{ $parent->id }}">
+                                        <input type="hidden" id="parentId" value="{{ $parent->parent_id }}">
                                     </button>
                                 </td>
                             </tr>
 
-                            <div class="modal fade" id="editparentModal{{ $parent->id }}" tabindex="-1" aria-labelledby="editparentModalLabel{{ $parent->id }}" aria-hidden="true">
+                            <div class="modal fade" id="editparentModal{{ $parent->parent_id }}" tabindex="-1" aria-labelledby="editparentModalLabel{{ $parent->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                   <div class="modal-content">
                                     <form action="editparentForm" method="POST" class="editparentForm">
                                       @csrf
 
                                       <div class="modal-header">
-                                        <h5 class="modal-title" id="editparentModalLabel{{ $parent->id }}">Edit parent</h5>
+                                        <h5 class="modal-title" id="editparentModalLabel{{ $parent->parent_id }}">Edit parent</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                       </div>
 
@@ -380,7 +380,8 @@
                                         title: 'Deleted!',
                                         text: response.message,
                                         timer: 2000,
-                                        showConfirmButton: false
+                                        showConfirmButton: false,
+                                        timerProgressBar: true
                                     });
 
 

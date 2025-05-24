@@ -131,4 +131,17 @@ class ParentsController extends Controller
         }
     }
 
+    public function destroyParent($id)
+    {
+        try {
+            Log::info("Gets here.--");
+            $subject = ParentProfile::findOrFail($id);
+            $subject->delete();
+
+            return response()->json(['success' => true, 'message' => 'Parent deleted successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
 }
