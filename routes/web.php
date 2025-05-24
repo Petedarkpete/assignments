@@ -120,4 +120,4 @@ Route::prefix('parents')->name('class.')->group(function () {
 
 Route::post('/findTeacher/{id}', [App\Http\Controllers\StudentController::class, 'findTeacher']);
 Route::get('/findStudent', [App\Http\Controllers\StudentController::class, 'findStudent']);
-
+Route::get('/findStudents/{id}', [App\Http\Controllers\StudentController::class, 'findStudents']);

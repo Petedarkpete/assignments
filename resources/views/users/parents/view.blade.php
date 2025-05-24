@@ -45,6 +45,7 @@
                                 <th>Email</th>
                                 <th>Relationship</th>
                                 <th>No of Students</th>
+                                <th>View Students</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -57,6 +58,11 @@
                                 <td>{{ $parent->email }}</td>
                                 <td>{{ $parent->relationship }}</td>
                                 <td>{{ $parent->student_count }}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-success btn-sm open-student-modal" data-parent-id="{{ $parent->parent_id }}" data-bs-toggle="modal" data-bs-target="#studentModal">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
                                 <td>
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editparentModal{{ $parent->id }}">
                                         <i class="bi bi-pencil-square"></i>
@@ -265,6 +271,39 @@
         </div>
     </div>
 
+    <!-- Student Details Modal -->
+    <div class="modal fade" id="studentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Student Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="studentDetailsContainer">
+                        <!-- Single student card template -->
+                        <div id="studentCardTemplate" class="card mb-3" style="display: none;">
+                            <div class="card-body">
+                                <h5 class="card-title" id="studentName"></h5>
+                                <p class="card-text">
+                                    <strong>Class:</strong> <span id="studentClass"></span><br>
+                                    <strong>Class Teacher:</strong> <span id="studentTeacher"></span><br>
+                                    <strong>Assignments Done:</strong> <span id="studentAssignments"></span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic cards will be cloned and populated here -->
+                        <div id="studentCards"></div>
+                    </div>
+                </div>
+                <div class="modal-footer p-0">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script>
 
@@ -291,7 +330,7 @@
                         console.log('Teacher Response:', response);
                         if (response.name && response.id) {
                             $('#bulkparentCode').val(response.id); // not response.name
-$('#bulkTeacherName').val(response.name);
+                            $('#bulkTeacherName').val(response.name);
 
                         } else {
                             $(teacherNameFieldId).val('No teacher found');
@@ -624,6 +663,52 @@ $('#bulkTeacherName').val(response.name);
 
     });
 
+    $(document).on('click', '.open-student-modal', function(e) {
+        e.preventDefault();
+
+        const parentId = $(this).data('parent-id');
+        const studentCards = $('#studentCards');
+        const studentCardTemplate = $('#studentCardTemplate');
+
+        // Clear previous content
+        studentCards.empty();
+
+        // Show loading spinner or message if needed
+        $.ajax({
+            url: '/findStudents/' + parentId,
+            method: 'GET',
+            success: function(response) {
+                if (!response.success || !response.students || response.students.length === 0) {
+                    studentCards.append(`
+                       <div class="text-center py-4">
+                            <i class="bi bi-x-circle text-muted" style="font-size: 3rem;"></i>
+                            <p class="mt-2 text-muted">No students found for this parent.</p>
+                        </div>
+                    `);
+                    return;
+                }
+
+                response.students.forEach(student => {
+
+                    const newCard = studentCardTemplate.clone().removeAttr('id').show();
+
+                    newCard.find('#studentName').text(student.student_name || 'Unknown');
+                    newCard.find('#studentClass').text(student.class_label || 'N/A');
+                    newCard.find('#studentTeacher').text(student.teacher_name || 'N/A');
+
+                    // Append to container
+                    studentCards.append(newCard);
+                });
+            },
+            error: function(xhr) {
+                let errorMessage = 'Error loading student data.';
+                if (xhr.status === 404) {
+                    errorMessage = 'No students found for this parent.';
+                }
+                studentCards.append(`<div class="alert alert-danger">${errorMessage}</div>`);
+            }
+        });
+    });
 
     </script>
 @endsection

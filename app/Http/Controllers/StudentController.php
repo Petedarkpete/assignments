@@ -123,5 +123,40 @@ class StudentController extends Controller
 
     }
 
+    public function findStudents (Request $request, $id)
+    {
+        Log::info("the id " .$id);
+        $students = DB::table('students')
+            ->join('parents', 'parents.id','students.parent_id')
+            ->join('users', 'users.id', 'students.user_id')
+            ->join('class','class.id','students.class_id')
+            ->join('streams', 'streams.id','class.stream_id')
+            ->join('teachers', 'teachers.id', 'students.teacher_id')
+            ->join('users as u', 'u.id', 'teachers.user_id')
+            ->select('users.name as student_name',
+                    'class.label as class_label',
+                    'class.stream_id',
+                    'u.name as teacher_name'
+                    )
+            ->where('students.parent_id', $id)
+            ->get();
+
+        Log::info("the students " . json_encode($students));
+
+        if($students->isEmpty())
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'No students found for this parent.',
+                'students' => []
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'students' => $students
+        ]);
+    }
+
 
 }

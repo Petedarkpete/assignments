@@ -24,10 +24,10 @@ class ParentsController extends Controller
             ->join('users', 'parents.user_id', 'users.id')
             ->leftJoin('students', 'parents.id', '=', 'students.parent_id')
             ->select(
+                'parents.id as parent_id',
                 'parents.*',
                 'users.*',
                 DB::raw('COUNT(students.id) as student_count'),
-                DB::raw('GROUP_CONCAT(students.id) as student_ids')
             )
             ->groupBy('parents.id', 'users.id')
             ->get();
