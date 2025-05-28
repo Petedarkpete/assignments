@@ -64,7 +64,7 @@
                                     </button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editparentModal{{ $parent->id }}">
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editparentModal{{ $parent->parent_id }}">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                     <button class="btn btn-danger btn-sm delete-button">

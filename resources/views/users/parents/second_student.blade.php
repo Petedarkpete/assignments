@@ -23,6 +23,17 @@
                                 <label class="form-label">Student Admission No</label>
                                 <input type="text" id="admission_no" name="admission_no" class="form-control" required>
                             </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Add another student?</label><br>
+                                <div class="form-check form-check-inline mt-1">
+                                    <input class="form-check-input" type="radio" name="add_student" id="add_student_yes" value="yes">
+                                    <label class="form-check-label" for="add_student_yes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline mt-1">
+                                    <input class="form-check-input" type="radio" name="add_student" id="add_student_no" value="no" checked>
+                                    <label class="form-check-label" for="add_student_no">No</label>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row d-none d-print-block" id="studentInfo">

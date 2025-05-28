@@ -114,6 +114,7 @@ Route::prefix('parents')->name('class.')->group(function () {
     Route::post('/update/{id}', [App\Http\Controllers\ParentsController::class, 'updateParent'])->name('update');
     Route::post('/import', [App\Http\Controllers\ParentsController::class, 'importParents'])->name('parents.import');
     Route::get('/second_student', [App\Http\Controllers\ParentsController::class, 'secondStudent']);
+    Route::get('/second_student_store', [App\Http\Controllers\ParentsController::class, 'secondStudent']);
 });
 
 
