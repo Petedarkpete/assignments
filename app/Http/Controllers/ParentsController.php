@@ -106,7 +106,9 @@ class ParentsController extends Controller
 
             if($validated['add_student'] = 'yes'){
             return redirect()->to('/parents/second_student')
-                ->with('success', 'Parent created successfully. Add information for second student');
+                ->with('success', 'Parent created successfully. Add information for second student')
+                //pass the parent_id of the new saved parent as a session
+                ->with('parent_id', $parent->id);
             } else {
                 return redirect()->to('/parents/view')
                 ->with('success', 'Teacher created successfully.');
@@ -128,6 +130,28 @@ class ParentsController extends Controller
                 'success' => false,
                 'error' => 'An unexpected error occurred while creating teacher.',
             ], 500);
+        }
+    }
+
+    public function secondStudentStore (Request $request)
+    {
+        $validated = $request->validate([
+            'admission_no'   => 'required|string|exists:students,admission_number',
+            'class_id'       => 'required|exists:class,id',
+            'teacher_id'     => 'required|exists:teachers,id',
+            'add_student'    => 'required'
+        ]);
+        try {
+            //code...
+            Log::info("all the info" . json_encode($request->all()));
+            $student = Student::where('admission_number', $validated['admission_no'])->firstOrFail();
+
+            $updateSuccess = $student->update([
+                'parent_id' => $request->parent_id,
+            ]);
+            dd();
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 

@@ -14,7 +14,7 @@
                     </div>
                 @endif
 
-                <form action="/parents/store" method="POST"  enctype="multipart/form-data">
+                <form action="/parents/second_student_store" method="POST"  enctype="multipart/form-data">
                     @csrf
 
                         <div class="row mb-3">
@@ -53,6 +53,7 @@
                             </div>
                             <input type="hidden" id="class_id" name="class_id">
                             <input type="hidden" id="teacher_id" name="teacher_id">
+                            <input type="hidden" name="parent_id" value="{{ session('parent_id') }}">
                         </div>
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-success" id="submitButton">Submit</button>
