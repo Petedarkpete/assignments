@@ -406,8 +406,10 @@ class UserController extends Controller
 
     }
 
-    public function updateStudent(Request $request, $id)
+   public function updateStudent(Request $request, $id)
     {
+        Log::info('Student update request', $request->all());
+
         $validated = $request->validate([
             'first_name'       => 'required|string|max:255',
             'last_name'        => 'required|string|max:255',
@@ -415,34 +417,39 @@ class UserController extends Controller
             'class_id'         => 'required|exists:class,id',
             'teacher_id'       => 'required|exists:teachers,id',
             'index_number'     => 'required|digits_between:1,6',
-            'admission_number' => 'required|string|max:255|',
+            'admission_number' => 'required|string|max:255',
         ]);
 
         DB::beginTransaction();
         try {
-
             $student = Student::findOrFail($id);
+            Log::info("the student ".json_encode($student->user_id));
 
             $student->update([
-                'class_id'          => $validated['class_id'],
-                'teacher_id'        => $validated['teacher_id'],
-                'index_number'      => $validated['index_number'],
-                'admission_number'  => $validated['admission_number'],
+                'class_id'         => $validated['class_id'],
+                'teacher_id'       => $validated['teacher_id'],
+                'index_number'     => $validated['index_number'],
+                'admission_number' => $validated['admission_number'],
             ]);
 
-            $user = $student->user;
-            $user->update([
-                'first_name' => $validated['first_name'],
-                'last_name'  => $validated['last_name'],
-                'name'       => $validated['first_name'] . ' ' . $validated['last_name'],
-                'gender'     => $validated['gender'],
-            ]);
+            $user = User::find($student->user_id);
+            
+            if ($user) {
+                $user->update([
+                    'first_name' => $validated['first_name'],
+                    'last_name'  => $validated['last_name'],
+                    'name'       => $validated['first_name'] . ' ' . $validated['last_name'],
+                    'gender'     => $validated['gender'],
+                ]);
+            } else {
+                Log::warning("User not found for student ID {$id}");
+            }
+
             DB::commit();
-
             return response()->json([
                 'success' => true,
                 'message' => 'Student updated successfully.'
-            ]);
+            ], 200);
 
         } catch (ValidationException $e) {
             DB::rollBack();
@@ -450,9 +457,7 @@ class UserController extends Controller
                 'success' => false,
                 'error' => 'Validation error: Please fill all required fields correctly.',
             ], 422);
-        }
-
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Student editing failed: ' . $e->getMessage());
             return response()->json([
@@ -460,8 +465,8 @@ class UserController extends Controller
                 'error' => 'An unexpected error occurred while editing student.',
             ], 500);
         }
-
     }
+
     public function destroyStudent($id)
     {
         try {
