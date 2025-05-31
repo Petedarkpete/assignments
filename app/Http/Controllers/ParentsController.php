@@ -141,16 +141,26 @@ class ParentsController extends Controller
             'teacher_id'     => 'required|exists:teachers,id',
             'add_student'    => 'required'
         ]);
+        DB::beginTransaction();
         try {
-
             Log::info("all the info" . json_encode($request->all()));
             $student = Student::where('admission_number', $validated['admission_no'])->firstOrFail();
 
             $updateSuccess = $student->update([
                 'parent_id' => $request->parent_id,
             ]);
+             if (!$updateSuccess) {
+                throw new \Exception('Failed to update student.');
+            }
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Student updated successfully.']);
         } catch (\Throwable $th) {
-            //throw $th;
+
+            DB::rollBack();
+            Log::error('Error in secondStudentStore: ' . $th->getMessage());
+            return response()->json(['success' => false, 'message' => 'Something went wrong.'], 500);
+
         }
     }
 
