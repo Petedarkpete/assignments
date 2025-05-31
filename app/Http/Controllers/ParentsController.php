@@ -142,14 +142,13 @@ class ParentsController extends Controller
             'add_student'    => 'required'
         ]);
         try {
-            //code...
+
             Log::info("all the info" . json_encode($request->all()));
             $student = Student::where('admission_number', $validated['admission_no'])->firstOrFail();
 
             $updateSuccess = $student->update([
                 'parent_id' => $request->parent_id,
             ]);
-            dd();
         } catch (\Throwable $th) {
             //throw $th;
         }

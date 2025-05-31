@@ -423,7 +423,6 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
             $student = Student::findOrFail($id);
-            Log::info("the student ".json_encode($student->user_id));
 
             $student->update([
                 'class_id'         => $validated['class_id'],
@@ -433,7 +432,7 @@ class UserController extends Controller
             ]);
 
             $user = User::find($student->user_id);
-            
+
             if ($user) {
                 $user->update([
                     'first_name' => $validated['first_name'],
