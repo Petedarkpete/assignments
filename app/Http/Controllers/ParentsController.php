@@ -153,14 +153,12 @@ class ParentsController extends Controller
                 throw new \Exception('Failed to update student.');
             }
             DB::commit();
-
             return response()->json(['success' => true, 'message' => 'Student updated successfully.']);
         } catch (\Throwable $th) {
 
             DB::rollBack();
-            Log::error('Error in secondStudentStore: ' . $th->getMessage());
+            Log::error('Error in adding second student ' . $th->getMessage());
             return response()->json(['success' => false, 'message' => 'Something went wrong.'], 500);
-
         }
     }
 
