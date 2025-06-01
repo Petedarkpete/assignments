@@ -488,11 +488,12 @@ class UserController extends Controller
                 'class_id'   => 'required|exists:class,id',
                 'excel_file' => 'required|mimes:xlsx,xls',
             ]);
-            // if ($request->hasFile('excel_file')) {
-            //     Log::info('Uploaded file:', [
-            //         'filename' => $request->file('excel_file')->getClientOriginalName()
-            //     ]);
-            // }
+            
+            if ($request->hasFile('excel_file')) {
+               Log::info('Uploaded file:', [
+                    'filename' => $request->file('excel_file')->getClientOriginalName()
+                 ]);
+            }
 
             $import = new StudentsImport($validated['teacher_id'], $validated['class_id']);
             $import->import($request->file('excel_file'));
@@ -517,7 +518,6 @@ class UserController extends Controller
                 'success' => true,
                 'message' => 'Students imported successfully.'
             ]);
-
 
         } catch (ValidationException $e) {
             return response()->json([
