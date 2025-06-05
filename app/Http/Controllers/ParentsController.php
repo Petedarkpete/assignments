@@ -139,11 +139,13 @@ class ParentsController extends Controller
             'admission_no'   => 'required|string|exists:students,admission_number',
             'class_id'       => 'required|exists:class,id',
             'teacher_id'     => 'required|exists:teachers,id',
+            'parent_id'      => 'required|exists:parents,id',
             'add_student'    => 'required'
         ]);
         DB::beginTransaction();
         try {
             Log::info("all the info" . json_encode($request->all()));
+
             $student = Student::where('admission_number', $validated['admission_no'])->firstOrFail();
 
             $updateSuccess = $student->update([
@@ -153,7 +155,17 @@ class ParentsController extends Controller
                 throw new \Exception('Failed to update student.');
             }
             DB::commit();
-            return response()->json(['success' => true, 'message' => 'Student updated successfully.']);
+
+            if($validated['add_student'] = 'yes'){
+            return redirect()->to('/parents/second_student')
+                ->with('success', 'Student updated successfully. Add information for second student')
+                //pass the parent_id of the new saved parent as a session
+                ->with('parent_id', $request->parent_id);
+            } else {
+                return redirect()->to('/parents/view')
+                ->with('success', 'Parent created successfully.');
+            }
+
         } catch (\Throwable $th) {
 
             DB::rollBack();
