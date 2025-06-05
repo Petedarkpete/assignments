@@ -315,18 +315,22 @@ class UserController extends Controller
 
     public function studentsView ()
     {
-        $students = DB::table('students')
-            ->join('users', 'users.id','students.user_id')
-            ->join('teachers', 'teachers.id','students.teacher_id')
-            ->join('class', 'class.id', 'students.class_id')
-            ->join('streams','streams.id','class.stream_id')
-            ->join('users as us', 'us.id', 'teachers.user_id')
-            ->select('students.id',
-                'users.first_name', 'users.last_name', 'users.name',
-                'class.label','students.index_number','students.admission_number',
-                'students.teacher_id', 'streams.stream', 'users.gender',
-                'us.name as tname', 'class.stream_id as cid')
-            ->get();
+
+    $students = DB::table('students')
+        ->leftJoin('users', 'users.id','students.user_id')
+        ->leftJoin('teachers', 'teachers.id','students.teacher_id')
+        ->leftJoin('class', 'class.id', 'students.class_id')
+        ->leftJoin('streams','streams.id','class.stream_id')
+        ->leftJoin('users as us', 'us.id', 'teachers.user_id')
+        ->select(
+            'students.id',
+            'users.first_name', 'users.last_name', 'users.name',
+            'class.label','students.index_number','students.admission_number',
+            'students.teacher_id', 'streams.stream', 'users.gender',
+            'us.name as tname', 'class.stream_id as cid'
+        )
+        ->get();
+
         $teachers = DB::table('teachers')
             ->join('users','users.id','teachers.user_id')
             ->select('teachers.id','users.name')
@@ -488,7 +492,7 @@ class UserController extends Controller
                 'class_id'   => 'required|exists:class,id',
                 'excel_file' => 'required|mimes:xlsx,xls',
             ]);
-            
+
             if ($request->hasFile('excel_file')) {
                Log::info('Uploaded file:', [
                     'filename' => $request->file('excel_file')->getClientOriginalName()
