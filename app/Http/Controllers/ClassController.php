@@ -100,6 +100,8 @@ class ClassController extends Controller
     {
         try {
 
+            Log::info("the requests  ". json_encode($request->all()));
+
             $validated = $request->validate([
                 'stream' => 'required|exists:streams,id',
                 'label' => 'required|string|max:255',
@@ -115,20 +117,31 @@ class ClassController extends Controller
                 'message' => 'Class updated successfully.'
             ]);
         } catch (ValidationException $e) {
+
+            Log::warning('Validation error while updating the class', [
+                'errors' => $e->validator->errors()->toArray()
+            ]);
             return response()->json([
                 'success' => false,
                 'message' => 'Validation error.',
                 'errors' => $e->validator->errors()->toArray()
             ], 422);
 
-        } catch (\Exception $e) {
+       } catch (\Exception $e) {
+        Log::error('Error while updating the class', [
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString(),
+        ]);
 
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while updating the class.',
-                'error' => $e->getMessage()
-            ], 500); // Use 500 for Internal Server Error
-        }
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred while updating the class.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+
     }
 
     public function destroy($id)
