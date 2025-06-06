@@ -20,9 +20,9 @@ class ClassController extends Controller
     //
     public function index(){
         $classes = DB::table('class')
-            ->join('teachers', 'teachers.id','class.teacher_id')
+            ->leftJoin('teachers', 'teachers.id','class.teacher_id')
             ->join('streams', 'streams.id','class.stream_id')
-            ->join('users', 'users.id', 'teachers.user_id')
+            ->leftJoin('users', 'users.id', 'teachers.user_id')
             ->select('class.id','streams.stream', 'streams.id as str_id', 'class.label', 'users.name','class.status', 'teachers.id as tr_id')
             ->get();
 
@@ -67,6 +67,19 @@ class ClassController extends Controller
             ]);
             Log::info("the validated ". json_encode($validated));
 
+            $existingClass = Clas::where('stream_id', $validated['stream_id'])
+                ->where('label', $validated['label'])
+                ->first();
+
+            Log::info("the existing class ". json_encode($existingClass));
+
+            if ($existingClass) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'A class with this label already exists in the selected stream.'
+                ], 422);
+            }
+
 
             Clas::create($validated);
 
@@ -105,12 +118,13 @@ class ClassController extends Controller
             $validated = $request->validate([
                 'stream' => 'required|exists:streams,id',
                 'label' => 'required|string|max:255',
-                'teacher_id' => 'nullable|exists:users,id',
+                'teacher_id' => 'nullable|exists:teachers,id',
                 'status' => 'required|boolean',
             ]);
 
             $class = Clas::findOrFail($id);
-            $class->update($request->only('stream','label','teacher_id','status'));
+            Log::info(" the class " .json_encode($class));
+            $class->update($request->only('stream_id', 'label', 'teacher_id', 'status'));
 
             return response()->json([
                 'success' => true,

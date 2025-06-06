@@ -302,7 +302,6 @@ class UserController extends Controller
 
     public function destroyTeacher($id)
     {
-        Log::info("gets here");
         try {
             $teacher = User::findOrFail($id);
             $teacher->delete();

@@ -16,10 +16,10 @@ return new class extends Migration
                 $table->id();
                 $table->string('label');
                 $table->unsignedBigInteger('stream_id');
-                $table->foreign('stream_id')->references('id')->on('streams')->onDelete('cascade')->onUpdate('cascade');
+                $table->foreign('stream_id')->references('id')->on('streams')->onDelete('set null')->onUpdate('cascade');
 
                 $table->unsignedBigInteger('teacher_id')->nullable();
-                $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade')->onUpdate('cascade');
+                $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('set null')->onUpdate('cascade');
 
                 $table->boolean('status');
 

@@ -110,9 +110,15 @@
                                                 <label class="form-label">Class Teacher</label>
                                                 <select class="form-select" name="teacher_id" id="teacher_id" required>
                                                     <option value="">-- Change Teacher --</option>
-                                                    @foreach($classes as $cls)
-                                                        <option value="{{ $cls->tr_id }}" {{ $cls->name == $class->name ? 'selected' : '' }}>
-                                                            {{ $cls->name }}
+                                                    @if($class->tr_id && $class->name)
+                                                        <option value="{{ $class->tr_id }}" selected>
+                                                            {{ $class->name }} (Current)
+                                                        </option>
+                                                    @endif
+
+                                                    @foreach($teachers as $teacher)
+                                                        <option value="{{ $teacher->id }}">
+                                                            {{ $teacher->user->name ?? 'Unnamed Teacher' }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -162,7 +168,13 @@
                             </div>
                             <div class="mb-3">
                                 <label for="className" class="form-label">Class Label</label>
-                                <input type="text" class="form-control" id="className" name="label" required placeholder="eg, West, Blue, Green">
+                                 <select name="label" id="className" class="form-control" required>
+                                    <option value="West">West</option>
+                                    <option value="East">East</option>
+                                    <option value="North">North</option>
+                                    <option value="South">South</option>
+                                    <option value="Central">Central</option>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="teacher_id" class="form-label">Class Teacher</label>
