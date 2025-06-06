@@ -151,12 +151,12 @@ class ClassController extends Controller
             'trace' => $e->getTraceAsString(),
         ]);
 
-        return response()->json([
-            'success' => false,
-            'message' => 'An error occurred while updating the class.',
-            'error' => $e->getMessage()
-        ], 500);
-    }
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the class.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
 
     }
 
@@ -179,22 +179,24 @@ class ClassController extends Controller
     public function checkClass(Request $request)
     {
         Log::info("the request ". json_encode($request->all()));
-        
+        try {
+                $validated = $request->validate([
+                    'stream' => 'required|exists:streams,id',
+                ]);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                Log::error("Validation failed: " . json_encode($e->errors()));
+                throw $e; // re-throw or handle accordingly
+            }
 
-        $exists = Clas::where('label', $request->label)
-            ->where('stream_id', $request->stream_id)
-            ->exists();
-        Log::info("the exists ". json_encode($exists));
+        $usedLabels = Clas::where('stream_id', $validated['stream'])->pluck('label')->toArray();
 
-        if ($exists) {
-            Log::info("the class already exists");
-            return response()->json([
-                'success' => false,
-                'message' => 'A class with this label already exists in the selected stream.'
+        $allLabels = ['West', 'East', 'North', 'South', 'Central'];
+
+        $available = array_diff($allLabels, $usedLabels);
+
+        return response()->json([
+                'labels' => array_values($available)
             ]);
-        }
-
-        return response()->json(['success' => true]);
     }
 
 }

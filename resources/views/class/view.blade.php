@@ -168,12 +168,9 @@
                             </div>
                             <div class="mb-3">
                                 <label for="className" class="form-label">Class Label</label>
-                                 <select name="label" id="className" class="form-control" required>
-                                    <option value="West">West</option>
-                                    <option value="East">East</option>
-                                    <option value="North">North</option>
-                                    <option value="South">South</option>
-                                    <option value="Central">Central</option>
+                                <select name="label" id="className" class="form-control" required>
+                                    <option value="">-- Select Label --</option>
+                                    <!-- Dynamic options will be added here -->
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -294,32 +291,32 @@
         });
     });
 
-    $('#className, #stream_id').on('change', function () {
-        const className = $('#className').val();
+    $('#stream_id').on('change', function () {
         const stream = $('#stream_id').val();
 
-        console.log('Class Name:', className);
         console.log('Stream:', stream);
 
-        if (className && stream) {
+        if (stream) {
             $.ajax({
                 url: '/checkClass',
                 type: 'POST',
                 data: {
-                    className: className,
                     stream: stream,
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    if (response.exists) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Class Name Exists',
-                            text: 'Please choose a different class name.'
-                        });
-                        $('#className').val('');
-                    }
-                },
+                const labelSelect = $('#className');
+                labelSelect.empty(); // Clear previous options
+
+                labelSelect.append('<option value="">-- Select Label --</option>');
+
+                response.labels.forEach(label => {
+                    labelSelect.append(`<option value="${label}">${label}</option>`);
+                });
+            },
+            error: function(xhr) {
+                console.error("Error loading class labels", xhr.responseJSON);
+            }
             })
         }
     })
