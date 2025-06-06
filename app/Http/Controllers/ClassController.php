@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
+use function Illuminate\Log\log;
+
 class ClassController extends Controller
 {
     //
@@ -173,4 +175,26 @@ class ClassController extends Controller
     public function createClass (){
         return view('class.create');
     }
+
+    public function checkClass(Request $request)
+    {
+        Log::info("the request ". json_encode($request->all()));
+        
+
+        $exists = Clas::where('label', $request->label)
+            ->where('stream_id', $request->stream_id)
+            ->exists();
+        Log::info("the exists ". json_encode($exists));
+
+        if ($exists) {
+            Log::info("the class already exists");
+            return response()->json([
+                'success' => false,
+                'message' => 'A class with this label already exists in the selected stream.'
+            ]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
 }

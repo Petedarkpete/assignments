@@ -293,6 +293,36 @@
             }
         });
     });
+
+    $('#className, #stream_id').on('change', function () {
+        const className = $('#className').val();
+        const stream = $('#stream_id').val();
+
+        console.log('Class Name:', className);
+        console.log('Stream:', stream);
+
+        if (className && stream) {
+            $.ajax({
+                url: '/checkClass',
+                type: 'POST',
+                data: {
+                    className: className,
+                    stream: stream,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.exists) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Class Name Exists',
+                            text: 'Please choose a different class name.'
+                        });
+                        $('#className').val('');
+                    }
+                },
+            })
+        }
+    })
 });
 
 
