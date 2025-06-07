@@ -93,7 +93,7 @@
                                           <div class="modal-body">
                                             <div class="mb-3">
                                               <label class="form-label">Stream</label>
-                                              <select class="form-select" name="stream" id="stream" required>
+                                              <select class="form-select" name="stream" id="stream" required disabled>
                                                 <option value="">-- Select Stream --</option>
                                                 @foreach($classes as $cls)
                                                     <option value="{{ $cls->str_id }}" {{ $cls->stream == $class->stream ? 'selected' : '' }}>
@@ -104,7 +104,7 @@
                                                                                       </div>
                                             <div class="mb-3">
                                               <label class="form-label">Class Label</label>
-                                              <input type="text" class="form-control" name="label" value="{{ $class->label }}" required>
+                                              <input type="text" class="form-control" name="label" value="{{ $class->label }}" required readonly>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Class Teacher</label>

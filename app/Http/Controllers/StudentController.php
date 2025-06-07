@@ -86,8 +86,8 @@ class StudentController extends Controller
 
         $student = DB::table('students')
             ->join('teachers', 'teachers.id', '=', 'students.teacher_id')
-            ->join('class', 'class.id', '=', 'students.class_id')
-            ->join('streams', 'streams.id', '=', 'class.stream_id')
+            ->leftJoin('class', 'class.id', '=', 'students.class_id')
+            ->leftJoin('streams', 'streams.id', '=', 'class.stream_id')
             ->join('users as teachers_user', 'teachers_user.id', '=', 'teachers.user_id')
             ->join('users as student_user', 'student_user.id', '=', 'students.user_id')
             ->select(
@@ -126,22 +126,22 @@ class StudentController extends Controller
     public function findStudents (Request $request, $id)
     {
         Log::info("the id " .$id);
-        $students = DB::table('students')
-            ->join('parents', 'parents.id','students.parent_id')
+        $query = DB::table('students')
+            ->join('parents', 'parents.id', 'students.parent_id')
             ->join('users', 'users.id', 'students.user_id')
-            ->join('class','class.id','students.class_id')
-            ->join('streams', 'streams.id','class.stream_id')
-            ->join('teachers', 'teachers.id', 'students.teacher_id')
-            ->join('users as u', 'u.id', 'teachers.user_id')
-            ->select('users.name as student_name',
-                    'class.label as class_label',
-                    'class.stream_id',
-                    'u.name as teacher_name'
-                    )
-            ->where('students.parent_id', $id)
-            ->get();
+            ->leftJoin('class','class.id','students.class_id')
+            ->leftJoin('streams', 'streams.id','class.stream_id')
+            ->leftJoin('teachers', 'teachers.id', 'students.teacher_id')
+            ->leftJoin('users as u', 'u.id', 'teachers.user_id')
+            ->select(
+                'users.name as student_name',
+                'class.label as class_label',
+                'class.stream_id',
+                'u.name as teacher_name'
+            )
+            ->where('students.parent_id', $id);
 
-        Log::info("the students " . json_encode($students));
+        $students = $query->get();
 
         if($students->isEmpty())
         {
