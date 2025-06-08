@@ -124,6 +124,7 @@ class ClassController extends Controller
                 'status' => 'required|boolean',
             ]);
 
+            Log::info("the validated ". json_encode($validated));
             $class = Clas::findOrFail($id);
             Log::info(" the class " .json_encode($class));
             $class->update($request->only('stream_id', 'label', 'teacher_id', 'status'));
