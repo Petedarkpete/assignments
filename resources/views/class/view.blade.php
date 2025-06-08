@@ -93,7 +93,7 @@
                                           <div class="modal-body">
                                             <div class="mb-3">
                                               <label class="form-label">Stream</label>
-                                              <select class="form-select" name="stream" id="stream" required disabled>
+                                              <select class="form-select"  disabled>
                                                 <option value="">-- Select Stream --</option>
                                                 @foreach($classes as $cls)
                                                     <option value="{{ $cls->str_id }}" {{ $cls->stream == $class->stream ? 'selected' : '' }}>
@@ -101,7 +101,8 @@
                                                     </option>
                                                 @endforeach
                                               </select>
-                                                                                      </div>
+                                              <input type="hidden" name="stream" id="stream" value="{{ $class->str_id }}">
+                                            </div>
                                             <div class="mb-3">
                                               <label class="form-label">Class Label</label>
                                               <input type="text" class="form-control" name="label" value="{{ $class->label }}" required readonly>
@@ -258,6 +259,7 @@
             });
 
         let form = $(this);
+
         var classIdUpdate = $('#classId').val();
         console.log('class ID:', classIdUpdate);
 
