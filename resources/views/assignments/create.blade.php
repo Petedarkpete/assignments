@@ -4,7 +4,7 @@
 <main id="main" class="main">
 
     <div class="container">
-        <h3>Add Teacher</h3>
+        <h3>Add Assignment</h3>
 
         <div class="card">
             @if(session('success'))
@@ -25,8 +25,6 @@
 
                     <!-- Step 1: Personal Information -->
                     <div id="step-1">
-                        <h5 class="mb-3">Add Assignment</h5>
-
                         <div class="row mb-2">
                             <!-- Title -->
                             <div class="col-md-6 mb-3">
@@ -76,7 +74,7 @@
                                 <select name="class_id" class="form-control" required>
                                     <option value="">Select Class</option>
                                     @foreach($classes as $class)
-                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                        <option value="{{ $class->id }}">{{ $class->label }}</option>
                                     @endforeach
                                 </select>
                             </div>

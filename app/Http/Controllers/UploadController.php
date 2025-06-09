@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clas;
+use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use App\Models\UploadedAssignment;
@@ -22,10 +24,12 @@ class UploadController extends Controller
     public function createAssignmentView()
     {
         $teacherId = FacadesSession::get('id');
-
         $teacher = Teacher::where('user_id', $teacherId)->first();
-        
-        return view('assignments.create', compact('teacher'));
+
+        $subjects = Subject::all();
+        $classes = Clas::all();
+
+        return view('assignments.create', compact('teacher','subjects','classes'));
     }
     public function createAssignment(Request $request)
     {
