@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use App\Models\UploadedAssignment;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session as FacadesSession;
 
 class UploadController extends Controller
 {
@@ -15,7 +18,16 @@ class UploadController extends Controller
         $assignments = UploadedAssignment::all();
         return view('assignments.upload_ass',compact('assignments'));
     }
-    public function upload(Request $request)
+
+    public function createAssignmentView()
+    {
+        $teacherId = FacadesSession::get('id');
+
+        $teacher = Teacher::where('user_id', $teacherId)->first();
+        
+        return view('assignments.create', compact('teacher'));
+    }
+    public function createAssignment(Request $request)
     {
         $assignment = new UploadedAssignment;
         $assignment->year = $request->year;
@@ -25,18 +37,18 @@ class UploadController extends Controller
         $assignment->details = $request->description;
         $assignment->user_id = Auth::id();
 
-        
+
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
             $destination = public_path('uploads/assignments');
             $file->move($destination, $filename);
-    
+
             $assignment->file = 'uploads/assignments/' . $filename;
         }
-    
-        
+
+
         $assignment->save();
 
         return redirect()->back()->with('success', 'Assignment uploaded successfully');

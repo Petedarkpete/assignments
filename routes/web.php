@@ -47,6 +47,7 @@ Route::post('/import',[App\Http\Controllers\UserController:: class, 'import'])->
 //assignments
 Route::get('dashboard', [App\Http\Controllers\DashboardController:: class, 'index'])->name('dashboard');
 Route::get('assignments', [App\Http\Controllers\UploadController:: class, 'index'])->name('upload_ass');
+Route::get('create_assignment', [App\Http\Controllers\UploadController:: class, 'createAssignmentView'])->name('assignments.create');
 Route::post('upload_assignment', [App\Http\Controllers\UploadController:: class, 'upload'])->name('upload_assignment');
 
 Route::get('/users/view', [UserController::class, 'index'])->name('users');
