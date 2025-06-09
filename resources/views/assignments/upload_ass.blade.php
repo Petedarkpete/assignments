@@ -19,8 +19,9 @@
         <div class="card">
             <div class="card-title d-flex justify-content-end">
                 <div class="col-12">
-                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_assignment">Add Assignment</button>
+                    <a href="{{ route('assignments.create') }}" class="btn btn-primary btn-sm">Add Assignment</a>
                 </div>
+
             </div>
 
             <div class="card-body">
@@ -106,13 +107,13 @@
                         <label for="input2">Upload</label>
                         <input type="file" class="form-control" id="file" placeholder="" name="file">
                         <!-- //<input type="hidden" class="form-control" id="input2" placeholder="" name="user_id" value="{{Auth::user()->id}}"> -->
-                        
+
                     </div>
 
                 </div>
-                
+
             </div>
-        
+
       </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

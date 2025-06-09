@@ -44,8 +44,9 @@ Route::post('/delete_user/{id}', [App\Http\Controllers\UserController:: class, '
 
 Route::post('/import',[App\Http\Controllers\UserController:: class, 'import'])->name('import');
 
+//assignments
 Route::get('dashboard', [App\Http\Controllers\DashboardController:: class, 'index'])->name('dashboard');
-Route::get('upload_ass', [App\Http\Controllers\UploadController:: class, 'index'])->name('upload_ass');
+Route::get('assignments', [App\Http\Controllers\UploadController:: class, 'index'])->name('upload_ass');
 Route::post('upload_assignment', [App\Http\Controllers\UploadController:: class, 'upload'])->name('upload_assignment');
 
 Route::get('/users/view', [UserController::class, 'index'])->name('users');
