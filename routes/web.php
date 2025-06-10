@@ -49,6 +49,7 @@ Route::get('dashboard', [App\Http\Controllers\DashboardController:: class, 'inde
 Route::get('assignments', [App\Http\Controllers\UploadController:: class, 'index'])->name('upload_ass');
 Route::get('create_assignment', [App\Http\Controllers\UploadController:: class, 'createAssignmentView'])->name('assignments.create');
 Route::post('upload_assignment', [App\Http\Controllers\UploadController:: class, 'upload'])->name('upload_assignment');
+Route::post('/assignments/store', [App\Http\Controllers\UploadController:: class, 'storeAssignment']);
 
 Route::get('/users/view', [UserController::class, 'index'])->name('users');
 

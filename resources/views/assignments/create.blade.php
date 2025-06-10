@@ -20,7 +20,7 @@
             @endif
             <div class="card-body">
 
-                <form action="/teachers/store" method="POST"  enctype="multipart/form-data">
+                <form action="/assignments/store" method="POST"  enctype="multipart/form-data">
                     @csrf
 
                     <!-- Step 1: Personal Information -->
