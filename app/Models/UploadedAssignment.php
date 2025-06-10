@@ -12,15 +12,19 @@ class UploadedAssignment extends Model
 {
     use HasFactory, Notifiable;
 
+    protected $table = 'uploaded_assignments';
+    protected $primaryKey = 'id';
+    public $incrementing = true;
+
     protected $fillable = [
-        'id',
-        'year',
-        'course',
-        'deadline',
         'title',
-        'details',
-        'user_id',
-        'file'
+        'description',
+        'file_path',
+        'external_link',
+        'due_date',
+        'teacher_id',
+        'class_id',
+        'subject_id',
     ];
 
     public $timestamps = true;
@@ -38,5 +42,5 @@ class UploadedAssignment extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
-    }   
+    }
 }
