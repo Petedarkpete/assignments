@@ -68,6 +68,9 @@ class UploadController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'file' => 'required|file|mimes:pdf,doc,docx|max:2048', // Adjust file types and size as needed
+            'teacher_id' => 'required|exists:teachers,id',
+            'class_id' => 'required|exists:class,id',
+            'subject_id' => 'required|exists:subjects,id',
         ]);
 
         $assignment = new UploadedAssignment;
