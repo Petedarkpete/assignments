@@ -73,11 +73,14 @@ class UploadController extends Controller
         ]);
 
         $assignment = new UploadedAssignment;
-        $assignment->year = $request->year;
-        $assignment->course = $request->course;
-        $assignment->deadline = $request->deadline;
-        $assignment->title = $request->title;
-        $assignment->details = $request->description;
+        $assignment->title = $validated['title'];
+        $assignment->details = $validated['description'] ?? '';
+        $assignment->file = $validated['file_path'] ?? null;
+        $assignment->external_link = $validated['external_link'] ?? null;
+        $assignment->due_date = $validated['due_date'];
+        $assignment->teacher_id = $validated['teacher_id'];
+        $assignment->class_id = $validated['class_id'];
+        $assignment->subject_id = $validated['subject_id'];
         $assignment->user_id = Auth::id();
 
         if ($request->hasFile('file')) {
