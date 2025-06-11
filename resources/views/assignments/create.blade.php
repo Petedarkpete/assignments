@@ -52,12 +52,12 @@
 
                             <!-- External Link -->
                             <div class="col-md-12 mb-3">
-                                <label class="form-label">Link to Resource (optional)</label>
+                                <label class="form-label">Link to Resource (optional) </label>
                                 <input type="url" name="external_link" class="form-control" placeholder="https://example.com/resource">
                             </div>
 
                             <!-- Hidden or Selected Fields -->
-                            <input type="hidden" name="teacher_id" value="{{ auth()->user()->id }}">
+                            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Subject</label>

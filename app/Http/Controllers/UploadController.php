@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session as FacadesSession;
+use Illuminate\Validation\ValidationException;
 
 class UploadController extends Controller
 {
@@ -66,23 +67,24 @@ class UploadController extends Controller
     public function storeAssignment(Request $request)
     {
         try {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'external_link' => 'nullable|url',
-            'due_date' => 'required|date',
-            'teacher_id' => 'required|exists:teachers,id',
-            'class_id' => 'required|exists:class,id',
-            'subject_id' => 'required|exists:subjects,id',
-        ]);
-    } catch (\Illuminate\Validation\ValidationException $ve) {
-        // Log validation errors
-        Log::error('Validation failed: ' . json_encode($ve->errors()));
-        return back()->withErrors($ve->errors())->withInput();
-    }
 
-        Log::info('Creating assignment with data: ' . json_encode($validated));
-        try {
+            try {
+                $validated = $request->validate([
+                    'title' => 'required|string|max:255',
+                    'description' => 'nullable|string',
+                    'external_link' => 'nullable|url',
+                    'due_date' => 'required|date',
+                    //this will be changed to teacher later
+                    'user_id' => 'required|exists:teachers,user_id',
+                    'class_id' => 'required|exists:class,id',
+                    'subject_id' => 'required|exists:subjects,id'
+                ]);
+
+                Log::info('Creating assignment with data: ' . json_encode($validated));
+            } catch (ValidationException $e) {
+                Log::error('Validation failed: ' . json_encode($e->errors()));
+                return back()->withErrors($e->errors());
+            }
             FacadesDB::beginTransaction();
 
             $assignment = new UploadedAssignment();
