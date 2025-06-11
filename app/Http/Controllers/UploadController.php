@@ -65,6 +65,7 @@ class UploadController extends Controller
 
     public function storeAssignment(Request $request)
     {
+        try {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -74,6 +75,13 @@ class UploadController extends Controller
             'class_id' => 'required|exists:class,id',
             'subject_id' => 'required|exists:subjects,id',
         ]);
+    } catch (\Illuminate\Validation\ValidationException $ve) {
+        // Log validation errors
+        Log::error('Validation failed: ' . json_encode($ve->errors()));
+        return back()->withErrors($ve->errors())->withInput();
+    }
+
+        Log::info('Creating assignment with data: ' . json_encode($validated));
         try {
             FacadesDB::beginTransaction();
 
