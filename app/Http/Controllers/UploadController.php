@@ -7,8 +7,12 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use App\Models\UploadedAssignment;
+use Illuminate\Container\Attributes\DB;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session as FacadesSession;
 
 class UploadController extends Controller
@@ -64,36 +68,57 @@ class UploadController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'file_path' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'external_link' => 'nullable|url',
             'due_date' => 'required|date',
             'teacher_id' => 'required|exists:teachers,id',
             'class_id' => 'required|exists:class,id',
             'subject_id' => 'required|exists:subjects,id',
         ]);
+        try {
+            FacadesDB::beginTransaction();
 
-        $assignment = new UploadedAssignment;
-        $assignment->title = $validated['title'];
-        $assignment->details = $validated['description'] ?? '';
-        $assignment->file = $validated['file_path'] ?? null;
-        $assignment->external_link = $validated['external_link'] ?? null;
-        $assignment->due_date = $validated['due_date'];
-        $assignment->teacher_id = $validated['teacher_id'];
-        $assignment->class_id = $validated['class_id'];
-        $assignment->subject_id = $validated['subject_id'];
-        $assignment->user_id = Auth::id();
+            $assignment = new UploadedAssignment();
+            $assignment->title = $validated['title'];
+            $assignment->details = $validated['description'] ?? '';
+            $assignment->file = $validated['file_path'] ?? null;
+            $assignment->external_link = $validated['external_link'] ?? null;
+            $assignment->due_date = $validated['due_date'];
+            $assignment->teacher_id = $validated['teacher_id'];
+            $assignment->class_id = $validated['class_id'];
+            $assignment->subject_id = $validated['subject_id'];
+            $assignment->user_id = Auth::id();
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $extension = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $extension;
-            $destination = public_path('uploads/assignments');
-            $file->move($destination, $filename);
+            // File upload
+            if ($request->hasFile('file')) {
+                try {
+                    $file = $request->file('file');
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = time() . '.' . $extension;
+                    $destination = public_path('uploads/assignments');
 
-            $assignment->file = 'uploads/assignments/' . $filename;
+                    if (!file_exists($destination)) {
+                        mkdir($destination, 0755, true);
+                    }
+
+                    $file->move($destination, $filename);
+                    $assignment->file = 'uploads/assignments/' . $filename;
+
+                } catch (\Exception $fileEx) {
+                    FacadesDB::rollBack();
+                    Log::error('File upload failed: ' . $fileEx->getMessage());
+                    return back()->withErrors(['file' => 'File upload failed.']);
+                }
+            }
+
+            $assignment->save();
+            FacadesDB::commit();
+
+            return redirect()->back()->with('success', 'Assignment uploaded successfully.');
+        } catch (\Exception $e) {
+            FacadesDB::rollBack();
+            Log::error('Assignment creation failed: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to upload assignment. Please try again.']);
         }
-
-        $assignment->save();
 
         return redirect()->back()->with('success', 'Assignment created successfully');
     }
