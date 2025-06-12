@@ -30,10 +30,8 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Course</th>
-                                <th>Year</th>
                                 <th>Title</th>
-                                <th>Details</th>
+                                <th>Description</th>
                                 <th>Uploaded Date</th>
                                 <th>Deadline</th>
                                 <th>Download</th>
@@ -44,16 +42,18 @@
                             @foreach($assignments as $assignment)
                             <tr>
                                 <td>{{$assignment->id}}</td>
-                                <td>{{$assignment->course}}</td>
-                                <td>{{$assignment->year}}</td>
                                 <td>{{$assignment->title}}</td>
-                                <td>{{$assignment->details}}</td>
+                                <td>{{$assignment->description}}</td>
                                 <td>{{$assignment->created_at}}</td>
-                                <td>{{$assignment->deadline}}</td>
+                                <td>{{$assignment->due_date}}</td>
                                 <td><a target="_blank" href="{{ asset('uploads/assignments/' . $assignment->file) }}"><button type="button" class="btn btn-success btn-sm">View</button></a></td>
                                 <td class="d-flex justify-content-center">
-                                    <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                    <a href="{{ route('assignments.edit', $assignment->id) }}" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="{{ route('assignments.destroy', $assignment->id) }}" class="btn btn-danger btn-sm ml-2" onclick="return confirm('Are you sure you want to delete this assignment?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach

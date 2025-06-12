@@ -23,7 +23,7 @@ class UploadController extends Controller
     {
         //$assignments = UploadedAssignment::where('user_id', Auth::id())->get();
         $assignments = UploadedAssignment::all();
-        return view('assignments.upload_ass',compact('assignments'));
+        return view('assignments.view',compact('assignments'));
     }
 
     public function createAssignmentView()
@@ -119,25 +119,17 @@ class UploadController extends Controller
             $assignment->save();
             FacadesDB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Assignment uploaded successfully.',
-            ]);
+            return redirect()->route('assignments.index')->with('success', 'Assignment uploaded successfully.');
         } catch (\Exception $e) {
             FacadesDB::rollBack();
             Log::error('Assignment creation failed: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'error' => 'An unexpected error occurred while creating assignment.',
-            ], 500);
+
+            return redirect()->route('assignments.index')->withErrors(['error' => 'Error occured while uploading the assignment.']);
         } catch (ValidationException $e) {
             Log::error('Validation failed: ' . json_encode($e->errors()));
 
             FacadesDB::rollBack();
-            return response()->json([
-                'success' => false,
-                'error' => 'Validation error: Please fill all required fields correctly.',
-            ], 422);
+            return redirect()->route('assignments.index')->withErrors(['error' => 'Validation failed. Please check your inputs.']);
         }
     }
     public function destroy($id)
@@ -163,12 +155,12 @@ class UploadController extends Controller
             return redirect()->back()->with('error', 'File not found.');
         }
     }
-    public function edit($id)
+    public function editAssignment($id)
     {
         $assignment = UploadedAssignment::findOrFail($id);
         return view('assignments.edit', compact('assignment'));
     }
-    public function update(Request $request, $id)
+    public function updateAssignment(Request $request, $id)
     {
         $request->validate([
             'year' => 'required|string|max:255',

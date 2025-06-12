@@ -46,8 +46,15 @@ Route::post('/import',[App\Http\Controllers\UserController:: class, 'import'])->
 
 //assignments
 Route::get('dashboard', [App\Http\Controllers\DashboardController:: class, 'index'])->name('dashboard');
-Route::get('assignments', [App\Http\Controllers\UploadController:: class, 'index'])->name('upload_ass');
+Route::get('assignments', [App\Http\Controllers\UploadController:: class, 'index'])->name('assignments.index');
 Route::get('create_assignment', [App\Http\Controllers\UploadController:: class, 'createAssignmentView'])->name('assignments.create');
+Route::post('assignments/store', [App\Http\Controllers\UploadController:: class, 'storeAssignment'])->name('assignments.store');
+Route::get('assignments/{id}/edit', [App\Http\Controllers\UploadController:: class, 'editAssignment'])->name('assignments.edit');
+Route::post('assignments/update/{id}', [App\Http\Controllers\UploadController:: class, 'updateAssignment'])->name('assignments.update');
+Route::delete('assignments/{id}', [App\Http\Controllers\UploadController:: class, 'destroyAssignment'])->name('assignments.destroy');
+Route::get('assignments/{id}/download', [App\Http\Controllers\UploadController:: class, 'downloadAssignment'])->name('assignments.download');
+Route::get('assignments/{id}/view', [App\Http\Controllers\UploadController:: class, 'viewAssignment'])->name('assignments.view');
+Route::get('assignments/{id}/submissions', [App\Http\Controllers\UploadController:: class, 'viewSubmissions'])->name('assignments.submissions');
 Route::post('upload_assignment', [App\Http\Controllers\UploadController:: class, 'upload'])->name('upload_assignment');
 Route::post('/assignments/store', [App\Http\Controllers\UploadController:: class, 'storeAssignment']);
 
