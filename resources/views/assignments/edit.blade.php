@@ -23,19 +23,18 @@
                 <form action="/assignments/store" method="POST"  enctype="multipart/form-data">
                     @csrf
 
-                    <!-- Step 1: Personal Information -->
                     <div id="step-1">
                         <div class="row mb-2">
                             <!-- Title -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Title</label>
-                                <input type="text" name="title" class="form-control" placeholder="e.g. Math Homework" required>
+                                <input type="text" name="title" class="form-control" placeholder="e.g. Math Homework" value="{{ old('title', $assignment->title ?? '') }}" required>
                             </div>
 
                             <!-- Description -->
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Description</label>
-                                <textarea name="description" class="form-control" rows="4" placeholder="Write assignment details..." required></textarea>
+                                <textarea name="description" class="form-control" rows="4" placeholder="Write assignment details..." required>{{ old('description', $assignment->description ?? '') }}</textarea>
                             </div>
 
                             <!-- File Upload -->
@@ -47,13 +46,13 @@
                             <!-- Due Date -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Due Date</label>
-                                <input type="date" name="due_date" class="form-control" required>
+                                <input type="date" name="due_date" class="form-control" required value="{{ old('due_date', $assignment->due_date ?? '') }}">
                             </div>
 
                             <!-- External Link -->
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Link to Resource (optional) </label>
-                                <input type="url" name="external_link" class="form-control" placeholder="https://example.com/resource">
+                                <input type="url" name="external_link" class="form-control" placeholder="https://example.com/resource" value="{{ old('external_link', $assignment->external_link ?? '') }}">
                             </div>
 
                             <!-- Hidden or Selected Fields -->
@@ -63,9 +62,9 @@
                                 <label class="form-label">Subject</label>
                                 <select name="subject_id" class="form-control" required>
                                     <option value="">Select Subject</option>
-                                    @foreach($subjects as $subject)
+                                    {{-- @foreach($subjects as $subject)
                                         <option value="{{ $subject->id }}">{{ $subject->name }}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </div>
 
@@ -73,9 +72,9 @@
                                 <label class="form-label">Class</label>
                                 <select name="class_id" class="form-control" required>
                                     <option value="">Select Class</option>
-                                    @foreach($classes as $class)
+                                    {{-- @foreach($classes as $class)
                                         <option value="{{ $class->id }}">{{ $class->label }}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </div>
                         </div>
