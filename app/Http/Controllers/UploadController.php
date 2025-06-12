@@ -80,18 +80,19 @@ class UploadController extends Controller
 
             Log::info('Creating assignment with data: ' . json_encode($validated));
 
+            $teacher_id = Teacher::where('user_id', $validated['user_id'])->value('id');
+
             FacadesDB::beginTransaction();
 
             $assignment = new UploadedAssignment();
             $assignment->title = $validated['title'];
-            $assignment->details = $validated['description'] ?? '';
-            $assignment->file = $validated['file_path'] ?? null;
+            $assignment->description = $validated['description'] ?? '';
+            $assignment->file_path = $validated['file_path'] ?? null;
             $assignment->external_link = $validated['external_link'] ?? null;
             $assignment->due_date = $validated['due_date'];
-            $assignment->teacher_id = $validated['teacher_id'];
+            $assignment->teacher_id = $teacher_id;
             $assignment->class_id = $validated['class_id'];
             $assignment->subject_id = $validated['subject_id'];
-            $assignment->user_id = Auth::id();
 
             // File upload
             if ($request->hasFile('file')) {
