@@ -67,24 +67,19 @@ class UploadController extends Controller
     public function storeAssignment(Request $request)
     {
         try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'external_link' => 'nullable|url',
+                'due_date' => 'required|date',
+                //this will be changed to teacher later
+                'user_id' => 'required|exists:teachers,user_id',
+                'class_id' => 'required|exists:class,id',
+                'subject_id' => 'required|exists:subjects,id'
+            ]);
 
-            try {
-                $validated = $request->validate([
-                    'title' => 'required|string|max:255',
-                    'description' => 'nullable|string',
-                    'external_link' => 'nullable|url',
-                    'due_date' => 'required|date',
-                    //this will be changed to teacher later
-                    'user_id' => 'required|exists:teachers,user_id',
-                    'class_id' => 'required|exists:class,id',
-                    'subject_id' => 'required|exists:subjects,id'
-                ]);
+            Log::info('Creating assignment with data: ' . json_encode($validated));
 
-                Log::info('Creating assignment with data: ' . json_encode($validated));
-            } catch (ValidationException $e) {
-                Log::error('Validation failed: ' . json_encode($e->errors()));
-                return back()->withErrors($e->errors());
-            }
             FacadesDB::beginTransaction();
 
             $assignment = new UploadedAssignment();
@@ -123,14 +118,26 @@ class UploadController extends Controller
             $assignment->save();
             FacadesDB::commit();
 
-            return redirect()->back()->with('success', 'Assignment uploaded successfully.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Assignment uploaded successfully.',
+            ]);
         } catch (\Exception $e) {
             FacadesDB::rollBack();
             Log::error('Assignment creation failed: ' . $e->getMessage());
-            return back()->withErrors(['error' => 'Failed to upload assignment. Please try again.']);
-        }
+            return response()->json([
+                'success' => false,
+                'error' => 'An unexpected error occurred while creating assignment.',
+            ], 500);
+        } catch (ValidationException $e) {
+            Log::error('Validation failed: ' . json_encode($e->errors()));
 
-        return redirect()->back()->with('success', 'Assignment created successfully');
+            FacadesDB::rollBack();
+            return response()->json([
+                'success' => false,
+                'error' => 'Validation error: Please fill all required fields correctly.',
+            ], 422);
+        }
     }
     public function destroy($id)
     {
