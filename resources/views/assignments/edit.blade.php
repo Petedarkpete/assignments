@@ -62,9 +62,7 @@
                                 <label class="form-label">Subject</label>
                                 <select name="subject_id" class="form-control" required>
                                     <option value="">Select Subject</option>
-                                    {{-- @foreach($subjects as $subject)
-                                        <option value="{{ $subject->id }}">{{ $subject->name }}</option>
-                                    @endforeach --}}
+                                    <option value="{{ $assignment->id }}">{{ old('subject_id', $assignment->name) }}</option>
                                 </select>
                             </div>
 
