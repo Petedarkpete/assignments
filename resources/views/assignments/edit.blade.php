@@ -62,7 +62,7 @@
                                 <label class="form-label">Subject</label>
                                 <select name="subject_id" class="form-control" required>
                                     <option value="">Select Subject</option>
-                                    <option value="{{ $assignment->id }}">{{ old('subject_id', $assignment->name) }}</option>
+                                    <option value="{{ $assignment->id }}">{{ old('subject_id', $assignment->subject_name) }}</option>
                                 </select>
                             </div>
 

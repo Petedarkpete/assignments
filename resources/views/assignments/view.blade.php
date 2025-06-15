@@ -31,6 +31,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Title</th>
+                                <th>Subject</th>
                                 <th>Description</th>
                                 <th>Uploaded Date</th>
                                 <th>Deadline</th>
@@ -43,10 +44,11 @@
                             <tr>
                                 <td>{{$assignment->id}}</td>
                                 <td>{{$assignment->title}}</td>
+                                <td>{{$assignment->subject_name}}</td>
                                 <td>{{$assignment->description}}</td>
                                 <td>{{$assignment->created_at}}</td>
                                 <td>{{$assignment->due_date}}</td>
-                                <td><a target="_blank" href="{{ asset('uploads/assignments/' . $assignment->file) }}"><button type="button" class="btn btn-success btn-sm">View</button></a></td>
+                                <td><a target="_blank" href="{{ asset('uploads/assignments/' . $assignment->file_path) }}"><button type="button" class="btn btn-success btn-sm">View</button></a></td>
                                 <td class="d-flex justify-content-center">
                                     <a href="{{ route('assignments.edit', $assignment->id) }}" class="btn btn-primary btn-sm">
                                         <i class="bi bi-pencil-square"></i>

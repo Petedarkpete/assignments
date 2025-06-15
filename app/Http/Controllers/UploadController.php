@@ -21,9 +21,14 @@ class UploadController extends Controller
     //for showing page
     public function index()
     {
-        //$assignments = UploadedAssignment::where('user_id', Auth::id())->get();
-        $assignments = UploadedAssignment::all();
-        return view('assignments.view',compact('assignments'));
+        //$assignments = UploadedAssignment::where('user_id', Auth::id())->get(); this will be used later
+        // Fetch all assignments for the view
+        $assignments = FacadesDB::table('uploaded_assignments')
+            ->join('subjects', 'uploaded_assignments.subject_id', '=', 'subjects.id')
+            ->join('class', 'uploaded_assignments.class_id', '=', 'class.id')
+            ->select('uploaded_assignments.*', 'subjects.name as subject_name', 'class.label as class_label')
+            ->get();
+            return view('assignments.view',compact('assignments'));
     }
 
     public function createAssignmentView()
@@ -161,7 +166,7 @@ class UploadController extends Controller
             ->join('subjects', 'uploaded_assignments.subject_id', '=', 'subjects.id')
             ->join('class', 'uploaded_assignments.class_id', '=', 'class.id')
             ->select('uploaded_assignments.*', 'subjects.name as subject_name', 'class.label as class_label')
-            ->where('id', $id)
+            ->where('uploaded_assignments.id', $id)
             ->first();
         return view('assignments.edit', compact('assignment'));
     }
