@@ -69,6 +69,7 @@
                                 <label class="form-label">Class</label>
                                 <select name="class_id" class="form-control" required>
                                     @foreach($classes as $class)
+                                    
                                         <option value="{{ $class->id }}">{{ $class->label }}</option>
                                     @endforeach
                                 </select>
