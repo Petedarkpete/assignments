@@ -171,8 +171,9 @@ class UploadController extends Controller
         $classes = FacadesDB::table('class')->get();
         return view('assignments.edit', compact('assignment','classes'));
     }
-    public function updateAssignment(Request $request, $id)
+    public function updateAssignment(Request $request)
     {
+        $id = $request->assignment_id;
         $request->validate([
             'year' => 'required|string|max:255',
             'course' => 'required|string|max:255',
@@ -200,7 +201,9 @@ class UploadController extends Controller
         }
 
         $assignment->save();
+        Log::info('getes e');
+        dd("test");
 
-        return redirect()->back()->with('success', 'Assignment updated successfully');
+        return redirect()->route('assignments.view')->with('success', 'Assignment updated successfully');
     }
 }

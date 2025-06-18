@@ -20,7 +20,7 @@
             @endif
             <div class="card-body">
 
-                <form action="/assignments/store" method="POST"  enctype="multipart/form-data">
+                <form action="{{ route('assignments.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div id="step-1">
@@ -69,11 +69,12 @@
                                 <label class="form-label">Class</label>
                                 <select name="class_id" class="form-control" required>
                                     @foreach($classes as $class)
-                                    
+
                                         <option value="{{ $class->id }}">{{ $class->label }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            <input type="hidden" name="assignment_id" value="{{ $assignment->id }}">
                         </div>
 
                         <div class="d-flex justify-content-end">
