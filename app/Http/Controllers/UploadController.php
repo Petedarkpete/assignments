@@ -168,7 +168,8 @@ class UploadController extends Controller
             ->select('uploaded_assignments.*', 'subjects.name as subject_name', 'class.label as class_label')
             ->where('uploaded_assignments.id', $id)
             ->first();
-        return view('assignments.edit', compact('assignment'));
+        $classes = FacadesDB::table('class')->get();
+        return view('assignments.edit', compact('assignment','classes'));
     }
     public function updateAssignment(Request $request, $id)
     {
