@@ -128,6 +128,17 @@ Route::prefix('parents')->name('class.')->group(function () {
 });
 
 
+Route::prefix('confirmations')->name('class.')->group(function () {
+    Route::get('/teachers', [App\Http\Controllers\ConfirmationController::class, 'confirmTeacher'])->name('confirmTeachers.view');
+    Route::get('/create', [App\Http\Controllers\ConfirmationController::class, 'create'])->name('create');
+    Route::post('/store', [App\Http\Controllers\ConfirmationController::class, 'store'])->name('store');
+    Route::delete('/{id}', [App\Http\Controllers\ConfirmationController::class, 'destroy'])->name('destroy');
+    Route::post('/update/{id}', [App\Http\Controllers\ConfirmationController::class, 'update'])->name('update');
+    Route::post('/import', [App\Http\Controllers\ConfirmationController::class, 'import'])->name('import');
+    Route::get('/second_student', [App\Http\Controllers\ConfirmationController::class, 'secondStudent']);
+    Route::post('/second_student_store', [App\Http\Controllers\ConfirmationController::class, 'secondStudentStore']);
+});
+
 
 Route::post('/findTeacher/{id}', [App\Http\Controllers\StudentController::class, 'findTeacher']);
 Route::get('/findStudent', [App\Http\Controllers\StudentController::class, 'findStudent']);
