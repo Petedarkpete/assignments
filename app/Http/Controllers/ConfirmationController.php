@@ -15,6 +15,7 @@ class ConfirmationController extends Controller
         $teachers = DB::table('teachers')
         ->join('users', 'teachers.user_id', '=', 'users.id')
         ->select('teachers.*', 'users.name', 'users.email', 'users.phone')
+        ->where('users.confirmed', 0)
         ->get();
 
         return view('confirmations.teachers', compact('teachers'));
