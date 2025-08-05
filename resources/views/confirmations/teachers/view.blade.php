@@ -44,7 +44,7 @@
                                 <td>{{ $teacher->phone }}</td>
                                 <td>{{ $teacher->email }}</td>
                                 <td>
-                                    <a href="/teachers/{{ $teacher->id }}/confirm" class="btn btn-success btn-sm">
+                                    <a href="/teachers/{{ $teacher->id }}/view" class="btn btn-success btn-sm">
                                         <em><i class="bi bi-check-circle"></i> &nbsp;Confirm</em>
                                     </a>
 

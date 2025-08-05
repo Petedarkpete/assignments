@@ -139,9 +139,9 @@ Route::prefix('confirmations')->name('class.')->group(function () {
     Route::post('/second_student_store', [App\Http\Controllers\ConfirmationController::class, 'secondStudentStore']);
 });
 
-Route::get('/teachers/{id}/confirm', [App\Http\Controllers\ConfirmationController::class, 'confirmTeacherView'])->name('teachers.confirm');
+Route::post('/teachers/{id}/confirm', [App\Http\Controllers\ConfirmationController::class, 'confirmTeacherAction'])->name('teachers.confirm');
 Route::get('/teachers/{id}/view', [App\Http\Controllers\ConfirmationController::class, 'confirmTeacherView'])->name('teachers.confirm.view');
-
+Route::post('/teachers/confirm/{id}', [App\Http\Controllers\ConfirmationController::class, 'test'])->name('test');
 
 Route::post('/findTeacher/{id}', [App\Http\Controllers\StudentController::class, 'findTeacher']);
 Route::get('/findStudent', [App\Http\Controllers\StudentController::class, 'findStudent']);

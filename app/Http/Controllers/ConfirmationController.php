@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendTeacherConfirmationEmail;
 use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ConfirmationController extends Controller
 {
@@ -24,6 +27,7 @@ class ConfirmationController extends Controller
     public function confirmTeacherView($id)
     {
         // Logic to view confirmation page
+        Log::info("Viewing confirmation for teacher with ID: $id");
         $teachers = DB::table('teachers')
             ->join('users', 'teachers.user_id', '=', 'users.id')
             ->select('teachers.*', 'users.name', 'users.email', 'users.phone')
@@ -36,11 +40,37 @@ class ConfirmationController extends Controller
 
     public function confirmTeacherAction($id)
     {
-        // Logic to confirm a teacher
-        $teacher = Teacher::findOrFail($id);
-        $teacher->confirmed = 1; // Assuming 'confirmed' is a field in the teachers table
+
+        Log::info("Confirming teacher with ID: $id");
+        $teacher = User::findOrFail($id);
+        $teacher->confirmed = 1; // Assuming 'confirmed' is a field in the users table
         $teacher->save();
 
-        return redirect()->route('teachers.view')->with('success', 'Teacher confirmed successfully.');
+        if ($teacher->save()) {
+            // Send activation email
+            // Dispatch the job to send confirmation email
+            SendTeacherConfirmationEmail::dispatch($teacher);
+        }
+
+        return redirect()->route('confirmations.teachers.view')->with('success', 'Teacher confirmed successfully.');
+    }
+
+    public function test($id)
+    {
+        Log::info("Confirming teacher with IDss: $id");
+        $teacher = User::findOrFail($id);
+        $teacher->confirmed = 1; // Assuming 'confirmed' is a field in the users table
+        $teacher->save();
+
+
+
+        if ($teacher->save()) {
+            // Send activation email
+            // Dispatch the job to send confirmation email
+            SendTeacherConfirmationEmail::dispatch($teacher);
+        }
+
+        return redirect()->route('confirmTeachers.view')->with('success', 'Teacher confirmed successfully.');
+
     }
 }
