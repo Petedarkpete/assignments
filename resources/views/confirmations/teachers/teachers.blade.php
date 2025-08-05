@@ -44,10 +44,10 @@
                                 <td>{{ $teacher->phone }}</td>
                                 <td>{{ $teacher->email }}</td>
                                 <td>
-                                    <button class="btn btn-success btn-sm delete-button">
-                                        <i class="bi bi-check-circle"> Confirm</i>
-                                        <input type="hidden" id="teacherId" value="{{ $teacher->id }}">
-                                    </button>
+                                    <a href="/teachers/{{ $teacher->id }}/confirm" class="btn btn-success btn-sm">
+                                        <em><i class="bi bi-check-circle"></i> &nbsp;Confirm</em>
+                                    </a>
+
                                 </td>
                             </tr>
                             @endforeach
