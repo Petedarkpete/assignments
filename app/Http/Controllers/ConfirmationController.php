@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ConfirmationController extends Controller
 {
@@ -68,15 +69,22 @@ class ConfirmationController extends Controller
             Log::error("Teacher not found with ID: $id");
             return redirect()->back()->with('error', 'Teacher not found.');
         }
+        $activation_token = Str::random(60);
 
-        $updated = DB::table('users')->where('id', $teacher->user_id)->update(['confirmed' => 1]);
+        $updated = DB::table('users')->where('id', $teacher->user_id)->update([
+            'activation_token' => $activation_token,
+            'confirmed' => 1,
+            'activation_token_expires_at' => now()->addMinutes(5)
+        ]);
 
         if ($updated) {
-            // Send activation email
-            // Dispatch the job to send confirmation email
+            $teacher->activation_token = $activation_token;
+            $teacher->activation_token_expires_at = now()->addMinutes(5);
+
             Log::info("Dispatching SendTeacherConfirmationEmail for teacher ID: $id");
             SendTeacherConfirmationEmail::dispatch($teacher);
         } else {
+
             Log::error("Failed to confirm teacher with ID: $id");
             return redirect()->back()->with('error', 'Failed to confirm teacher, contact support.');
         }

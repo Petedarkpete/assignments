@@ -163,3 +163,6 @@ Route::post('/findTeacher/{id}', [App\Http\Controllers\StudentController::class,
 Route::get('/findStudent', [App\Http\Controllers\StudentController::class, 'findStudent']);
 Route::get('/findStudents/{id}', [App\Http\Controllers\StudentController::class, 'findStudents']);
 Route::post('/checkClass', [App\Http\Controllers\ClassController::class, 'checkClass']);
+
+Route::post('/activate/{token}', [App\Http\Controllers\Auth\ActivationController::class, 'submitForm'])->name('activation.submit');
+Route::get('/activation/{token}', [App\Http\Controllers\Auth\ActivationController::class, 'showForm'])->name('activate');

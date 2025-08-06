@@ -44,6 +44,7 @@ class TeacherConfirmationMail extends Mailable implements ShouldQueue
                 Log::info("Sending confirmation email to teacher: {$this->teacher->email}"),
                 'teacherName' => $this->teacher->name,
                 'teacherEmail' => $this->teacher->email,
+                'activationToken' => $this->teacher->activation_token,
             ],
         );
     }
