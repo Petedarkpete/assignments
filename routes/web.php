@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -129,7 +130,6 @@ Route::prefix('parents')->name('class.')->group(function () {
 
 
 Route::prefix('confirmations')->name('class.')->group(function () {
-    Route::get('/teachers', [App\Http\Controllers\ConfirmationController::class, 'confirmTeacher'])->name('confirmTeachers.view');
     Route::get('/create', [App\Http\Controllers\ConfirmationController::class, 'create'])->name('create');
     Route::post('/store', [App\Http\Controllers\ConfirmationController::class, 'store'])->name('store');
     Route::delete('/{id}', [App\Http\Controllers\ConfirmationController::class, 'destroy'])->name('destroy');
@@ -137,6 +137,22 @@ Route::prefix('confirmations')->name('class.')->group(function () {
     Route::post('/import', [App\Http\Controllers\ConfirmationController::class, 'import'])->name('import');
     Route::get('/second_student', [App\Http\Controllers\ConfirmationController::class, 'secondStudent']);
     Route::post('/second_student_store', [App\Http\Controllers\ConfirmationController::class, 'secondStudentStore']);
+});
+
+Route::get('/confirmations/teachers', [App\Http\Controllers\ConfirmationController::class, 'confirmTeacher'])->name('confirmTeachers.view');
+
+
+// routes/web.php
+Route::get('/test-email', function () {
+    try {
+        Mail::raw('Test email from Laravel!', function ($message) {
+            $message->to('peterndahi2018@gmail.com')
+                   ->subject('Test Email');
+        });
+        return 'Email sent successfully!';
+    } catch (Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
 });
 
 Route::post('/teachers/{id}/confirm', [App\Http\Controllers\ConfirmationController::class, 'confirmTeacherAction'])->name('teachers.confirm');

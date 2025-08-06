@@ -12,9 +12,9 @@
             </div>
         </div>
         <div class="card mt-1">
-            @if(session('success'))
-                <div class="alert alert-success">
-                    <p style="font-size: 0.85rem;">{{ session('success') }}</p>
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    <p style="font-size: 0.85rem;">{{ session('error') }}</p>
                 </div>
             @endif
 

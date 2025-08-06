@@ -58,16 +58,27 @@ class ConfirmationController extends Controller
     public function test($id)
     {
         Log::info("Confirming teacher with IDss: $id");
-        $teacher = User::findOrFail($id);
-        $teacher->confirmed = 1; // Assuming 'confirmed' is a field in the users table
-        $teacher->save();
+        $teacher = DB::table('teachers')
+            ->join('users', 'teachers.user_id', '=', 'users.id')
+            ->select('teachers.*', 'users.name', 'users.email', 'users.phone')
+            ->where('teachers.id', $id)
+            ->first();
 
+        if (!$teacher) {
+            Log::error("Teacher not found with ID: $id");
+            return redirect()->back()->with('error', 'Teacher not found.');
+        }
 
+        $updated = DB::table('users')->where('id', $teacher->user_id)->update(['confirmed' => 1]);
 
-        if ($teacher->save()) {
+        if ($updated) {
             // Send activation email
             // Dispatch the job to send confirmation email
+            Log::info("Dispatching SendTeacherConfirmationEmail for teacher ID: $id");
             SendTeacherConfirmationEmail::dispatch($teacher);
+        } else {
+            Log::error("Failed to confirm teacher with ID: $id");
+            return redirect()->back()->with('error', 'Failed to confirm teacher, contact support.');
         }
 
         return redirect()->route('confirmTeachers.view')->with('success', 'Teacher confirmed successfully.');

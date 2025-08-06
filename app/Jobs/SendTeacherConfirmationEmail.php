@@ -27,6 +27,6 @@ class SendTeacherConfirmationEmail implements ShouldQueue
     public function handle(): void
     {
         //
-        Mail::to($this->teacher->email)->send(new TeacherConfirmationMail($this->teacher));
+        Mail::to($this->teacher->email)->queue(new TeacherConfirmationMail($this->teacher));
     }
 }

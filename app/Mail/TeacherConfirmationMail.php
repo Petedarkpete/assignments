@@ -8,17 +8,19 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class TeacherConfirmationMail extends Mailable
+class TeacherConfirmationMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public $teacher;
+    public function __construct($teacher)
     {
-        //
+        $this->teacher = $teacher;
     }
 
     /**
@@ -38,6 +40,11 @@ class TeacherConfirmationMail extends Mailable
     {
         return new Content(
             markdown: 'emails.teacher.confirmation',
+            with: [
+                Log::info("Sending confirmation email to teacher: {$this->teacher->email}"),
+                'teacherName' => $this->teacher->name,
+                'teacherEmail' => $this->teacher->email,
+            ],
         );
     }
 

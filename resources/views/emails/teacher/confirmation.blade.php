@@ -1,12 +1,14 @@
-<x-mail::message>
-# Introduction
+@component('mail::message')
+# Hello {{ $teacherName }},
 
-The body of your message.
+Your account has been successfully confirmed.
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+Thank you for joining our team!
 
-Thanks,<br>
+{{-- @component('mail::button', ['url' => url('/')])
+Visit Dashboard
+@endcomponent
+
+Thanks, --}}
 {{ config('app.name') }}
-</x-mail::message>
+@endcomponent

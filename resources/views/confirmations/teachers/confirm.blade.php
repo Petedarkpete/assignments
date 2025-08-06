@@ -3,6 +3,20 @@
 @section('content')
 <main id="main" class="main">
     <div class="container mx-auto py-8">
+        <div class="card mt-1">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    <p style="font-size: 0.85rem;">{{ session('success') }}</p>
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+        </div>
          <div class="alert alert-info shadow-sm">
         <h4 class="alert-heading mb-2">Confirm Teacher Account</h4>
         <p class="mb-0">
