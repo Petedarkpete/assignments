@@ -31,7 +31,7 @@ class ConfirmationController extends Controller
         Log::info("Viewing confirmation for teacher with ID: $id");
         $teachers = DB::table('teachers')
             ->join('users', 'teachers.user_id', '=', 'users.id')
-            ->select('teachers.*', 'users.name', 'users.email', 'users.phone')
+            ->select('teachers.*', 'users.*')
             ->where('users.confirmed', 0)
             ->where('teachers.id', $id)
             ->get();
@@ -62,7 +62,7 @@ class ConfirmationController extends Controller
         $teacher = DB::table('teachers')
             ->join('users', 'teachers.user_id', '=', 'users.id')
             ->select('teachers.*', 'users.name', 'users.email', 'users.phone')
-            ->where('teachers.id', $id)
+            ->where('users.id', $id)
             ->first();
 
         if (!$teacher) {

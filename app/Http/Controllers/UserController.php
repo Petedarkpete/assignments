@@ -145,7 +145,12 @@ class UserController extends Controller
     }
 
     public function teachersView () {
-        $teachers = Teacher::all();
+        //wwhere confirmed is 1
+        $teachers = Teacher::where('confirmed', 1)
+            ->join('users', 'teachers.user_id', '=', 'users.id')
+            ->select('teachers.*', 'users.name', 'users.email', 'users.phone')
+            ->where('users.confirmed', 1)
+            ->get();
         return view ('users.teachers.view', compact('teachers'));
     }
     public function teacherCreate () {
