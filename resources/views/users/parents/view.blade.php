@@ -1,5 +1,9 @@
 @extends('layouts.page')
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/confirm_details.css') }}">
+@endpush
+
 @section('content')
 <main id="main" class="main">
     <div class="container">
@@ -36,43 +40,65 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive m-2">
-                    <table class="table table-bordered bg-warning table-sm" id="modules_table" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Full Name</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-                                <th>Relationship</th>
-                                <th>No of Students</th>
-                                <th>View Students</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($parents as $parent)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $parent->name }}</td>
-                                <td>{{ $parent->phone }}</td>
-                                <td>{{ $parent->email }}</td>
-                                <td>{{ $parent->relationship }}</td>
-                                <td>{{ $parent->student_count }}</td>
-                                <td class="text-center">
-                                    <button class="btn btn-success btn-sm open-student-modal" data-parent-id="{{ $parent->parent_id }}" data-bs-toggle="modal" data-bs-target="#studentModal">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editparentModal{{ $parent->parent_id }}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </button>
-                                    <button class="btn btn-danger btn-sm delete-button">
-                                        <i class="bi bi-trash"></i>
-                                        <input type="hidden" id="parentId" value="{{ $parent->parent_id }}">
-                                    </button>
-                                </td>
-                            </tr>
+                    <div class="table-container table-fade-in">
+                        <table class="table enhanced-table" id="modules_table" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                    <th class="hide-mobile">Contact</th>
+                                    <th>Relationship</th>
+                                    <th>Students</th>
+                                    <th>View</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($parents as $parent)
+                                <tr>
+                                    <td>
+                                        <span class="row-number">{{ $loop->iteration }}</span>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <strong>{{ $parent->name }}</strong>
+                                    </td>
+                                    <td class="hide-mobile">
+                                        <div class="contact-info">
+                                            <span class="phone">📱 {{ $parent->phone }}</span>
+                                            <span class="email">📧 {{ $parent->email }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="relationship-badge">{{ $parent->relationship }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="count-badge">{{ $parent->student_count }}</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-success btn-enhanced btn-sm open-student-modal"
+                                                data-parent-id="{{ $parent->parent_id }}"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#studentModal"
+                                                title="View Students">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-primary btn-enhanced btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editparentModal{{ $parent->parent_id }}"
+                                                    title="Edit Parent">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-enhanced btn-sm delete-button"
+                                                    title="Delete Parent">
+                                                <i class="bi bi-trash"></i>
+                                                <input type="hidden" id="parentId" value="{{ $parent->parent_id }}">
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
 
                             <div class="modal fade" id="editparentModal{{ $parent->parent_id }}" tabindex="-1" aria-labelledby="editparentModalLabel{{ $parent->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
@@ -272,37 +298,69 @@
     </div>
 
     <!-- Student Details Modal -->
-    <div class="modal fade" id="studentModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Student Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="studentDetailsContainer">
-                        <!-- Single student card template -->
-                        <div id="studentCardTemplate" class="card mb-3" style="display: none;">
-                            <div class="card-body">
-                                <h5 class="card-title" id="studentName"></h5>
-                                <p class="card-text">
-                                    <strong>Class:</strong> <span id="studentClass"></span><br>
-                                    <strong>Class Teacher:</strong> <span id="studentTeacher"></span><br>
-                                    <strong>Assignments Done:</strong> <span id="studentAssignments"></span>
-                                </p>
+    <div class="modal fade enhanced-modal" id="studentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Student Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="studentDetailsContainer">
+                    <!-- Single student card template -->
+                    <div id="studentCardTemplate" class="student-card" style="display: none;">
+                        <div class="card-body">
+                            <h5 class="card-title" id="studentName"></h5>
+                            <div class="student-info">
+                                <div class="student-field class">
+                                    <strong>Class:</strong>
+                                    <span id="studentClass"></span>
+                                </div>
+                                <div class="student-field teacher">
+                                    <strong>Class Teacher:</strong>
+                                    <span id="studentTeacher"></span>
+                                </div>
+                                <div class="student-field assignments">
+                                    <strong>Assignments:</strong>
+                                    <span id="studentAssignments"></span>
+                                    <div class="assignment-progress">
+                                        <div class="assignment-progress-bar" id="assignmentProgress" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div class="student-field performance">
+                                    <strong>Performance:</strong>
+                                    <span id="studentPerformance">Excellent</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic cards will be cloned and populated here -->
+                    <div id="studentCards">
+                        <!-- Loading state -->
+                        <div id="loadingState" style="display: none;">
+                            <div class="student-card loading-card">
+                                <div class="card-body">
+                                    <div style="height: 120px;"></div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Dynamic cards will be cloned and populated here -->
-                        <div id="studentCards"></div>
+                        <!-- Empty state -->
+                        <div id="emptyState" class="empty-state" style="display: none;">
+                            <div class="empty-state-icon">👨‍🎓</div>
+                            <h5>No Students Found</h5>
+                            <p>This parent doesn't have any students associated with their account.</p>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer p-0">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
 
 
     <script>
@@ -712,4 +770,8 @@
     });
 
     </script>
+
+    @push('scripts')
+        <script src="{{ asset('js/modals.js') }}"></script>
+    @endpush
 @endsection
