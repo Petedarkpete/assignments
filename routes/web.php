@@ -140,7 +140,7 @@ Route::prefix('confirmations')->name('class.')->group(function () {
 });
 
 Route::get('/confirmations/teachers', [App\Http\Controllers\ConfirmationController::class, 'confirmTeacher'])->name('confirmTeachers.view');
-
+Route::get('/confirmations/assignments', [App\Http\Controllers\ConfirmationController::class, 'confirmAssignment'])->name('confirmAssignments.view');
 
 // routes/web.php
 Route::get('/test-email', function () {
@@ -158,6 +158,9 @@ Route::get('/test-email', function () {
 Route::post('/teachers/{id}/confirm', [App\Http\Controllers\ConfirmationController::class, 'confirmTeacherAction'])->name('teachers.confirm');
 Route::get('/teachers/{id}/view', [App\Http\Controllers\ConfirmationController::class, 'confirmTeacherView'])->name('teachers.confirm.view');
 Route::post('/teachers/confirm/{id}', [App\Http\Controllers\ConfirmationController::class, 'test'])->name('test');
+
+Route::post('/assignments/{id}/confirm', [App\Http\Controllers\ConfirmationController::class, 'confirmAssignmentAction'])->name('assignments.confirm');
+Route::get('/assignments/{id}/view', [App\Http\Controllers\ConfirmationController::class, 'confirmAssignmentView'])->name('assignments.confirm.view');
 
 Route::post('/findTeacher/{id}', [App\Http\Controllers\StudentController::class, 'findTeacher']);
 Route::get('/findStudent', [App\Http\Controllers\StudentController::class, 'findStudent']);

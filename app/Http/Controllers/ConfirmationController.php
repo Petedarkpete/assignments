@@ -92,4 +92,45 @@ class ConfirmationController extends Controller
         return redirect()->route('confirmTeachers.view')->with('success', 'Teacher confirmed successfully.');
 
     }
+
+    public function confirmAssignment()
+    {
+        // Logic to view assignment confirmations
+        $assignments = DB::table('uploaded_assignments')
+            ->leftJoin('users', 'uploaded_assignments.teacher_id', '=', 'users.id')
+            ->select('uploaded_assignments.*', 'users.name', 'users.email', 'users.phone')
+            ->whereNull('uploaded_assignments.confirmed')
+            ->get();
+
+        return view('confirmations.assignments.view', compact('assignments'));
+    }
+
+    public function confirmAssignmentView($id)
+    {
+        // Logic to view confirmation page for assignments
+        Log::info("Viewing confirmation for assignment with ID: $id");
+        $assignments = DB::table('uploaded_assignments')
+            ->leftJoin('users', 'uploaded_assignments.teacher_id', '=', 'users.id')
+            ->select('uploaded_assignments.*', 'users.name', 'users.email', 'users.phone')
+            ->where('uploaded_assignments.id', $id)
+            ->get();
+
+        return view('confirmations.assignments.confirm', compact('assignments'));
+    }
+
+    public function confirmAssignmentAction($id)
+    {
+        Log::info("Confirming assignment with ID: $id");
+        $assignment = DB::table('uploaded_assignments')->where('id', $id)->first();
+
+        if (!$assignment) {
+            Log::error("Assignment not found with ID: $id");
+            return redirect()->back()->with('error', 'Assignment not found.');
+        }
+
+        // Update the assignment as confirmed
+        DB::table('uploaded_assignments')->where('id', $id)->update(['confirmed' => 1]);
+
+        return redirect()->route('confirmations.assignments.view')->with('success', 'Assignment confirmed successfully.');
+    }
 }
