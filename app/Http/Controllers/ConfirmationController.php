@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendAssignmentNotificationJob;
 use App\Jobs\SendTeacherConfirmationEmail;
 use App\Models\Teacher;
 use App\Models\User;
@@ -130,6 +131,17 @@ class ConfirmationController extends Controller
 
         // Update the assignment as confirmed
         DB::table('uploaded_assignments')->where('id', $id)->update(['confirmed' => 1]);
+        $parents = DB::table('parents')
+        ->join('students', 'students.parent_id', '=', 'parents.id')
+        ->where('students.class_id', $assignment->class_id) // Or any relation you use
+        ->select('parents.*')
+        ->get();
+
+        foreach ($parents as $parent) {
+            // Dispatch the job to send assignment notification email
+            SendAssignmentNotificationJob::dispatch($assignment, $parent->email);
+        }
+
 
         return redirect()->route('confirmations.assignments.view')->with('success', 'Assignment confirmed successfully.');
     }

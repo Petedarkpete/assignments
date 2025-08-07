@@ -15,9 +15,11 @@ class SendAssignmentNotificationJob implements ShouldQueue
      * Create a new job instance.
      */
     public $assignment;
-    public function __construct($assignment)
+    public $email;
+    public function __construct($assignment, $email)
     {
         $this->assignment = $assignment;
+        $this->email = $email;
     }
 
     /**
@@ -25,6 +27,6 @@ class SendAssignmentNotificationJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->assignment->teacher->email)->send(new AssignmentNotificationMail($this->assignment));
+        Mail::to($this->email)->send(new AssignmentNotificationMail($this->assignment));
     }
 }

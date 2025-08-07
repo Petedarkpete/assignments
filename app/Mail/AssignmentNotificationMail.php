@@ -16,9 +16,10 @@ class AssignmentNotificationMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public $assignment;
+    public function __construct($assignment)
     {
-        //
+        $this->assignment = $assignment;
     }
 
     /**
@@ -38,6 +39,13 @@ class AssignmentNotificationMail extends Mailable
     {
         return new Content(
             markdown: 'emails.assignment.notification',
+            with: [
+                'assignmentTitle' => $this->assignment->title,
+                'assignmentDescription' => $this->assignment->description,
+                'teacherName' => $this->assignment->teacher->name,
+                'dueDate' => $this->assignment->due_date,
+                'assignmentId' => $this->assignment->id,
+            ],
         );
     }
 
