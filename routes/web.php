@@ -46,8 +46,11 @@ Route::post('/delete_user/{id}', [App\Http\Controllers\UserController:: class, '
 Route::post('/import',[App\Http\Controllers\UserController:: class, 'import'])->name('import');
 
 //assignments
-Route::get('dashboard', [App\Http\Controllers\DashboardController:: class, 'index'])->name('dashboard');
-Route::get('assignments', [App\Http\Controllers\UploadController:: class, 'index'])->name('assignments.index');
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('dashboard', [App\Http\Controllers\DashboardController:: class, 'index'])->name('dashboard');
+    Route::get('assignments', [App\Http\Controllers\UploadController:: class, 'index'])->name('assignments.index');
+
+
 Route::get('create_assignment', [App\Http\Controllers\UploadController:: class, 'createAssignmentView'])->name('assignments.create');
 Route::post('assignments/store', [App\Http\Controllers\UploadController:: class, 'storeAssignment'])->name('assignments.store');
 Route::get('assignments/{id}/edit', [App\Http\Controllers\UploadController:: class, 'editAssignment'])->name('assignments.edit');
@@ -72,9 +75,6 @@ Route::get('/roles', function () {
     return view('roles.index', [
         'roles' => \App\Models\Role::with('permissions')->get()
     ]);
-});
-
-require __DIR__.'/auth.php';
 
 //class
 
@@ -89,7 +89,7 @@ Route::prefix('subject')->name('subject.')->group(function () {
     Route::delete('/{id}', [App\Http\Controllers\SubjectController::class, 'destroy'])->name('destroy');
     Route::post('/update/{id}', [App\Http\Controllers\SubjectController::class, 'update'])->name('update');
 });
-
+});
 //stream
 Route::prefix('streams')->name('streams.')->group(function () {
     Route::get('/view', [App\Http\Controllers\SettingController::class, 'index'])->name('view');
@@ -166,3 +166,5 @@ Route::post('/checkClass', [App\Http\Controllers\ClassController::class, 'checkC
 
 Route::post('/activate/{token}', [App\Http\Controllers\Auth\ActivationController::class, 'submitForm'])->name('activation.submit');
 Route::get('/activation/{token}', [App\Http\Controllers\Auth\ActivationController::class, 'showForm'])->name('activate');
+});
+require __DIR__.'/auth.php';
