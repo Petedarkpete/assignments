@@ -22,9 +22,9 @@ Route::middleware('auth')->group(function () {
 Route::get('/users', [App\Http\Controllers\UserController:: class, 'index'])->name('users');
 
 //for modules
-Route::get('/modules', [App\Http\Controllers\ModuleController:: class, 'index'])->name('modules');
 Route::post('/modules/store', [App\Http\Controllers\ModuleController:: class, 'store'])->name('modules.store');
 Route::post('/sub_modules/store', [App\Http\Controllers\ModuleController:: class, 'storeSubModule'])->name('sub_modules.store');
+Route::get('/modules', [App\Http\Controllers\ModuleController:: class, 'index'])->name('modules');
 
 //for users
 Route::get('/teachers/view', [App\Http\Controllers\UserController:: class, 'teachersView'])->name('teachers.view');

@@ -95,7 +95,7 @@ class UploadController extends Controller
             $assignment->file_path = $validated['file_path'] ?? null;
             $assignment->external_link = $validated['external_link'] ?? null;
             $assignment->due_date = $validated['due_date'];
-            $assignment->teacher_id = $teacher_id;
+            $assignment->teacher_id = Auth::id();
             $assignment->class_id = $validated['class_id'];
             $assignment->subject_id = $validated['subject_id'];
 

@@ -174,7 +174,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addSubmoduleLabel">Add Submodule</h5>
+                    <h5 class="modal-title" id="addSubmoduleLabel">Add Submoduless</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -281,10 +281,11 @@
             e.preventDefault();
 
             let formData = $(this).serialize();
+            console.log("gets hereee");
 
             $.ajax({
                 type:'POST',
-                url: '{{route("sub_modules.store")}}',
+                url: '/sub_modules/store',
                 data: formData,
                 success: function (response) {
                     $('#add_module').modal('hide');

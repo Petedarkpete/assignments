@@ -41,7 +41,7 @@
             <div class="card-body">
                 <div class="table-responsive m-2">
                     <div class="table-container table-fade-in">
-                        <table class="table enhanced-table" id="modules_table" width="100%" cellspacing="0">
+                        <table class="table enhanced-table table-sm" id="modules_table" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -64,7 +64,7 @@
                                     </td>
                                     <td class="hide-mobile">
                                         <div class="contact-info">
-                                            <span class="phone">📱 {{ $parent->phone }}</span>
+                                            <span class="phone">📞 {{ $parent->phone }}</span>
                                             <span class="email">📧 {{ $parent->email }}</span>
                                         </div>
                                     </td>
