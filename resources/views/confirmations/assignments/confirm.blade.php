@@ -1,11 +1,12 @@
 @extends('layouts.page')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/confirm_details.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/confirm_details.css') }}?v={{ time() }}">
 @endpush
 
 @section('content')
-<div class="assignment-confirm-container page-loading">
+<main id="main" class="main">
+<div class=" page-loading">
     <div class="container">
         @if(session('success'))
             <div class="alert alert-success alert-enhanced">
@@ -16,9 +17,9 @@
         <div class="confirm-card">
             <!-- Header Section -->
             <div class="confirm-header">
-                <div class="confirm-icon">
+                {{-- <div class="confirm-icon">
                     📝
-                </div>
+                </div> --}}
                 <h1 class="confirm-title">Review Assignment Details</h1>
                 <p class="confirm-subtitle">Please review the information below before confirming submission</p>
             </div>

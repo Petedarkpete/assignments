@@ -1003,7 +1003,7 @@
 /* Header Section */
 .confirm-header {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 2.5rem 2rem;
+    padding: 1rem 1rem;
     text-align: center;
     position: relative;
 }
