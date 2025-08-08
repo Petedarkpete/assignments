@@ -141,6 +141,7 @@ Route::prefix('confirmations')->name('class.')->group(function () {
 
 Route::get('/confirmations/teachers', [App\Http\Controllers\ConfirmationController::class, 'confirmTeacher'])->name('confirmTeachers.view');
 Route::get('/confirmations/assignments', [App\Http\Controllers\ConfirmationController::class, 'confirmAssignment'])->name('confirmAssignments.view');
+Route::get('/confirmations/parents', [App\Http\Controllers\ConfirmationController::class, 'confirmParent'])->name('confirmParents.view.single');
 
 // routes/web.php
 Route::get('/test-email', function () {
@@ -162,6 +163,10 @@ Route::post('/teachers/confirm/{id}', [App\Http\Controllers\ConfirmationControll
 Route::post('/assignments/{id}/confirm', [App\Http\Controllers\ConfirmationController::class, 'confirmAssignmentAction'])->name('assignments.confirm');
 Route::get('/assignments/{id}/view', [App\Http\Controllers\ConfirmationController::class, 'confirmAssignmentView'])->name('assignments.confirm.view');
 Route::get('/assignments/{id}/view_single', [App\Http\Controllers\ConfirmationController::class, 'confirmAssignmentViewSingle'])->name('assignments.confirm.view_single');
+
+Route::post('/parents/{id}/confirm', [App\Http\Controllers\ConfirmationController::class, 'confirmParentAction'])->name('parents.confirm');
+Route::get('/parents/{id}/view', [App\Http\Controllers\ConfirmationController::class, 'confirmParentView'])->name('parents.confirm.view');
+Route::get('/parents/{id}/view_single', [App\Http\Controllers\ConfirmationController::class, 'confirmParentViewSingle'])->name('parents.confirm.view_single');
 
 
 Route::post('/findTeacher/{id}', [App\Http\Controllers\StudentController::class, 'findTeacher']);

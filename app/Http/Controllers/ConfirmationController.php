@@ -120,19 +120,6 @@ class ConfirmationController extends Controller
         return view('confirmations.assignments.confirm', compact('assignments', 'omit_confirm'));
     }
 
-    public function confirmAssignmentViewSingle($id)
-    {
-        // Logic to view confirmation page for assignments
-        Log::info("Viewing confirmation for assignment with ID: $id");
-        $assignments = DB::table('uploaded_assignments')
-            ->leftJoin('users', 'uploaded_assignments.teacher_id', '=', 'users.id')
-            ->select('uploaded_assignments.*', 'users.name', 'users.email', 'users.phone')
-            ->where('uploaded_assignments.id', $id)
-            ->get();
-
-        return view('confirmations.assignments.confirm', compact('assignments'));
-    }
-
     public function confirmAssignmentAction($id)
     {
         Log::info("Confirming assignment with ID: $id");
@@ -159,5 +146,31 @@ class ConfirmationController extends Controller
 
 
         return redirect()->route('confirmAssignments.view')->with('success', 'Assignment confirmed successfully.');
+    }
+
+    public function confirmParent()
+    {
+        // Logic to view confirmations
+        $parents = DB::table('parents')
+            ->join('users', 'parents.user_id', '=', 'users.id')
+            ->select('parents.*', 'users.name', 'users.email', 'users.phone')
+            ->where('users.confirmed', 0)
+            ->get();
+
+        return view('confirmations.parents.view', compact('parents'));
+    }
+
+    public function confirmParentView($id)
+    {
+        // Logic to view confirmation page
+        Log::info("Viewing confirmation for parent with ID: $id");
+        $parents = DB::table('parents')
+            ->join('users', 'parents.user_id', '=', 'users.id')
+            ->select('parents.*', 'users.*')
+            ->where('users.confirmed', 0)
+            ->where('parents.id', $id)
+            ->get();
+
+        return view('confirmations.parents.confirm', compact('parents'));
     }
 }
