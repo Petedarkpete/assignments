@@ -64,8 +64,8 @@
                                     </td>
                                     <td class="hide-mobile">
                                         <div class="contact-info">
-                                            <span class="phone">📞 {{ $parent->phone }}</span>
-                                            <span class="email">📧 {{ $parent->email }}</span>
+                                            <span class="phone"> {{ $parent->phone }}</span>
+                                            <span class="email"> {{ $parent->email }}</span>
                                         </div>
                                     </td>
                                     <td>

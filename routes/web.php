@@ -161,6 +161,8 @@ Route::post('/teachers/confirm/{id}', [App\Http\Controllers\ConfirmationControll
 
 Route::post('/assignments/{id}/confirm', [App\Http\Controllers\ConfirmationController::class, 'confirmAssignmentAction'])->name('assignments.confirm');
 Route::get('/assignments/{id}/view', [App\Http\Controllers\ConfirmationController::class, 'confirmAssignmentView'])->name('assignments.confirm.view');
+Route::get('/assignments/{id}/view_single', [App\Http\Controllers\ConfirmationController::class, 'confirmAssignmentViewSingle'])->name('assignments.confirm.view_single');
+
 
 Route::post('/findTeacher/{id}', [App\Http\Controllers\StudentController::class, 'findTeacher']);
 Route::get('/findStudent', [App\Http\Controllers\StudentController::class, 'findStudent']);

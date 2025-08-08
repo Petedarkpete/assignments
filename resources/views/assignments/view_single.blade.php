@@ -149,21 +149,6 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            @if(!isset($omit_confirm) || !$omit_confirm)
-            <div class="action-buttons">
-                <form action="{{ route('assignments.confirm', $assignment->id ?? 1) }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit" class="btn btn-confirm">
-                        ✓ Confirm & Submit Assignment
-                    </button>
-                </form>
-
-                <a href="{{ route('assignments.edit', $assignment->id ?? 1) }}" class="btn btn-edit">
-                    ✏️ Edit Assignment Details
-                </a>
-            </div>
-            @endif
         </div>
     </div>
 </div>

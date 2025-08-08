@@ -115,6 +115,20 @@ class ConfirmationController extends Controller
             ->select('uploaded_assignments.*', 'users.name', 'users.email', 'users.phone')
             ->where('uploaded_assignments.id', $id)
             ->get();
+        $omit_confirm = true; // Assuming you want to omit the confirmation for this view
+
+        return view('confirmations.assignments.confirm', compact('assignments', 'omit_confirm'));
+    }
+
+    public function confirmAssignmentViewSingle($id)
+    {
+        // Logic to view confirmation page for assignments
+        Log::info("Viewing confirmation for assignment with ID: $id");
+        $assignments = DB::table('uploaded_assignments')
+            ->leftJoin('users', 'uploaded_assignments.teacher_id', '=', 'users.id')
+            ->select('uploaded_assignments.*', 'users.name', 'users.email', 'users.phone')
+            ->where('uploaded_assignments.id', $id)
+            ->get();
 
         return view('confirmations.assignments.confirm', compact('assignments'));
     }
