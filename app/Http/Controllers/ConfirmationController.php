@@ -133,8 +133,9 @@ class ConfirmationController extends Controller
         DB::table('uploaded_assignments')->where('id', $id)->update(['confirmed' => 1]);
         $parents = DB::table('parents')
         ->join('students', 'students.parent_id', '=', 'parents.id')
+        ->join('users', 'parents.user_id', '=', 'users.id')
         ->where('students.class_id', $assignment->class_id) // Or any relation you use
-        ->select('parents.*')
+        ->select('users.*')
         ->get();
 
         foreach ($parents as $parent) {
@@ -143,6 +144,6 @@ class ConfirmationController extends Controller
         }
 
 
-        return redirect()->route('confirmations.assignments.view')->with('success', 'Assignment confirmed successfully.');
+        return redirect()->route('confirmAssignments.view')->with('success', 'Assignment confirmed successfully.');
     }
 }

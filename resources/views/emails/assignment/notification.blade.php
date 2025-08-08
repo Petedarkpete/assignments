@@ -9,7 +9,7 @@ A new assignment titled **"{{ $assignmentTitle }}"** has been posted and is now 
 - **Description:** {{ $assignmentDescription }}
 - **Due Date:** {{ \Carbon\Carbon::parse($dueDate)->format('F j, Y') }}
 
-<x-mail::button :url="route('assignments.view', $assignment->id)">
+<x-mail::button :url="route('assignments.confirm.view', $assignment->id)">
 View Assignment
 </x-mail::button>
 

@@ -42,7 +42,6 @@ class AssignmentNotificationMail extends Mailable
             with: [
                 'assignmentTitle' => $this->assignment->title,
                 'assignmentDescription' => $this->assignment->description,
-                'teacherName' => $this->assignment->teacher->name,
                 'dueDate' => $this->assignment->due_date,
                 'assignmentId' => $this->assignment->id,
             ],
