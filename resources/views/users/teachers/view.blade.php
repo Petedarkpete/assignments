@@ -42,6 +42,7 @@
                                 <th>Specialization</th>
                                 <th>Class Teacher</th>
                                 <th>Joined On</th>
+                                <th>View</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -58,6 +59,11 @@
 
                                 </td>
                                 <td>{{ $teacher->join_date}}</td>
+                                <td>
+                                    {{-- <a href="{{ route('teacher.view', Crypt::encryptString($teacher->user->id)) }}" class="btn btn-success btn-sm">
+                                        <i class="bi bi-eye"></i>
+                                    </a> --}}
+                                </td>
                                 <td>
                                     <a href="{{ route('teacher.edit', Crypt::encryptString($teacher->user->id)) }}" class="btn btn-primary btn-sm">
                                         <i class="bi bi-pencil-square"></i>
