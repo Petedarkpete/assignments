@@ -76,6 +76,8 @@ Route::get('/roles', function () {
         'roles' => \App\Models\Role::with('permissions')->get()
     ]);
 
+});
+
 //class
 
 //students
@@ -88,7 +90,6 @@ Route::prefix('subject')->name('subject.')->group(function () {
     Route::post('/store', [App\Http\Controllers\SubjectController::class, 'store'])->name('store');
     Route::delete('/{id}', [App\Http\Controllers\SubjectController::class, 'destroy'])->name('destroy');
     Route::post('/update/{id}', [App\Http\Controllers\SubjectController::class, 'update'])->name('update');
-});
 });
 //stream
 Route::prefix('streams')->name('streams.')->group(function () {

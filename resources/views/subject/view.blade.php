@@ -1,5 +1,9 @@
 @extends('layouts.page')
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/confirm_details.css') }}">
+@endpush
+
 @section('content')
 <main id="main" class="main">
     <div class="container">
@@ -41,7 +45,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered bg-info table-sm" id="users_table" width="100%" cellspacing="0">
+                    <table class="table table-bordered enhanced-table bg-info table-sm" id="users_table" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>Name</th>
