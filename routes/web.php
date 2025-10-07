@@ -28,6 +28,7 @@ Route::get('/modules', [App\Http\Controllers\ModuleController:: class, 'index'])
 
 //for users
 Route::get('/teachers/view', [App\Http\Controllers\UserController:: class, 'teachersView'])->name('teachers.view');
+Route::get('/teacher/{id}/view', [App\Http\Controllers\UserController:: class, 'singleTeacherView'])->name('teacher.view');
 Route::get('/teachers/create', [App\Http\Controllers\UserController:: class, 'teacherCreate'])->name('teachers.create');
 Route::post('/teachers/store', [App\Http\Controllers\UserController:: class, 'teacherStore'])->name('teachers.store');
 Route::delete('/teacher/{id}', [App\Http\Controllers\UserController::class, 'destroyTeacher'])->name('teacher.destroy');

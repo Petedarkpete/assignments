@@ -60,9 +60,9 @@
                                 </td>
                                 <td>{{ $teacher->join_date}}</td>
                                 <td>
-                                    {{-- <a href="{{ route('teacher.view', Crypt::encryptString($teacher->user->id)) }}" class="btn btn-success btn-sm">
+                                    <a href="{{ route('teacher.view', Crypt::encryptString($teacher->user->id)) }}" class="btn btn-success btn-sm">
                                         <i class="bi bi-eye"></i>
-                                    </a> --}}
+                                    </a>
                                 </td>
                                 <td>
                                     <a href="{{ route('teacher.edit', Crypt::encryptString($teacher->user->id)) }}" class="btn btn-primary btn-sm">
@@ -85,62 +85,62 @@
     <script>
             $(document).ready(function() {
 
-$('.delete-button').on('click', function(e) {
-    e.preventDefault();
+            $('.delete-button').on('click', function(e) {
+                e.preventDefault();
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    var teacherId = $(this).find('#teacherId').val();
-    console.log(teacherId);
-
-
-    Swal.fire({
-        title: 'Are you sure to delete this teacher?',
-        text: 'You won\'t be able to revert this!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'Cancel',
-    }).then((result) => {
-        if (result.isConfirmed) {
-
-            $.ajax({
-                url: '/teacher/' + teacherId,
-                type: 'DELETE',
-                success: function(response) {
-                    if(response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Deleted!',
-                            text: response.message,
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                var teacherId = $(this).find('#teacherId').val();
+                console.log(teacherId);
 
 
-                        $('button[data-id="' + teacherId + '"]').closest('tr').remove();
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops!',
-                            text: response.message
+                Swal.fire({
+                    title: 'Are you sure to delete this teacher?',
+                    text: 'You won\'t be able to revert this!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            url: '/teacher/' + teacherId,
+                            type: 'DELETE',
+                            success: function(response) {
+                                if(response.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Deleted!',
+                                        text: response.message,
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    });
+
+
+                                    $('button[data-id="' + teacherId + '"]').closest('tr').remove();
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops!',
+                                        text: response.message
+                                    });
+                                }
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops!',
+                                    text: 'Something went wrong.'
+                                });
+                            }
                         });
                     }
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops!',
-                        text: 'Something went wrong.'
-                    });
-                }
+                });
             });
-        }
-    });
-});
-});
+            });
     </script>
 @endsection

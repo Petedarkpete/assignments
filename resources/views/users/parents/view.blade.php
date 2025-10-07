@@ -27,149 +27,150 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-            <div class="card-title d-flex align-items-center p-2">
+            <div class="card-title d-flex align-items-center">
                 @if(Session::get('id') == 1)
                 <div class="card-title d-flex justify-content-between align-items-center p-2">
 
-                    <a href="{{ url('parents/create') }}" class="btn btn-primary btn-sm">Add Parent</a>
-                </div>
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addBulkparentModal">
+                    <a href="{{ url('parents/create') }}" class="btn btn-secondary btn-sm">Add Parent</a>
+
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#addBulkparentModal">
                         Add Bulk parents
                     </button>
+                </div>
                 @endif
             </div>
             <div class="card-body">
-                <div class="table-responsive m-2">
-                    <div class="table-container table-fade-in">
-                        <table class="table enhanced-table table-sm" id="modules_table" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Full Name</th>
-                                    <th class="hide-mobile">Contact</th>
-                                    <th>Relationship</th>
-                                    <th>Students</th>
-                                    <th>View</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($parents as $parent)
-                                <tr>
-                                    <td>
-                                        <span class="row-number">{{ $loop->iteration }}</span>
-                                    </td>
-                                    <td style="text-align: left;">
-                                        <strong>{{ $parent->name }}</strong>
-                                    </td>
-                                    <td class="hide-mobile">
-                                        <div class="contact-info">
-                                            <span class="phone"> {{ $parent->phone }}</span>
-                                            <span class="email"> {{ $parent->email }}</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="relationship-badge">{{ $parent->relationship }}</span>
-                                    </td>
-                                    <td>
-                                        <span class="count-badge">{{ $parent->student_count }}</span>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-success btn-enhanced btn-sm open-student-modal"
-                                                data-parent-id="{{ $parent->parent_id }}"
+                <div class="table-responsive">
+
+                    <table class="table enhanced-table table-sm" id="modules_table" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Full Name</th>
+                                <th class="hide-mobile">Contact</th>
+                                <th>Relationship</th>
+                                <th>Students</th>
+                                <th>View</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($parents as $parent)
+                            <tr>
+                                <td>
+                                    <span class="row-number">{{ $loop->iteration }}</span>
+                                </td>
+                                <td style="text-align: left;">
+                                    <strong>{{ $parent->name }}</strong>
+                                </td>
+                                <td class="hide-mobile">
+                                    <div class="contact-info">
+                                        <span class="phone"> {{ $parent->phone }}</span>
+                                        <span class="email"> {{ $parent->email }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="relationship-badge">{{ $parent->relationship }}</span>
+                                </td>
+                                <td>
+                                    <span class="count-badge">{{ $parent->student_count }}</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-enhanced btn-sm open-student-modal"
+                                            data-parent-id="{{ $parent->parent_id }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#studentModal"
+                                            title="View Students">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-primary btn-enhanced btn-sm"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#studentModal"
-                                                title="View Students">
-                                            <i class="bi bi-eye"></i>
+                                                data-bs-target="#editparentModal{{ $parent->parent_id }}"
+                                                title="Edit Parent">
+                                            <i class="bi bi-pencil-square"></i>
                                         </button>
-                                    </td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-primary btn-enhanced btn-sm"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editparentModal{{ $parent->parent_id }}"
-                                                    title="Edit Parent">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-enhanced btn-sm delete-button"
-                                                    title="Delete Parent">
-                                                <i class="bi bi-trash"></i>
-                                                <input type="hidden" id="parentId" value="{{ $parent->parent_id }}">
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        <button class="btn btn-danger btn-enhanced btn-sm delete-button"
+                                                title="Delete Parent">
+                                            <i class="bi bi-trash"></i>
+                                            <input type="hidden" id="parentId" value="{{ $parent->parent_id }}">
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
 
-                            <div class="modal fade" id="editparentModal{{ $parent->parent_id }}" tabindex="-1" aria-labelledby="editparentModalLabel{{ $parent->id }}" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                  <div class="modal-content">
-                                    <form action="editparentForm" method="POST" class="editparentForm">
-                                      @csrf
+                        <div class="modal fade" id="editparentModal{{ $parent->parent_id }}" tabindex="-1" aria-labelledby="editparentModalLabel{{ $parent->id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                <form action="editparentForm" method="POST" class="editparentForm">
+                                    @csrf
 
-                                      <div class="modal-header">
-                                        <h5 class="modal-title" id="editparentModalLabel{{ $parent->parent_id }}">Edit parent</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                      </div>
-
-                                      <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <!-- First Name -->
-                                                <div class="mb-3">
-                                                    <label for="editFirstName" class="form-label">First Name</label>
-                                                    <input type="text" class="form-control" id="editFirstName" value="{{ $parent->first_name }}" name="first_name" required>
-                                                </div>
-
-                                                <!-- Class -->
-                                                <div class="mb-3">
-                                                    <label for="editClass" class="form-label">Class</label>
-                                                    <select name="class_id" id="editClass" class="form-control" required>
-                                                        <option value="">-- Select Class --</option>
-                                                        @foreach($classes as $cls)
-                                                            <option value="{{ $cls->id }}" {{ $cls->stream == $cls->stream ? 'selected' : '' }}>
-                                                                {{ $cls->stream }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-
-
-                                                <!-- Gender -->
-                                                <div class="mb-3">
-                                                    <label for="editGender" class="form-label">Gender</label>
-                                                    <select name="gender" id="editGender" class="form-control" required>
-                                                        <option value="Male" {{ old('gender', $user->gender ?? '') == 'male' ? 'selected' : '' }}>Male</option>
-                                                        <option value="Female" {{ old('gender', $user->gender ?? '') == 'female' ? 'selected' : '' }}>Female</option>
-                                                    </select>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <!-- Last Name -->
-                                                <div class="mb-3">
-                                                    <label for="editLastName" class="form-label">Last Name</label>
-                                                    <input type="text" class="form-control" id="editLastName" value="{{ $parent->last_name }}" name="last_name" required>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Hidden input for parent ID (for updates) -->
-                                        <input type="hidden" id="editparentId" name="parent_id">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="editparentModalLabel{{ $parent->parent_id }}">Edit parent</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
 
-                                      <div class="modal-footer">
-                                        <button type="submit" class="btn btn-success">Update</button>
-                                      </div>
-                                    </form>
-                                  </div>
+                                    <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <!-- First Name -->
+                                            <div class="mb-3">
+                                                <label for="editFirstName" class="form-label">First Name</label>
+                                                <input type="text" class="form-control" id="editFirstName" value="{{ $parent->first_name }}" name="first_name" required>
+                                            </div>
+
+                                            <!-- Class -->
+                                            <div class="mb-3">
+                                                <label for="editClass" class="form-label">Class</label>
+                                                <select name="class_id" id="editClass" class="form-control" required>
+                                                    <option value="">-- Select Class --</option>
+                                                    @foreach($classes as $cls)
+                                                        <option value="{{ $cls->id }}" {{ $cls->stream == $cls->stream ? 'selected' : '' }}>
+                                                            {{ $cls->stream }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+
+                                            <!-- Gender -->
+                                            <div class="mb-3">
+                                                <label for="editGender" class="form-label">Gender</label>
+                                                <select name="gender" id="editGender" class="form-control" required>
+                                                    <option value="Male" {{ old('gender', $user->gender ?? '') == 'male' ? 'selected' : '' }}>Male</option>
+                                                    <option value="Female" {{ old('gender', $user->gender ?? '') == 'female' ? 'selected' : '' }}>Female</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <!-- Last Name -->
+                                            <div class="mb-3">
+                                                <label for="editLastName" class="form-label">Last Name</label>
+                                                <input type="text" class="form-control" id="editLastName" value="{{ $parent->last_name }}" name="last_name" required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hidden input for parent ID (for updates) -->
+                                    <input type="hidden" id="editparentId" name="parent_id">
+                                </div>
+
+                                    <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Update</button>
+                                    </div>
+                                </form>
                                 </div>
                             </div>
-                            @endforeach
+                        </div>
+                        @endforeach
                         </tbody>
 
                     </table>
-                </div>
+
             </div>
         </div>
     </div>

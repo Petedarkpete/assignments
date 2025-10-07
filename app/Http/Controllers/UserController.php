@@ -153,6 +153,17 @@ class UserController extends Controller
             ->get();
         return view ('users.teachers.view', compact('teachers'));
     }
+
+    public function singleTeacherView ($id) {
+        $id = Crypt::decryptString($id);
+        $teachers = Teacher::where('confirmed', 1)
+            ->join('users', 'teachers.user_id', '=', 'users.id')
+            ->select('teachers.*', 'users.name', 'users.email', 'users.phone', 'users.first_name', 'users.last_name', 'users.other_names', 'users.gender', 'users.address')
+            ->where('users.confirmed', 1)
+            ->where('users.id', $id)
+            ->first();
+        return view ('users.teachers.view_single', compact('teachers'));
+    }
     public function teacherCreate () {
         $subjects = Subject::all();
         return view ('users.teachers.create', compact('subjects'));
