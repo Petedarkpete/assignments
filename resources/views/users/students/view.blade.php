@@ -70,6 +70,9 @@
                                 <td>{{ $student->admission_number }}</td>
                                 <td>{{ $student->gender }}</td>
                                 <td>
+                                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#viewStudentModal{{ $student->id }}">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editstudentModal{{ $student->id }}">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
@@ -83,7 +86,7 @@
                             <div class="modal fade" id="editstudentModal{{ $student->id }}" tabindex="-1" aria-labelledby="editstudentModalLabel{{ $student->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                   <div class="modal-content">
-                                    <form action="editstudentForm" method="POST" class="editstudentForm">
+                                    <form id="editstudentForm{{ $student->id }}" class="editstudentForm">
                                       @csrf
 
                                       <div class="modal-header">
@@ -153,13 +156,91 @@
                                         </div>
 
                                         <!-- Hidden input for student ID (for updates) -->
-                                        <input type="hidden" id="editStudentId" name="student_id">
-                                    </div>
+                                        <input type="hidden" id="editStudentId" name="student_id" value="{{ $student->id }}">
+                                        </div>
 
                                       <div class="modal-footer">
-                                        <button type="submit" class="btn btn-success">Update</button>
+                                        <button type="submit" id="updateStudentBtn{{ $student->id }}" class="btn btn-success">Update</button>
                                       </div>
                                     </form>
+                                  </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="viewStudentModal{{ $student->id }}" tabindex="-1" aria-labelledby="viewStudentModalLabel{{ $student->id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                  <div class="modal-content">
+                                      @csrf
+
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="viewStudentModalLabel{{ $student->id }}">View student</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                      </div>
+
+                                      <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <!-- First Name -->
+                                                <div class="mb-3">
+                                                    <label for="editFirstName" class="form-label">First Name</label>
+                                                    <input type="text" class="form-control" id="editFirstName" value="{{ $student->first_name }}" name="first_name" readonly>
+                                                </div>
+
+                                                <!-- Class -->
+                                                <div class="mb-3">
+                                                    <label for="editClass" class="form-label">Class</label>
+                                                    <select name="class_id" id="editClass" class="form-control" readonly>
+                                                        <option value="">-- Select Class --</option>
+                                                        @foreach($classes as $cls)
+                                                            <option value="{{ $cls->id }}" {{ $cls->stream == $cls->stream ? 'selected' : '' }}>
+                                                                {{ $cls->stream }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <!-- Index Number -->
+                                                <div class="mb-3">
+                                                    <label for="editIndexNumber" class="form-label">Index Number</label>
+                                                    <input type="number" class="form-control" id="editIndexNumber" value="{{ $student->index_number }}" name="index_number" readonly>
+                                                </div>
+
+                                                <!-- Gender -->
+                                                <div class="mb-3">
+                                                    <label for="editGender" class="form-label">Gender</label>
+                                                    <select name="gender" id="editGender" class="form-control" readonly>
+                                                        <option value="Male" {{ old('gender', $user->gender ?? '') == 'male' ? 'selected' : '' }}>Male</option>
+                                                        <option value="Female" {{ old('gender', $user->gender ?? '') == 'female' ? 'selected' : '' }}>Female</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <!-- Last Name -->
+                                                <div class="mb-3">
+                                                    <label for="editLastName" class="form-label">Last Name</label>
+                                                    <input type="text" class="form-control" id="editLastName" value="{{ $student->last_name }}" name="last_name" readonly>
+                                                </div>
+
+                                                <!-- Teacher Name (readonly) -->
+                                                <div class="mb-3">
+                                                    <label for="editTeacherName" class="form-label">Teacher</label>
+                                                    <input type="text" class="form-control" value="{{ $student->tname }}" id="editTeacherName" readonly>
+                                                    <input type="hidden" id="editTeacherId" name="teacher_id" value="{{ $student->teacher_id }}">
+                                                </div>
+
+                                                <!-- Admission Number -->
+                                                <div class="mb-3">
+                                                    <label for="editAdmissionNo" class="form-label">Admission Number</label>
+                                                    <input type="text" class="form-control" id="editAdmissionNo" value="{{ $student->admission_number }}" name="admission_number" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hidden input for student ID (for updates) -->
+                                        <input type="hidden" id="editStudentId" name="student_id" >
+                                    </div>
                                   </div>
                                 </div>
                             </div>
@@ -550,25 +631,43 @@
             });
         });
 
-        $('.editstudentForm').on('submit', function(e) {
+        $(document).on('submit', '.editstudentForm', function(e) {
             e.preventDefault();
+            console.log('Form submission captured!');
 
             $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
 
-            let form = $(this);
-            var studentIdUpdate = $('#studentId').val();
+            //create an object from the event clicked
+            let form = $('#editstudentForm');
+            var formData = form.serialize();
+            let studentIdUpdate = $('#editStudentId').val();
             console.log('student ID:', studentIdUpdate);
+
+            // 1️⃣ Show "loading" alert
+            Swal.fire({
+                title: 'Updating the Student',
+                html: 'Please wait...',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
             $.ajax({
                 url: '/students/update/' + studentIdUpdate,
                 type: "POST",
-                data: form.serialize(),
+                data: formData,
                 success: function(response) {
-                    if (response.success) {
+                    // 2️⃣ Close the loading alert first
+                    Swal.close();
+
+                    // 3️⃣ Then show the success alert after a short delay
+                    setTimeout(() => {
                         Swal.fire({
                             icon: 'success',
                             title: 'Success',
@@ -576,14 +675,14 @@
                             timer: 2000,
                             showConfirmButton: false,
                             timerProgressBar: true,
-                        }).then(() => {
-                            window.location.href = '/students/view';
                         });
+                    }, 200);
 
-                        form.closest('.modal').modal('hide');
-                    }
+                    // 4️⃣ Hide modal afterward
+                    form.closest('.modal').modal('hide');
                 },
                 error: function(response) {
+                    Swal.close(); // Close loading alert first
                     Swal.fire({
                         icon: 'error',
                         title: 'Update Failed',
@@ -592,6 +691,7 @@
                 }
             });
         });
+
 
         $('.delete-button').on('click', function(e) {
             e.preventDefault();
